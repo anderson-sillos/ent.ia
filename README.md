@@ -14,7 +14,7 @@ O projeto está na fase de especificação e desenho arquitetural. Ainda não h�
 
 ## Documentação
 
-- [Apresentação conceitual e técnica](docs/apresentacao-pitch-tecnico.html)
+- [Abrir apresentação conceitual e técnica](https://anderson-sillos.github.io/ent.ia/)
 - [Roteiro da apresentação](docs/roteiro-pitch-tecnico.md)
 - [Diagrama de arquitetura](docs/arquitetura-entia.svg)
 - [Proposta da fundação](openspec/changes/fundacao-plataforma-entia/proposal.md)
