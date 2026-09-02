@@ -14,6 +14,9 @@ O projeto está na fase de especificação e desenho arquitetural. Ainda não h�
 
 ## Documentação
 
+- [Pitch executivo-técnico](docs/apresentacao-pitch-tecnico.html)
+- [Roteiro do pitch](docs/roteiro-pitch-tecnico.md)
+- [Diagrama de arquitetura](docs/arquitetura-entia.svg)
 - [Proposta da fundação](openspec/changes/fundacao-plataforma-entia/proposal.md)
 - [Design arquitetural](openspec/changes/fundacao-plataforma-entia/design.md)
 - [Especificações](openspec/changes/fundacao-plataforma-entia/specs)

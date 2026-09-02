@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pitch executivo-técnico da plataforma ENT.IA">
+  <title>ENT.IA — Pitch executivo-técnico</title>
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #55667a;
+      --paper: #f7f9fc;
+      --white: #ffffff;
+      --navy: #071a2d;
+      --navy-2: #0d2942;
+      --teal: #00a69c;
+      --teal-soft: #d9f3f0;
+      --cyan: #4edbd1;
+      --coral: #ff6b5f;
+      --gold: #ffc857;
+      --line: #dce5ef;
+      --shadow: 0 24px 64px rgb(0 20 40 / 22%);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #020b14;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    button { font: inherit; }
+
+    .deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      padding: 5.7% 6.4% 4.4%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 95% -10%, rgb(0 166 156 / 12%), transparent 28%),
+        var(--paper);
+    }
+
+    .slide.active { display: flex; }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        radial-gradient(circle at 86% 18%, rgb(0 166 156 / 30%), transparent 28%),
+        radial-gradient(circle at 18% 110%, rgb(78 219 209 / 15%), transparent 36%),
+        linear-gradient(135deg, var(--navy), #04111f 68%);
+    }
+
+    .slide::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      content: "";
+      background: linear-gradient(90deg, var(--teal), var(--cyan) 55%, var(--coral));
+    }
+
+    .eyebrow {
+      margin: 0 0 1.1%;
+      color: var(--teal);
+      font-size: clamp(10px, 1.08vw, 19px);
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .dark .eyebrow { color: var(--cyan); }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 82%;
+      margin-bottom: 2.1%;
+      font-size: clamp(36px, 5.35vw, 92px);
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+
+    h2 {
+      max-width: 92%;
+      margin-bottom: 2.8%;
+      color: var(--navy);
+      font-size: clamp(25px, 3.05vw, 54px);
+      line-height: 1.04;
+      letter-spacing: -.035em;
+    }
+
+    .dark h2 { color: var(--white); }
+
+    h3 {
+      margin-bottom: .7em;
+      color: var(--navy);
+      font-size: clamp(13px, 1.35vw, 25px);
+      line-height: 1.16;
+    }
+
+    .dark h3 { color: var(--white); }
+
+    p, li {
+      font-size: clamp(11px, 1.16vw, 21px);
+      line-height: 1.42;
+    }
+
+    .lead {
+      max-width: 81%;
+      color: inherit;
+      font-size: clamp(17px, 2.05vw, 37px);
+      line-height: 1.27;
+      letter-spacing: -.018em;
+    }
+
+    .muted { color: var(--muted); }
+    .dark .muted { color: #b8cad9; }
+    .accent { color: var(--teal); }
+    .dark .accent { color: var(--cyan); }
+    .coral { color: var(--coral); }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 1.6%;
+      width: 100%;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      min-width: 0;
+      padding: 2.2%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgb(255 255 255 / 82%);
+      box-shadow: 0 8px 24px rgb(15 38 61 / 6%);
+    }
+
+    .dark .card {
+      border-color: rgb(255 255 255 / 12%);
+      background: rgb(255 255 255 / 6%);
+      box-shadow: none;
+    }
+
+    .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+
+    .number {
+      display: grid;
+      width: 2.2em;
+      height: 2.2em;
+      margin-bottom: .8em;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--teal);
+      font-size: clamp(12px, 1.15vw, 21px);
+      font-weight: 800;
+    }
+
+    .tag {
+      display: inline-block;
+      margin: 0 .35em .45em 0;
+      padding: .34em .65em;
+      border: 1px solid rgb(0 166 156 / 28%);
+      border-radius: 999px;
+      color: #056d68;
+      background: var(--teal-soft);
+      font-size: clamp(8px, .82vw, 14px);
+      font-weight: 750;
+      line-height: 1;
+    }
+
+    .dark .tag {
+      color: var(--cyan);
+      border-color: rgb(78 219 209 / 25%);
+      background: rgb(78 219 209 / 9%);
+    }
+
+    ul {
+      margin: .2em 0 0;
+      padding-left: 1.15em;
+    }
+
+    li { margin: 0 0 .45em; }
+    li::marker { color: var(--teal); }
+
+    .bar {
+      display: flex;
+      align-items: stretch;
+      gap: 1.1%;
+      width: 100%;
+    }
+
+    .step {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      padding: 2.2% 1.7%;
+      border-radius: 14px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .step:not(:last-child)::after {
+      position: absolute;
+      z-index: 3;
+      top: 44%;
+      right: -9%;
+      width: 12%;
+      color: var(--teal);
+      content: "→";
+      font-size: clamp(15px, 1.8vw, 34px);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: .6em;
+      color: var(--navy);
+      font-size: clamp(11px, 1.05vw, 19px);
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: clamp(9px, .88vw, 16px);
+      line-height: 1.35;
+    }
+
+    .callout {
+      margin-top: auto;
+      padding: 1.35% 1.7%;
+      border-left: 5px solid var(--teal);
+      border-radius: 0 12px 12px 0;
+      color: var(--navy);
+      background: var(--teal-soft);
+      font-size: clamp(10px, 1.08vw, 19px);
+      line-height: 1.35;
+    }
+
+    .dark .callout {
+      color: var(--white);
+      background: rgb(78 219 209 / 10%);
+    }
+
+    .architecture {
+      width: 100%;
+      max-height: 67%;
+      margin: -.5% auto 0;
+    }
+
+    .architecture .box {
+      fill: #fff;
+      stroke: #bdd0df;
+      stroke-width: 2;
+      rx: 14;
+    }
+
+    .architecture .core { fill: #e1f5f3; stroke: #00a69c; }
+    .architecture .external { fill: #fff2ef; stroke: #ff8b82; }
+    .architecture .infra { fill: #eef3f8; stroke: #97aec0; }
+    .architecture .arrow { stroke: #446176; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
+    .architecture .label { fill: #102033; font-weight: 800; font-size: 16px; text-anchor: middle; }
+    .architecture .small { fill: #55667a; font-size: 12px; text-anchor: middle; }
+    .architecture .lane { fill: #00a69c; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+
+    .module-map {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.15%;
+    }
+
+    .module {
+      min-height: 88px;
+      padding: 11% 8%;
+      border-radius: 12px;
+      color: var(--navy);
+      background: var(--white);
+      border-top: 5px solid var(--teal);
+      box-shadow: 0 7px 20px rgb(0 20 40 / 7%);
+      font-size: clamp(9px, .95vw, 17px);
+      font-weight: 800;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .module.risk { border-top-color: var(--coral); }
+    .module.platform { border-top-color: var(--gold); }
+
+    table {
+      width: 100%;
+      border-spacing: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--white);
+      font-size: clamp(9px, .92vw, 17px);
+    }
+
+    th, td {
+      padding: .72em .9em;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--navy);
+      background: #eaf1f7;
+      font-size: .9em;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .risk-list {
+      display: grid;
+      gap: 1.1%;
+      grid-template-columns: 1fr 1.4fr;
+    }
+
+    .risk-list > div {
+      display: contents;
+    }
+
+    .risk-list strong, .risk-list span {
+      padding: .72em .9em;
+      border-bottom: 1px solid var(--line);
+      font-size: clamp(9px, .94vw, 17px);
+      line-height: 1.3;
+    }
+
+    .risk-list strong { color: var(--navy); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: .45em;
+      font-weight: 800;
+    }
+
+    .status::before {
+      width: .7em;
+      height: .7em;
+      border-radius: 50%;
+      content: "";
+      background: var(--teal);
+    }
+
+    .status.open::before { background: var(--gold); }
+
+    .quote {
+      max-width: 88%;
+      margin: auto 0;
+      font-size: clamp(27px, 4.25vw, 74px);
+      font-weight: 780;
+      line-height: 1.04;
+      letter-spacing: -.045em;
+    }
+
+    .footer {
+      position: absolute;
+      right: 6.4%;
+      bottom: 2.3%;
+      left: 6.4%;
+      display: flex;
+      justify-content: space-between;
+      color: #718197;
+      font-size: clamp(7px, .68vw, 12px);
+    }
+
+    .dark .footer { color: #91a9ba; }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .45em;
+      font-weight: 900;
+      letter-spacing: -.03em;
+    }
+
+    .brand-dot {
+      width: .72em;
+      height: .72em;
+      border-radius: 2px 8px 2px 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--teal));
+      transform: rotate(15deg);
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 20;
+      right: 18px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      border: 1px solid rgb(255 255 255 / 12%);
+      border-radius: 999px;
+      color: #fff;
+      background: rgb(3 14 25 / 82%);
+      backdrop-filter: blur(12px);
+    }
+
+    .controls button {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: rgb(255 255 255 / 9%);
+      cursor: pointer;
+    }
+
+    .controls button:hover { background: rgb(78 219 209 / 28%); }
+    .counter { min-width: 48px; font-size: 12px; text-align: center; }
+
+    .progress {
+      position: fixed;
+      z-index: 21;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      background: rgb(255 255 255 / 8%);
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--cyan));
+      transition: width .2s ease;
+    }
+
+    .hint {
+      position: fixed;
+      z-index: 18;
+      bottom: 22px;
+      left: 22px;
+      color: rgb(255 255 255 / 58%);
+      font-size: 11px;
+    }
+
+    @media (max-width: 720px) {
+      .hint { display: none; }
+      .controls { right: 8px; bottom: 8px; }
+    }
+
+    @media print {
+      @page { size: 16in 9in; margin: 0; }
+
+      html, body {
+        display: block;
+        overflow: visible;
+        background: #fff;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .deck { width: auto; overflow: visible; box-shadow: none; }
+      .slide {
+        position: relative;
+        display: flex !important;
+        width: 16in;
+        height: 9in;
+        break-after: page;
+        page-break-after: always;
+      }
+      .controls, .progress, .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Apresentação técnica do ENT.IA">
+    <section class="slide dark active" aria-labelledby="s1-title">
+      <p class="eyebrow">Pitch executivo-técnico · decisão de investimento</p>
+      <h1 id="s1-title">ENT<span class="accent">.IA</span></h1>
+      <p class="lead">Plataforma inteligente para modelagem e personalização de entidades de negócio.</p>
+      <div style="margin-top:auto">
+        <span class="tag">Entidades moldadas ao seu negócio.</span>
+        <span class="tag">Modele entidades. A IA faz o resto.</span>
+      </div>
+      <div class="footer"><span>ENTidades de negócio + IA</span><span>Setembro de 2026</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s2-title">
+      <p class="eyebrow">Resumo executivo</p>
+      <h2 id="s2-title">A decisão: financiar uma fundação reutilizável, não mais um CRUD isolado</h2>
+      <div class="grid-3" style="flex:1">
+        <article class="card">
+          <div class="number">1</div>
+          <h3>Problema recorrente</h3>
+          <p class="muted">Cada novo domínio repete banco, APIs, telas, permissões, integrações e auditoria.</p>
+        </article>
+        <article class="card">
+          <div class="number">2</div>
+          <h3>Tese do produto</h3>
+          <p class="muted">Transformar a definição da entidade em metadados e reutilizar uma plataforma segura para operá-la.</p>
+        </article>
+        <article class="card">
+          <div class="number">3</div>
+          <h3>Estratégia de investimento</h3>
+          <p class="muted">Evoluir por gates: fundação confiável, núcleo dinâmico, IA controlada e piloto real.</p>
+        </article>
+      </div>
+      <div class="callout"><strong>Pedido desta reunião:</strong> validar a tese, o recorte do MVP e o investimento incremental para reduzir os maiores riscos técnicos antes de escalar.</div>
+      <div class="footer"><span>Visão executiva</span><span>02</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s3-title">
+      <p class="eyebrow">O problema</p>
+      <h2 id="s3-title">A maior parte do custo não está na entidade. Está na infraestrutura repetida ao redor dela.</h2>
+      <div class="grid-4" style="margin-top:1.5%">
+        <article class="card"><h3>Dados</h3><p class="muted">Schema, migrations, validação, relacionamentos e consultas.</p></article>
+        <article class="card"><h3>Experiência</h3><p class="muted">Formulários, detalhes, filtros, tabelas e paginação.</p></article>
+        <article class="card"><h3>Confiança</h3><p class="muted">Login, isolamento, permissões, auditoria e segurança.</p></article>
+        <article class="card"><h3>Integração</h3><p class="muted">APIs, documentação, identidade e automações inteligentes.</p></article>
+      </div>
+      <p class="quote" style="font-size:clamp(24px,3.3vw,59px)">O resultado é <span class="accent">lead time alto</span>, soluções inconsistentes e uma superfície de risco multiplicada.</p>
+      <div class="footer"><span>Hipótese de oportunidade</span><span>03</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s4-title">
+      <p class="eyebrow">A proposta</p>
+      <h2 id="s4-title">Um catálogo central transforma metadados em uma aplicação operacional</h2>
+      <div class="bar" style="margin-top:1.7%">
+        <div class="step"><strong>Modelar</strong><span>Campos, tipos, validações, relações e apresentação.</span></div>
+        <div class="step"><strong>Validar</strong><span>Compatibilidade, impacto, segurança e integridade.</span></div>
+        <div class="step"><strong>Publicar</strong><span>Snapshot global, imutável, versionado e auditado.</span></div>
+        <div class="step"><strong>Ativar</strong><span>Tabela física, índices e contrato disponíveis com segurança.</span></div>
+        <div class="step"><strong>Operar</strong><span>REST, cadastros, consultas e IA usam o mesmo contrato.</span></div>
+      </div>
+      <div class="grid-2" style="margin-top:3.1%">
+        <article class="card">
+          <h3>Sem geração de código por entidade</h3>
+          <p class="muted">Backend e React interpretam JSON Schema e UI Schema em tempo de execução.</p>
+        </article>
+        <article class="card">
+          <h3>Uma fonte de verdade</h3>
+          <p class="muted">Persistência, API, interface, autorização e ferramentas da IA seguem a mesma versão ativa.</p>
+        </article>
+      </div>
+      <div class="footer"><span>Conceito do produto</span><span>04</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s5-title">
+      <p class="eyebrow">Recorte proposto</p>
+      <h2 id="s5-title">O MVP comprova o núcleo dinâmico com segurança — sem tentar resolver todo tipo de plataforma</h2>
+      <div class="grid-2">
+        <article class="card" style="border-top:5px solid var(--teal)">
+          <h3>Dentro do MVP</h3>
+          <ul>
+            <li>multi-organização, autenticação federada e RBAC contextual;</li>
+            <li>catálogo global, versões e habilitação por organização;</li>
+            <li>tabela física por entidade e evolução compatível;</li>
+            <li>REST, formulários, detalhes, filtros e listagens dinâmicos;</li>
+            <li>auditoria verificável no PostgreSQL;</li>
+            <li>IA: leitura primeiro; escrita somente com confirmação.</li>
+          </ul>
+        </article>
+        <article class="card" style="border-top:5px solid var(--coral)">
+          <h3>Fora da primeira versão</h3>
+          <ul>
+            <li>microsserviços, Kafka e topologia distribuída;</li>
+            <li>schema personalizado por organização;</li>
+            <li>código, scripts ou SQL arbitrários;</li>
+            <li>alterações destrutivas automáticas;</li>
+            <li>RAG, agentes autônomos e banco vetorial;</li>
+            <li>resistência WORM contra superusuário do banco.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout">O recorte protege o investimento: prova o diferencial e adia complexidades que ainda não têm demanda ou escala comprovadas.</div>
+      <div class="footer"><span>Escopo e disciplina</span><span>05</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s6-title">
+      <p class="eyebrow">Diferenciais estruturais</p>
+      <h2 id="s6-title">Quatro decisões tornam o ENT.IA mais do que um gerador de telas</h2>
+      <div class="grid-4" style="flex:1">
+        <article class="card">
+          <div class="number">01</div>
+          <h3>Contrato único</h3>
+          <p class="muted">Metadados publicados governam dados, REST, UI e IA.</p>
+        </article>
+        <article class="card">
+          <div class="number">02</div>
+          <h3>Persistência real</h3>
+          <p class="muted">Tabela por entidade permite índices, constraints e tuning específicos.</p>
+        </article>
+        <article class="card">
+          <div class="number">03</div>
+          <h3>Segurança contextual</h3>
+          <p class="muted">Organização + entidade + operação, negado por padrão no servidor.</p>
+        </article>
+        <article class="card">
+          <div class="number">04</div>
+          <h3>IA governada</h3>
+          <p class="muted">Ferramentas REST autorizadas, sem SQL livre e com confirmação humana.</p>
+        </article>
+      </div>
+      <div class="callout"><strong>Moat técnico potencial:</strong> o valor acumulado está no motor seguro de metadados, ciclo de schema, experiência dinâmica e governança transversal.</div>
+      <div class="footer"><span>Proposta de valor técnica</span><span>06</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s7-title">
+      <p class="eyebrow">Arquitetura de referência</p>
+      <h2 id="s7-title">Um núcleo modular, dependências abertas e fronteiras preparadas para evolução</h2>
+      <svg class="architecture" viewBox="0 0 1200 500" role="img" aria-label="Arquitetura de alto nível do ENT.IA">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#446176"></path>
+          </marker>
+        </defs>
+        <text class="lane" x="18" y="32">ACESSO PÚBLICO CONTROLADO</text>
+        <rect class="box" x="18" y="52" width="175" height="76"></rect>
+        <text class="label" x="105" y="83">React SPA</text>
+        <text class="small" x="105" y="106">browser sem tokens</text>
+        <rect class="infra" x="238" y="52" width="190" height="76" rx="14"></rect>
+        <text class="label" x="333" y="83">Proxy / WAF</text>
+        <text class="small" x="333" y="106">TLS · rate limit · rotas</text>
+        <rect class="core" x="475" y="42" width="285" height="96" rx="14"></rect>
+        <text class="label" x="617" y="78">BFF + REST API</text>
+        <text class="small" x="617" y="104">Spring Boot modular monolith</text>
+        <path class="arrow" d="M193 90 L238 90"></path>
+        <path class="arrow" d="M428 90 L475 90"></path>
+
+        <text class="lane" x="18" y="190">REDE INTERNA / SERVIÇOS CONFIÁVEIS</text>
+        <rect class="external" x="45" y="215" width="215" height="88" rx="14"></rect>
+        <text class="label" x="152" y="250">Keycloak</text>
+        <text class="small" x="152" y="274">realm ent-ia · OIDC/SAML</text>
+        <rect class="core" x="350" y="205" width="350" height="108" rx="14"></rect>
+        <text class="label" x="525" y="242">Módulos do domínio</text>
+        <text class="small" x="525" y="267">catálogo · RBAC · runtime · auditoria</text>
+        <text class="small" x="525" y="289">schema engine · IA · observabilidade</text>
+        <rect class="external" x="795" y="215" width="220" height="88" rx="14"></rect>
+        <text class="label" x="905" y="250">Orquestrador de IA</text>
+        <text class="small" x="905" y="274">cliente REST controlado</text>
+        <path class="arrow" d="M560 138 L535 205"></path>
+        <path class="arrow" d="M260 259 L350 259"></path>
+        <path class="arrow" d="M700 259 L795 259"></path>
+
+        <rect class="infra" x="310" y="390" width="250" height="78" rx="14"></rect>
+        <text class="label" x="435" y="422">PostgreSQL</text>
+        <text class="small" x="435" y="445">catálogo + tabelas por entidade</text>
+        <rect class="external" x="830" y="390" width="180" height="78" rx="14"></rect>
+        <text class="label" x="920" y="422">LLM</text>
+        <text class="small" x="920" y="445">provedor a decidir</text>
+        <path class="arrow" d="M485 313 L445 390"></path>
+        <path class="arrow" d="M905 303 L920 390"></path>
+        <path class="arrow" d="M795 278 C735 355 660 350 603 304"></path>
+      </svg>
+      <div class="footer"><span>Fluxo externo sempre atravessa as políticas da plataforma</span><span>07</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s8-title">
+      <p class="eyebrow">Estratégia de software</p>
+      <h2 id="s8-title">Monólito modular: velocidade inicial com limites explícitos de evolução</h2>
+      <div class="module-map">
+        <div class="module">Identity</div>
+        <div class="module">Tenancy</div>
+        <div class="module">Authorization</div>
+        <div class="module risk">Catalog</div>
+        <div class="module risk">Schema Management</div>
+        <div class="module risk">Dynamic Records</div>
+        <div class="module">Dynamic API</div>
+        <div class="module">Audit</div>
+        <div class="module risk">AI Orchestration</div>
+        <div class="module platform">Observability</div>
+      </div>
+      <div class="grid-3" style="margin-top:2.6%">
+        <article class="card"><h3>Coesão operacional</h3><p class="muted">Uma implantação e transações locais no início.</p></article>
+        <article class="card"><h3>Fronteiras testáveis</h3><p class="muted">Interfaces públicas, eventos e propriedade de dados por módulo.</p></article>
+        <article class="card"><h3>Extração por evidência</h3><p class="muted">IA ou jobs podem ser separados quando risco ou escala justificarem.</p></article>
+      </div>
+      <div class="footer"><span>Spring Modulith reforça os limites</span><span>08</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s9-title">
+      <p class="eyebrow">Dados e evolução</p>
+      <h2 id="s9-title">Definição global; ativação segura; dados isolados por organização</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Modelo físico escolhido</h3>
+          <ul>
+            <li>um banco e schema de aplicação compartilhados;</li>
+            <li>uma tabela física por entidade;</li>
+            <li><code>organization_id</code> obrigatório;</li>
+            <li>UUID técnico e versão otimista do registro;</li>
+            <li>índices e unicidade incluem a organização.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Governança da definição</h3>
+          <ul>
+            <li>versões globais e snapshots imutáveis;</li>
+            <li>uma única versão ativa;</li>
+            <li>habilitação opcional por organização;</li>
+            <li>mudanças destrutivas bloqueadas no MVP;</li>
+            <li>drift físico impede nova ativação.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="bar" style="margin-top:2.2%">
+        <div class="step"><strong>Draft</strong><span>editável</span></div>
+        <div class="step"><strong>Validated</strong><span>hash conferido</span></div>
+        <div class="step"><strong>Published</strong><span>snapshot imutável</span></div>
+        <div class="step"><strong>Activating</strong><span>DDL idempotente</span></div>
+        <div class="step"><strong>Active</strong><span>contrato vigente</span></div>
+      </div>
+      <div class="footer"><span>Rollback mantém a versão anterior ativa; não apaga dados</span><span>09</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s10-title">
+      <p class="eyebrow">Identidade e segurança</p>
+      <h2 id="s10-title">Keycloak autentica. O ENT.IA decide o que cada identidade pode fazer.</h2>
+      <div class="grid-3">
+        <article class="card">
+          <h3>Identidade federada</h3>
+          <p class="muted">Realm único <code>ent-ia</code>, provedor padrão e OIDC/SAML por organização.</p>
+        </article>
+        <article class="card">
+          <h3>Sessão BFF</h3>
+          <p class="muted">Tokens ficam no backend; navegador recebe cookie HttpOnly, Secure e SameSite.</p>
+        </article>
+        <article class="card">
+          <h3>Exposição mínima</h3>
+          <p class="muted">Frontchannel via WAF; console, Admin API, health e métricas permanecem internos.</p>
+        </article>
+      </div>
+      <div class="grid-2" style="margin-top:2.3%">
+        <article class="card"><h3>Sem senha no banco da aplicação</h3><p class="muted">Credenciais, recuperação, MFA e social login pertencem ao provedor de identidade.</p></article>
+        <article class="card"><h3>Confiança nunca vem do payload</h3><p class="muted">Usuário e organização são derivados da sessão autenticada e revalidados no servidor.</p></article>
+      </div>
+      <div class="footer"><span>Segurança como requisito fundacional</span><span>10</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s11-title">
+      <p class="eyebrow">Autorização e auditoria</p>
+      <h2 id="s11-title">Toda operação responde a duas perguntas: “pode?” e “como comprovamos?”</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>RBAC contextual</h3>
+          <p><strong>organização × entidade × operação</strong></p>
+          <ul>
+            <li>perfis por organização;</li>
+            <li>união das concessões;</li>
+            <li>negação por padrão;</li>
+            <li>controle aplicado no backend, inclusive para IA.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Auditoria resistente à adulteração</h3>
+          <ul>
+            <li>append-only para a aplicação;</li>
+            <li>eventos estruturados e correlacionados;</li>
+            <li>hash do evento + hash anterior;</li>
+            <li>verificação detecta alteração ou lacuna.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout"><strong>Limite assumido:</strong> no mesmo PostgreSQL, a auditoria detecta e dificulta adulteração, mas não é WORM contra DBA/superusuário. Âncora externa permanece evolução possível.</div>
+      <div class="footer"><span>Controle + evidência</span><span>11</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s12-title">
+      <p class="eyebrow">IA com governança</p>
+      <h2 id="s12-title">A LLM propõe intenções; a plataforma mantém autoridade sobre a execução</h2>
+      <div class="bar" style="margin-top:1%">
+        <div class="step"><strong>Prompt</strong><span>usuário autenticado e organização confiável</span></div>
+        <div class="step"><strong>Tool call</strong><span>JSON tipado e allowlist por permissão</span></div>
+        <div class="step"><strong>Preview</strong><span>risco, impacto e dados minimizados</span></div>
+        <div class="step"><strong>Confirmação</strong><span>obrigatória para qualquer mutação</span></div>
+        <div class="step"><strong>REST</strong><span>autorização repetida, idempotência e auditoria</span></div>
+      </div>
+      <div class="grid-3" style="margin-top:3.1%">
+        <article class="card"><h3>Sem acesso direto</h3><p class="muted">A LLM não recebe banco, SQL livre nem cliente HTTP arbitrário.</p></article>
+        <article class="card"><h3>Dados classificados</h3><p class="muted">Campos podem ser permitidos, mascarados ou proibidos para a IA.</p></article>
+        <article class="card"><h3>Fornecedor desacoplado</h3><p class="muted">Modelo e provedor serão escolhidos por privacidade, custo e capacidade.</p></article>
+      </div>
+      <div class="footer"><span>API REST é a fronteira oficial da IA</span><span>12</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s13-title">
+      <p class="eyebrow">Stack tecnológica proposta</p>
+      <h2 id="s13-title">Tecnologias maduras, alinhadas à experiência da equipe e com preferência por ecossistema aberto</h2>
+      <table aria-label="Stack tecnológica do ENT.IA">
+        <thead><tr><th>Camada</th><th>Tecnologias</th><th>Papel</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Backend</strong></td><td>OpenJDK 25 LTS · Spring Boot 4.1 · Spring Modulith · Spring Security</td><td>Monólito modular, BFF, domínio e segurança</td></tr>
+          <tr><td><strong>Dados</strong></td><td>PostgreSQL · jOOQ · Liquibase*</td><td>Integridade, SQL seguro, schema estático</td></tr>
+          <tr><td><strong>Frontend</strong></td><td>React 19 · TypeScript · Vite · MUI</td><td>SPA e renderer dinâmico</td></tr>
+          <tr><td><strong>Estado/UI</strong></td><td>TanStack Query/Table · React Hook Form · JSON Schema 2020-12</td><td>Consultas, tabelas e formulários</td></tr>
+          <tr><td><strong>Identidade</strong></td><td>Keycloak · OIDC/SAML · proxy/WAF</td><td>Federação, login social e proteção de borda</td></tr>
+          <tr><td><strong>Qualidade</strong></td><td>Maven · Testcontainers · Vitest · RTL · Playwright</td><td>Build e testes em múltiplas camadas</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>* Gate jurídico:</strong> a versão do Liquibase só será fixada após revisão da licença vigente. O motor de schema dinâmico é próprio e não depende dele.</div>
+      <div class="footer"><span>Spring AI é candidato; LLM ainda não decidida</span><span>13</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s14-title">
+      <p class="eyebrow">Plano de investimento incremental</p>
+      <h2 id="s14-title">Cada fase entrega evidência antes de liberar a próxima</h2>
+      <table aria-label="Fases de investimento no ENT.IA">
+        <thead><tr><th>Gate</th><th>Entrega verificável</th><th>Decisão de continuidade</th></tr></thead>
+        <tbody>
+          <tr><td><strong>0 · Destravar</strong></td><td>NFRs, convenções físicas, RLS, API e auditoria detalhados</td><td>Arquitetura implementável e riscos aceitos</td></tr>
+          <tr><td><strong>1 · Fundação confiável</strong></td><td>Identidade, organizações, RBAC, migrations e observabilidade</td><td>Isolamento e operação demonstrados</td></tr>
+          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Catálogo, ciclo de vida, schema engine, REST e UI em entidade piloto</td><td>Ganho de produtividade e recuperação comprovados</td></tr>
+          <tr><td><strong>3 · IA controlada</strong></td><td>Consulta conversacional; depois mutação com preview e confirmação</td><td>Segurança, utilidade e custo medidos</td></tr>
+          <tr><td><strong>4 · Piloto</strong></td><td>Organização e domínio reais, operação assistida e métricas</td><td>Escalar, ajustar posicionamento ou interromper</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">Prazos, equipe e orçamento devem ser estimados após o Gate 0, com NFRs e domínio piloto definidos.</div>
+      <div class="footer"><span>Financiamento por evidência</span><span>14</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s15-title">
+      <p class="eyebrow">Riscos relevantes</p>
+      <h2 id="s15-title">Os maiores riscos são conhecidos — e precisam ser atacados cedo</h2>
+      <div class="risk-list">
+        <div><strong>Vazamento entre organizações</strong><span>Contexto central, negação padrão, testes cruzados e decisão sobre PostgreSQL RLS.</span></div>
+        <div><strong>DDL em tabelas grandes</strong><span>Vocabulário fechado, análise de impacto, operações compatíveis e execução por fases.</span></div>
+        <div><strong>Complexidade do schema engine</strong><span>Planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
+        <div><strong>Prompt injection e excesso de autonomia</strong><span>Allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
+        <div><strong>Auditoria no mesmo banco</strong><span>Privilégios mínimos, cadeia de hashes e opção futura de checkpoint externo.</span></div>
+        <div><strong>Licenças e dependências</strong><span>Revisão jurídica antes de fixar versões sensíveis; fronteiras substituíveis.</span></div>
+      </div>
+      <div class="footer"><span>Risco explícito é parte do design</span><span>15</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s16-title">
+      <p class="eyebrow">Como medir a tese</p>
+      <h2 id="s16-title">O investimento deve ser acompanhado por métricas de produto, plataforma e risco</h2>
+      <div class="grid-3">
+        <article class="card">
+          <h3>Valor e velocidade</h3>
+          <ul>
+            <li>tempo de ideia até entidade ativa;</li>
+            <li>esforço evitado por novo domínio;</li>
+            <li>adoção e conclusão de fluxos.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Confiabilidade</h3>
+          <ul>
+            <li>ativações concluídas ou recuperadas;</li>
+            <li>latência e erro por operação;</li>
+            <li>tempo de restauração e drift.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Segurança e IA</h3>
+          <ul>
+            <li>zero acesso cruzado tolerado;</li>
+            <li>cobertura e integridade da auditoria;</li>
+            <li>aceite, erro e custo das sugestões.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout">Os valores-alvo serão definidos com o domínio piloto; a instrumentação nasce na fundação.</div>
+      <div class="footer"><span>KPIs antes de escala</span><span>16</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s17-title">
+      <p class="eyebrow">Decisões solicitadas</p>
+      <h2 id="s17-title">O que os gestores precisam decidir para transformar design em plano financiável</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3><span class="status">Validar agora</span></h3>
+          <ul>
+            <li>tese e posicionamento do produto;</li>
+            <li>recorte do MVP e estratégia por gates;</li>
+            <li>monólito modular e stack proposta;</li>
+            <li>domínio piloto e patrocinador técnico.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="status open">Destravar no Gate 0</span></h3>
+          <ul>
+            <li>NFRs, limites de volume e SLOs;</li>
+            <li>RLS e convenções físicas do schema;</li>
+            <li>contratos REST, filtros e exclusão;</li>
+            <li>algoritmo de auditoria e retenção;</li>
+            <li>topologia, equipe, prazo e orçamento;</li>
+            <li>licença Liquibase e critérios para LLM.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout"><strong>Recomendação:</strong> aprovar o Gate 0 e um spike do núcleo dinâmico; usar a evidência para fechar estimativa e autorizar a construção do MVP.</div>
+      <div class="footer"><span>Decisão informada</span><span>17</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s18-title">
+      <p class="eyebrow">ENT.IA</p>
+      <p id="s18-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
+      <p class="lead" style="font-size:clamp(14px,1.7vw,30px);margin-bottom:8%">Próximo passo proposto: autorizar o Gate 0 e selecionar a entidade piloto.</p>
+      <div class="footer"><span>ent.ia.br</span><span>Discussão e decisão</span></div>
+    </section>
+  </main>
+
+  <div class="hint" aria-hidden="true">← → navegar · F tela cheia · Home/End início/fim</div>
+  <nav class="controls" aria-label="Controles da apresentação">
+    <button id="previous" type="button" title="Slide anterior" aria-label="Slide anterior">←</button>
+    <span id="counter" class="counter" aria-live="polite">1 / 18</span>
+    <button id="next" type="button" title="Próximo slide" aria-label="Próximo slide">→</button>
+    <button id="fullscreen" type="button" title="Tela cheia" aria-label="Alternar tela cheia">⛶</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      let current = 0;
+
+      const indexFromHash = () => {
+        const match = location.hash.match(/^#slide-(\d+)$/);
+        return match ? Math.min(Math.max(Number(match[1]) - 1, 0), slides.length - 1) : 0;
+      };
+
+      const show = (index, updateHash = true) => {
+        current = Math.min(Math.max(index, 0), slides.length - 1);
+        slides.forEach((slide, position) => slide.classList.toggle('active', position === current));
+        counter.textContent = `${current + 1} / ${slides.length}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        if (updateHash) history.replaceState(null, '', `#slide-${current + 1}`);
+      };
+
+      const fullscreen = () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen();
+      };
+
+      document.getElementById('previous').addEventListener('click', () => show(current - 1));
+      document.getElementById('next').addEventListener('click', () => show(current + 1));
+      document.getElementById('fullscreen').addEventListener('click', fullscreen);
+      window.addEventListener('hashchange', () => show(indexFromHash(), false));
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault();
+          show(current + 1);
+        } else if (['ArrowLeft', 'PageUp'].includes(event.key)) {
+          event.preventDefault();
+          show(current - 1);
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          show(0);
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          show(slides.length - 1);
+        } else if (event.key.toLowerCase() === 'f') {
+          fullscreen();
+        }
+      });
+
+      show(indexFromHash(), false);
+    })();
+  </script>
+</body>
+</html>
