@@ -8,6 +8,10 @@ Abra o arquivo HTML em um navegador. Use as setas para navegar e `F` para
 alternar a tela cheia. A impressão do navegador gera uma página 16:9 por slide,
 permitindo salvar a apresentação em PDF.
 
+Em celulares na vertical, os slides entram em modo de leitura e permitem
+rolagem. Use os botões ou deslize horizontalmente para trocar de slide. No
+diagrama de arquitetura, gire o aparelho ou arraste a imagem para os lados.
+
 O roteiro abaixo foi pensado para uma conversa de aproximadamente 15 minutos,
 seguida de perguntas. Ajuste o tempo conforme o grau de familiaridade do gestor
 técnico com a proposta.

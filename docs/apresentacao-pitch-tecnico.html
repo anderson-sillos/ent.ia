@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Apresentação conceitual e técnica da plataforma ENT.IA">
   <title>ENT.IA — Apresentação conceitual e técnica</title>
   <style>
@@ -540,9 +540,214 @@
       font-size: 11px;
     }
 
+    .mobile-architecture-hint { display: none; }
+
     @media (max-width: 720px) {
       .hint { display: none; }
       .controls { right: 8px; bottom: 8px; }
+    }
+
+    @media screen and (orientation: portrait), screen and (max-width: 600px) {
+      html, body {
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        display: block;
+        overflow: hidden;
+      }
+
+      .deck {
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        aspect-ratio: auto;
+        overflow: hidden;
+        box-shadow: none;
+      }
+
+      .slide {
+        padding: max(34px, env(safe-area-inset-top)) 18px
+          calc(88px + env(safe-area-inset-bottom));
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .eyebrow {
+        margin-bottom: 12px;
+        font-size: 11px;
+      }
+
+      h1 {
+        max-width: 100%;
+        margin-bottom: 18px;
+        font-size: clamp(52px, 19vw, 78px);
+      }
+
+      h2 {
+        max-width: 100%;
+        margin-bottom: 22px;
+        font-size: clamp(27px, 8.2vw, 38px);
+        line-height: 1.08;
+      }
+
+      h3 { font-size: 20px; }
+
+      p, li {
+        font-size: 16px;
+        line-height: 1.48;
+      }
+
+      .lead {
+        max-width: 100%;
+        font-size: 23px;
+      }
+
+      .grid-2, .grid-3, .grid-4, .tech-columns {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .card {
+        padding: 18px;
+        border-radius: 14px;
+      }
+
+      .number {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+
+      .bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .step { padding: 18px; }
+      .step:not(:last-child)::after { display: none; }
+      .step strong { font-size: 18px; }
+      .step span { font-size: 15px; }
+
+      .callout {
+        margin-top: 20px;
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+
+      .module-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .module {
+        min-height: 66px;
+        padding: 15px 7px;
+        font-size: 14px;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+        border-radius: 10px;
+        font-size: 14px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      th, td {
+        min-width: 145px;
+        padding: 10px;
+      }
+
+      .risk-list {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .risk-list > div {
+        display: block;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--white);
+      }
+
+      .risk-list strong, .risk-list span {
+        display: block;
+        padding: 0;
+        border: 0;
+        font-size: 15px;
+      }
+
+      .risk-list span { margin-top: 6px; }
+      .tech-list dt { font-size: 16px; }
+      .tech-list dd { font-size: 14px; }
+
+      .prompt, .preview { font-size: 15px; }
+
+      .quote {
+        max-width: 100%;
+        font-size: clamp(38px, 11vw, 54px);
+      }
+
+      .footer {
+        position: static;
+        margin-top: 28px;
+        padding-top: 12px;
+        font-size: 11px;
+      }
+
+      .controls {
+        right: max(10px, env(safe-area-inset-right));
+        bottom: max(10px, env(safe-area-inset-bottom));
+        padding: 6px;
+      }
+
+      .controls button {
+        width: 44px;
+        height: 44px;
+      }
+
+      .counter {
+        min-width: 54px;
+        font-size: 13px;
+      }
+
+      .hint { display: none; }
+      code { overflow-wrap: anywhere; }
+
+      .slide.architecture-slide {
+        align-items: flex-start;
+        padding: 0 0 calc(76px + env(safe-area-inset-bottom));
+        overflow: auto;
+      }
+
+      .architecture-full {
+        flex: none;
+        width: 980px;
+        max-width: none;
+        height: auto;
+        margin-top: 48px;
+      }
+
+      .mobile-architecture-hint {
+        position: fixed;
+        z-index: 4;
+        top: max(12px, env(safe-area-inset-top));
+        left: 12px;
+        display: block;
+        margin: 0;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--white);
+        background: rgb(7 26 45 / 88%);
+        font-size: 12px;
+        line-height: 1.2;
+      }
     }
 
     @media print {
@@ -703,6 +908,7 @@
     </section>
 
     <section class="slide architecture-slide" aria-label="Arquitetura de referência do ENT.IA">
+      <p class="mobile-architecture-hint">Gire o celular ou arraste o diagrama horizontalmente</p>
       <img class="architecture-full" src="arquitetura-entia.svg" alt="Diagrama da arquitetura de referência do ENT.IA">
     </section>
 
@@ -1017,10 +1223,14 @@
 
   <script>
     (() => {
+      const deck = document.querySelector('.deck');
       const slides = Array.from(document.querySelectorAll('.slide'));
       const counter = document.getElementById('counter');
       const progress = document.getElementById('progress');
       let current = 0;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchNavigationBlocked = false;
 
       const indexFromHash = () => {
         const match = location.hash.match(/^#slide-(\d+)$/);
@@ -1030,6 +1240,8 @@
       const show = (index, updateHash = true) => {
         current = Math.min(Math.max(index, 0), slides.length - 1);
         slides.forEach((slide, position) => slide.classList.toggle('active', position === current));
+        slides[current].scrollTop = 0;
+        slides[current].scrollLeft = 0;
         counter.textContent = `${current + 1} / ${slides.length}`;
         progress.style.width = `${((current + 1) / slides.length) * 100}%`;
         if (updateHash) history.replaceState(null, '', `#slide-${current + 1}`);
@@ -1044,6 +1256,21 @@
       document.getElementById('next').addEventListener('click', () => show(current + 1));
       document.getElementById('fullscreen').addEventListener('click', fullscreen);
       window.addEventListener('hashchange', () => show(indexFromHash(), false));
+      deck.addEventListener('touchstart', (event) => {
+        const touch = event.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchNavigationBlocked = Boolean(event.target.closest('table, .architecture-slide'));
+      }, { passive: true });
+      deck.addEventListener('touchend', (event) => {
+        if (touchNavigationBlocked) return;
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) > 70 && Math.abs(deltaX) > Math.abs(deltaY) * 1.35) {
+          show(current + (deltaX < 0 ? 1 : -1));
+        }
+      }, { passive: true });
       window.addEventListener('keydown', (event) => {
         if (['ArrowRight', 'PageDown', ' '].includes(event.key)) {
           event.preventDefault();
