@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Pitch executivo-técnico da plataforma ENT.IA">
-  <title>ENT.IA — Pitch executivo-técnico</title>
+  <meta name="description" content="Apresentação conceitual e técnica da plataforma ENT.IA">
+  <title>ENT.IA — Apresentação conceitual e técnica</title>
   <style>
     :root {
       --ink: #102033;
@@ -270,26 +270,67 @@
       background: rgb(78 219 209 / 10%);
     }
 
-    .architecture {
+    .prompt {
+      margin: .55em 0 .7em;
+      padding: .8em 1em;
+      border-radius: 14px 14px 4px 14px;
+      color: var(--navy);
+      background: var(--teal-soft);
+      font-size: clamp(10px, 1.06vw, 19px);
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .preview {
+      padding: .68em .85em;
+      border: 1px solid #f1c49f;
+      border-radius: 10px;
+      color: #704523;
+      background: #fff7e8;
+      font-size: clamp(9px, .9vw, 16px);
+      line-height: 1.35;
+    }
+
+    .guardrails {
+      margin-top: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: guardrail;
+    }
+
+    .guardrails li {
+      position: relative;
+      min-height: 2em;
+      margin-bottom: .62em;
+      padding-left: 2.5em;
+      counter-increment: guardrail;
+    }
+
+    .guardrails li::before {
+      position: absolute;
+      top: -.08em;
+      left: 0;
+      display: grid;
+      width: 1.8em;
+      height: 1.8em;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--teal);
+      content: counter(guardrail);
+      font-size: .78em;
+      font-weight: 850;
+    }
+
+    .slide.architecture-slide { padding: 0; background: #f7f9fc; }
+
+    .architecture-slide::before { z-index: 2; }
+
+    .architecture-full {
       width: 100%;
-      max-height: 67%;
-      margin: -.5% auto 0;
+      height: 100%;
+      object-fit: contain;
     }
-
-    .architecture .box {
-      fill: #fff;
-      stroke: #bdd0df;
-      stroke-width: 2;
-      rx: 14;
-    }
-
-    .architecture .core { fill: #e1f5f3; stroke: #00a69c; }
-    .architecture .external { fill: #fff2ef; stroke: #ff8b82; }
-    .architecture .infra { fill: #eef3f8; stroke: #97aec0; }
-    .architecture .arrow { stroke: #446176; stroke-width: 2.3; fill: none; marker-end: url(#arrow); }
-    .architecture .label { fill: #102033; font-weight: 800; font-size: 16px; text-anchor: middle; }
-    .architecture .small { fill: #55667a; font-size: 12px; text-anchor: middle; }
-    .architecture .lane { fill: #00a69c; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
 
     .module-map {
       display: grid;
@@ -313,6 +354,32 @@
 
     .module.risk { border-top-color: var(--coral); }
     .module.platform { border-top-color: var(--gold); }
+
+    .tech-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.4%;
+      width: 100%;
+    }
+
+    .tech-list { margin: 0; }
+
+    .tech-list dt {
+      margin-top: .62em;
+      color: var(--navy);
+      font-size: clamp(9px, .92vw, 17px);
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .tech-list dt:first-child { margin-top: 0; }
+
+    .tech-list dd {
+      margin: .14em 0 0;
+      color: var(--muted);
+      font-size: clamp(8px, .78vw, 14px);
+      line-height: 1.28;
+    }
 
     table {
       width: 100%;
@@ -505,7 +572,7 @@
 <body>
   <main class="deck" aria-label="Apresentação técnica do ENT.IA">
     <section class="slide dark active" aria-labelledby="s1-title">
-      <p class="eyebrow">Pitch executivo-técnico · decisão de investimento</p>
+      <p class="eyebrow">Apresentação conceitual e técnica · viabilidade e aplicabilidade</p>
       <h1 id="s1-title">ENT<span class="accent">.IA</span></h1>
       <p class="lead">Plataforma inteligente para modelagem e personalização de entidades de negócio.</p>
       <div style="margin-top:auto">
@@ -516,39 +583,39 @@
     </section>
 
     <section class="slide" aria-labelledby="s2-title">
-      <p class="eyebrow">Resumo executivo</p>
-      <h2 id="s2-title">A decisão: financiar uma fundação reutilizável, não mais um CRUD isolado</h2>
+      <p class="eyebrow">A ideia em uma página</p>
+      <h2 id="s2-title">Transformar entidades configuráveis em aplicações seguras e prontas para operar</h2>
       <div class="grid-3" style="flex:1">
         <article class="card">
           <div class="number">1</div>
-          <h3>Problema recorrente</h3>
-          <p class="muted">Cada novo domínio repete banco, APIs, telas, permissões, integrações e auditoria.</p>
+          <h3>O que é</h3>
+          <p class="muted">Uma plataforma multi-organização que converte metadados em banco, APIs, telas, permissões e auditoria.</p>
         </article>
         <article class="card">
           <div class="number">2</div>
-          <h3>Tese do produto</h3>
-          <p class="muted">Transformar a definição da entidade em metadados e reutilizar uma plataforma segura para operá-la.</p>
+          <h3>Onde se aplica</h3>
+          <p class="muted">Cadastros e consultas de fornecedores, contratos, ativos, ocorrências e outros dados estruturados.</p>
         </article>
         <article class="card">
           <div class="number">3</div>
-          <h3>Estratégia de investimento</h3>
-          <p class="muted">Evoluir por gates: fundação confiável, núcleo dinâmico, IA controlada e piloto real.</p>
+          <h3>Por que é viável</h3>
+          <p class="muted">Arquitetura modular, tecnologias consolidadas e validação incremental das áreas de maior complexidade.</p>
         </article>
       </div>
-      <div class="callout"><strong>Pedido desta reunião:</strong> validar a tese, o recorte do MVP e o investimento incremental para reduzir os maiores riscos técnicos antes de escalar.</div>
+      <div class="callout"><strong>Objetivo desta conversa:</strong> validar a aplicabilidade, os fundamentos arquiteturais e a escolha de uma entidade piloto. O projeto está especificado, mas ainda não possui implementação.</div>
       <div class="footer"><span>Visão executiva</span><span>02</span></div>
     </section>
 
     <section class="slide dark" aria-labelledby="s3-title">
       <p class="eyebrow">O problema</p>
-      <h2 id="s3-title">A maior parte do custo não está na entidade. Está na infraestrutura repetida ao redor dela.</h2>
+      <h2 id="s3-title">A maior parte do esforço não está na entidade. Está na infraestrutura repetida ao redor dela.</h2>
       <div class="grid-4" style="margin-top:1.5%">
         <article class="card"><h3>Dados</h3><p class="muted">Schema, migrations, validação, relacionamentos e consultas.</p></article>
         <article class="card"><h3>Experiência</h3><p class="muted">Formulários, detalhes, filtros, tabelas e paginação.</p></article>
         <article class="card"><h3>Confiança</h3><p class="muted">Login, isolamento, permissões, auditoria e segurança.</p></article>
         <article class="card"><h3>Integração</h3><p class="muted">APIs, documentação, identidade e automações inteligentes.</p></article>
       </div>
-      <p class="quote" style="font-size:clamp(24px,3.3vw,59px)">O resultado é <span class="accent">lead time alto</span>, soluções inconsistentes e uma superfície de risco multiplicada.</p>
+      <p class="quote" style="font-size:clamp(24px,3.3vw,59px)">O resultado é <span class="accent">tempo de entrega alto</span>, soluções inconsistentes e uma superfície de risco multiplicada.</p>
       <div class="footer"><span>Hipótese de oportunidade</span><span>03</span></div>
     </section>
 
@@ -576,113 +643,67 @@
     </section>
 
     <section class="slide" aria-labelledby="s5-title">
-      <p class="eyebrow">Recorte proposto</p>
-      <h2 id="s5-title">O MVP comprova o núcleo dinâmico com segurança — sem tentar resolver todo tipo de plataforma</h2>
+      <p class="eyebrow">Aplicabilidade</p>
+      <h2 id="s5-title">Onde o ENT.IA é uma boa solução — e onde não pretende competir inicialmente</h2>
       <div class="grid-2">
         <article class="card" style="border-top:5px solid var(--teal)">
-          <h3>Dentro do MVP</h3>
+          <h3>Bons candidatos</h3>
           <ul>
-            <li>multi-organização, autenticação federada e RBAC contextual;</li>
-            <li>catálogo global, versões e habilitação por organização;</li>
-            <li>tabela física por entidade e evolução compatível;</li>
-            <li>REST, formulários, detalhes, filtros e listagens dinâmicos;</li>
-            <li>auditoria verificável no PostgreSQL;</li>
-            <li>IA: leitura primeiro; escrita somente com confirmação.</li>
+            <li>cadastros de fornecedores e parceiros;</li>
+            <li>contratos, licenças e documentos controlados;</li>
+            <li>ativos, equipamentos e inventários internos;</li>
+            <li>catálogos, tabelas de referência e parâmetros;</li>
+            <li>ocorrências, evidências e registros de conformidade;</li>
+            <li>backoffices que variam campos conforme o domínio.</li>
           </ul>
         </article>
         <article class="card" style="border-top:5px solid var(--coral)">
-          <h3>Fora da primeira versão</h3>
+          <h3>Não é o foco inicial</h3>
           <ul>
-            <li>microsserviços, Kafka e topologia distribuída;</li>
-            <li>schema personalizado por organização;</li>
-            <li>código, scripts ou SQL arbitrários;</li>
-            <li>alterações destrutivas automáticas;</li>
-            <li>RAG, agentes autônomos e banco vetorial;</li>
-            <li>resistência WORM contra superusuário do banco.</li>
+            <li>núcleos transacionais de altíssima frequência;</li>
+            <li>BPM e workflows complexos de longa duração;</li>
+            <li>data lake, BI ou processamento analítico massivo;</li>
+            <li>execução de regras ou código arbitrário;</li>
+            <li>schema diferente para cada organização;</li>
+            <li>agentes autônomos sem confirmação humana.</li>
           </ul>
         </article>
       </div>
-      <div class="callout">O recorte protege o investimento: prova o diferencial e adia complexidades que ainda não têm demanda ou escala comprovadas.</div>
-      <div class="footer"><span>Escopo e disciplina</span><span>05</span></div>
+      <div class="callout"><strong>Piloto ideal:</strong> uma entidade estruturada, com variação de campos, necessidade de controle de acesso, auditoria e consultas recorrentes.</div>
+      <div class="footer"><span>Aplicabilidade com limites explícitos</span><span>05</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s6-title">
-      <p class="eyebrow">Diferenciais estruturais</p>
-      <h2 id="s6-title">Quatro decisões tornam o ENT.IA mais do que um gerador de telas</h2>
+      <p class="eyebrow">Exemplo ilustrativo</p>
+      <h2 id="s6-title">Uma definição de “Fornecedor” vira dados, telas, APIs e interação por prompt</h2>
       <div class="grid-4" style="flex:1">
         <article class="card">
           <div class="number">01</div>
-          <h3>Contrato único</h3>
-          <p class="muted">Metadados publicados governam dados, REST, UI e IA.</p>
+          <h3>Definir</h3>
+          <p class="muted">CNPJ, razão social, categoria, status, validações e relacionamento.</p>
         </article>
         <article class="card">
           <div class="number">02</div>
-          <h3>Persistência real</h3>
-          <p class="muted">Tabela por entidade permite índices, constraints e tuning específicos.</p>
+          <h3>Persistir</h3>
+          <p class="muted">Tabela física própria, com <code>organization_id</code>, índices e constraints.</p>
         </article>
         <article class="card">
           <div class="number">03</div>
-          <h3>Segurança contextual</h3>
-          <p class="muted">Organização + entidade + operação, negado por padrão no servidor.</p>
+          <h3>Operar</h3>
+          <p class="muted">REST, cadastro, detalhe, filtros e listagem surgem do contrato publicado.</p>
         </article>
         <article class="card">
           <div class="number">04</div>
-          <h3>IA governada</h3>
-          <p class="muted">Ferramentas REST autorizadas, sem SQL livre e com confirmação humana.</p>
+          <h3>Interagir por IA</h3>
+          <p class="muted">O usuário consulta e solicita alterações por prompt, sem conhecer endpoints ou o schema físico.</p>
         </article>
       </div>
-      <div class="callout"><strong>Moat técnico potencial:</strong> o valor acumulado está no motor seguro de metadados, ciclo de schema, experiência dinâmica e governança transversal.</div>
-      <div class="footer"><span>Proposta de valor técnica</span><span>06</span></div>
+      <div class="callout"><strong>Diferencial competitivo técnico:</strong> “Liste fornecedores ativos” gera uma consulta REST autorizada; “Altere a categoria da ACME” gera uma prévia e aguarda confirmação. O mesmo metadado governa dados, interface, acesso e IA.</div>
+      <div class="footer"><span>Do conceito à operação</span><span>06</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s7-title">
-      <p class="eyebrow">Arquitetura de referência</p>
-      <h2 id="s7-title">Um núcleo modular, dependências abertas e fronteiras preparadas para evolução</h2>
-      <svg class="architecture" viewBox="0 0 1200 500" role="img" aria-label="Arquitetura de alto nível do ENT.IA">
-        <defs>
-          <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill="#446176"></path>
-          </marker>
-        </defs>
-        <text class="lane" x="18" y="32">ACESSO PÚBLICO CONTROLADO</text>
-        <rect class="box" x="18" y="52" width="175" height="76"></rect>
-        <text class="label" x="105" y="83">React SPA</text>
-        <text class="small" x="105" y="106">browser sem tokens</text>
-        <rect class="infra" x="238" y="52" width="190" height="76" rx="14"></rect>
-        <text class="label" x="333" y="83">Proxy / WAF</text>
-        <text class="small" x="333" y="106">TLS · rate limit · rotas</text>
-        <rect class="core" x="475" y="42" width="285" height="96" rx="14"></rect>
-        <text class="label" x="617" y="78">BFF + REST API</text>
-        <text class="small" x="617" y="104">Spring Boot modular monolith</text>
-        <path class="arrow" d="M193 90 L238 90"></path>
-        <path class="arrow" d="M428 90 L475 90"></path>
-
-        <text class="lane" x="18" y="190">REDE INTERNA / SERVIÇOS CONFIÁVEIS</text>
-        <rect class="external" x="45" y="215" width="215" height="88" rx="14"></rect>
-        <text class="label" x="152" y="250">Keycloak</text>
-        <text class="small" x="152" y="274">realm ent-ia · OIDC/SAML</text>
-        <rect class="core" x="350" y="205" width="350" height="108" rx="14"></rect>
-        <text class="label" x="525" y="242">Módulos do domínio</text>
-        <text class="small" x="525" y="267">catálogo · RBAC · runtime · auditoria</text>
-        <text class="small" x="525" y="289">schema engine · IA · observabilidade</text>
-        <rect class="external" x="795" y="215" width="220" height="88" rx="14"></rect>
-        <text class="label" x="905" y="250">Orquestrador de IA</text>
-        <text class="small" x="905" y="274">cliente REST controlado</text>
-        <path class="arrow" d="M560 138 L535 205"></path>
-        <path class="arrow" d="M260 259 L350 259"></path>
-        <path class="arrow" d="M700 259 L795 259"></path>
-
-        <rect class="infra" x="310" y="390" width="250" height="78" rx="14"></rect>
-        <text class="label" x="435" y="422">PostgreSQL</text>
-        <text class="small" x="435" y="445">catálogo + tabelas por entidade</text>
-        <rect class="external" x="830" y="390" width="180" height="78" rx="14"></rect>
-        <text class="label" x="920" y="422">LLM</text>
-        <text class="small" x="920" y="445">provedor a decidir</text>
-        <path class="arrow" d="M485 313 L445 390"></path>
-        <path class="arrow" d="M905 303 L920 390"></path>
-        <path class="arrow" d="M795 278 C735 355 660 350 603 304"></path>
-      </svg>
-      <div class="footer"><span>Fluxo externo sempre atravessa as políticas da plataforma</span><span>07</span></div>
+    <section class="slide architecture-slide" aria-label="Arquitetura de referência do ENT.IA">
+      <img class="architecture-full" src="arquitetura-entia.svg" alt="Diagrama da arquitetura de referência do ENT.IA">
     </section>
 
     <section class="slide" aria-labelledby="s8-title">
@@ -745,26 +766,26 @@
 
     <section class="slide dark" aria-labelledby="s10-title">
       <p class="eyebrow">Identidade e segurança</p>
-      <h2 id="s10-title">Keycloak autentica. O ENT.IA decide o que cada identidade pode fazer.</h2>
+      <h2 id="s10-title">Cada organização escolhe sua origem de identidade — a plataforma cobre quem não possui uma</h2>
       <div class="grid-3">
         <article class="card">
-          <h3>Identidade federada</h3>
-          <p class="muted">Realm único <code>ent-ia</code>, provedor padrão e OIDC/SAML por organização.</p>
+          <h3>Provedor da organização</h3>
+          <p class="muted">Integração com Microsoft Entra ID, Okta, Keycloak corporativo ou outro provedor OIDC/SAML.</p>
         </article>
         <article class="card">
-          <h3>Sessão BFF</h3>
-          <p class="muted">Tokens ficam no backend; navegador recebe cookie HttpOnly, Secure e SameSite.</p>
+          <h3>Provedor da plataforma</h3>
+          <p class="muted">Se a organização não possuir provedor, o Keycloak do ENT.IA oferece conta, recuperação e MFA.</p>
         </article>
         <article class="card">
-          <h3>Exposição mínima</h3>
-          <p class="muted">Frontchannel via WAF; console, Admin API, health e métricas permanecem internos.</p>
+          <h3>Login social</h3>
+          <p class="muted">Google, Microsoft ou GitHub podem ser habilitados como opções de entrada, conforme a política adotada.</p>
         </article>
       </div>
       <div class="grid-2" style="margin-top:2.3%">
-        <article class="card"><h3>Sem senha no banco da aplicação</h3><p class="muted">Credenciais, recuperação, MFA e social login pertencem ao provedor de identidade.</p></article>
-        <article class="card"><h3>Confiança nunca vem do payload</h3><p class="muted">Usuário e organização são derivados da sessão autenticada e revalidados no servidor.</p></article>
+        <article class="card"><h3>Exemplo de roteamento</h3><p class="muted">Organização Alfa → Entra ID corporativo. Organização Beta → conta do ENT.IA ou login com Google. O vínculo organizacional continua na plataforma.</p></article>
+        <article class="card"><h3>Sessão protegida</h3><p class="muted">O BFF mantém tokens no backend e entrega somente cookie seguro. Console e APIs administrativas do Keycloak permanecem internos.</p></article>
       </div>
-      <div class="footer"><span>Segurança como requisito fundacional</span><span>10</span></div>
+      <div class="footer"><span>Keycloak autentica; o ENT.IA aplica autorização de negócio</span><span>10</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s11-title">
@@ -773,6 +794,7 @@
       <div class="grid-2">
         <article class="card">
           <h3>RBAC contextual</h3>
+          <p class="muted"><strong>RBAC · Role-Based Access Control:</strong> controle de acesso baseado nos perfis atribuídos ao usuário.</p>
           <p><strong>organização × entidade × operação</strong></p>
           <ul>
             <li>perfis por organização;</li>
@@ -782,34 +804,43 @@
           </ul>
         </article>
         <article class="card">
-          <h3>Auditoria resistente à adulteração</h3>
+          <h3>Auditoria e não-repúdio</h3>
           <ul>
+            <li>autoria vinculada à identidade autenticada;</li>
             <li>append-only para a aplicação;</li>
-            <li>eventos estruturados e correlacionados;</li>
             <li>hash do evento + hash anterior;</li>
             <li>verificação detecta alteração ou lacuna.</li>
           </ul>
         </article>
       </div>
-      <div class="callout"><strong>Limite assumido:</strong> no mesmo PostgreSQL, a auditoria detecta e dificulta adulteração, mas não é WORM contra DBA/superusuário. Âncora externa permanece evolução possível.</div>
+      <div class="callout"><strong>Não-repúdio:</strong> capacidade de associar uma ação ao seu autor e produzir evidências que dificultem sua negação posterior. O MVP oferece não-repúdio operacional; uma garantia criptográfica forte exigiria assinatura, carimbo de tempo ou âncora externa — ponto ainda aberto.</div>
       <div class="footer"><span>Controle + evidência</span><span>11</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s12-title">
-      <p class="eyebrow">IA com governança</p>
-      <h2 id="s12-title">A LLM propõe intenções; a plataforma mantém autoridade sobre a execução</h2>
-      <div class="bar" style="margin-top:1%">
-        <div class="step"><strong>Prompt</strong><span>usuário autenticado e organização confiável</span></div>
-        <div class="step"><strong>Tool call</strong><span>JSON tipado e allowlist por permissão</span></div>
-        <div class="step"><strong>Preview</strong><span>risco, impacto e dados minimizados</span></div>
-        <div class="step"><strong>Confirmação</strong><span>obrigatória para qualquer mutação</span></div>
-        <div class="step"><strong>REST</strong><span>autorização repetida, idempotência e auditoria</span></div>
+      <p class="eyebrow">IA na prática</p>
+      <h2 id="s12-title">O usuário pede em linguagem natural; o ENT.IA executa como uma operação comum</h2>
+      <div class="grid-2">
+        <article class="card">
+          <span class="tag">Consulta</span>
+          <div class="prompt">“Liste os fornecedores ativos de São Paulo.”</div>
+          <p class="muted">A IA usa a ferramenta de consulta REST autorizada e devolve um resultado limitado aos campos e registros permitidos.</p>
+          <span class="tag" style="margin-top:.35em">Alteração</span>
+          <div class="prompt">“Mude a categoria da ACME para Estratégico.”</div>
+          <div class="preview"><strong>Pré-visualização:</strong> Fornecedor ACME<br>Categoria: Regular → Estratégico<br><strong>Aguardando confirmação do usuário.</strong></div>
+        </article>
+        <article class="card">
+          <h3>O que acontece nos bastidores</h3>
+          <ol class="guardrails">
+            <li><strong>Contextualiza:</strong> identifica usuário e organização pela sessão segura.</li>
+            <li><strong>Seleciona:</strong> oferece à LLM somente ferramentas REST permitidas.</li>
+            <li><strong>Protege:</strong> aplica RBAC e mascara ou bloqueia campos sensíveis.</li>
+            <li><strong>Confirma:</strong> exige aceite humano antes de criar, alterar ou excluir.</li>
+            <li><strong>Executa e registra:</strong> a API revalida tudo e grava a auditoria correlacionada.</li>
+          </ol>
+        </article>
       </div>
-      <div class="grid-3" style="margin-top:3.1%">
-        <article class="card"><h3>Sem acesso direto</h3><p class="muted">A LLM não recebe banco, SQL livre nem cliente HTTP arbitrário.</p></article>
-        <article class="card"><h3>Dados classificados</h3><p class="muted">Campos podem ser permitidos, mascarados ou proibidos para a IA.</p></article>
-        <article class="card"><h3>Fornecedor desacoplado</h3><p class="muted">Modelo e provedor serão escolhidos por privacidade, custo e capacidade.</p></article>
-      </div>
+      <div class="callout"><strong>Regra simples:</strong> consultas autorizadas podem ser automáticas e limitadas; qualquer alteração exige pré-visualização e confirmação. A LLM nunca acessa diretamente o banco.</div>
       <div class="footer"><span>API REST é a fronteira oficial da IA</span><span>12</span></div>
     </section>
 
@@ -827,115 +858,158 @@
           <tr><td><strong>Qualidade</strong></td><td>Maven · Testcontainers · Vitest · RTL · Playwright</td><td>Build e testes em múltiplas camadas</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>* Gate jurídico:</strong> a versão do Liquibase só será fixada após revisão da licença vigente. O motor de schema dinâmico é próprio e não depende dele.</div>
+      <div class="callout"><strong>* Decisão jurídica:</strong> a versão do Liquibase só será fixada após revisão da licença vigente. O motor de schema dinâmico é próprio e não depende dele.</div>
       <div class="footer"><span>Spring AI é candidato; LLM ainda não decidida</span><span>13</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s14-title">
-      <p class="eyebrow">Plano de investimento incremental</p>
-      <h2 id="s14-title">Cada fase entrega evidência antes de liberar a próxima</h2>
-      <table aria-label="Fases de investimento no ENT.IA">
-        <thead><tr><th>Gate</th><th>Entrega verificável</th><th>Decisão de continuidade</th></tr></thead>
-        <tbody>
-          <tr><td><strong>0 · Destravar</strong></td><td>NFRs, convenções físicas, RLS, API e auditoria detalhados</td><td>Arquitetura implementável e riscos aceitos</td></tr>
-          <tr><td><strong>1 · Fundação confiável</strong></td><td>Identidade, organizações, RBAC, migrations e observabilidade</td><td>Isolamento e operação demonstrados</td></tr>
-          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Catálogo, ciclo de vida, schema engine, REST e UI em entidade piloto</td><td>Ganho de produtividade e recuperação comprovados</td></tr>
-          <tr><td><strong>3 · IA controlada</strong></td><td>Consulta conversacional; depois mutação com preview e confirmação</td><td>Segurança, utilidade e custo medidos</td></tr>
-          <tr><td><strong>4 · Piloto</strong></td><td>Organização e domínio reais, operação assistida e métricas</td><td>Escalar, ajustar posicionamento ou interromper</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">Prazos, equipe e orçamento devem ser estimados após o Gate 0, com NFRs e domínio piloto definidos.</div>
-      <div class="footer"><span>Financiamento por evidência</span><span>14</span></div>
+      <p class="eyebrow">Stack tecnológica · visão complementar</p>
+      <h2 id="s14-title">O papel de cada tecnologia na solução</h2>
+      <div class="tech-columns">
+        <article class="card">
+          <h3>Backend e identidade</h3>
+          <dl class="tech-list">
+            <dt>OpenJDK 25 LTS</dt><dd>Runtime Java estável para o backend.</dd>
+            <dt>Spring Boot</dt><dd>Base da aplicação, APIs REST e configuração.</dd>
+            <dt>Spring Modulith</dt><dd>Define e testa os limites do monólito modular.</dd>
+            <dt>Spring Security</dt><dd>Protege sessões, endpoints e integração OIDC.</dd>
+            <dt>Keycloak</dt><dd>Login, MFA, federação corporativa e login social.</dd>
+            <dt>Spring AI*</dt><dd>Candidato para abstrair modelos, prompts e ferramentas.</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <h3>Dados, build e infraestrutura</h3>
+          <dl class="tech-list">
+            <dt>PostgreSQL</dt><dd>Persistência relacional, catálogo e tabelas das entidades.</dd>
+            <dt>jOOQ</dt><dd>SQL tipado e montagem segura de consultas dinâmicas.</dd>
+            <dt>Liquibase*</dt><dd>Evolui somente o schema estático da plataforma.</dd>
+            <dt>Maven</dt><dd>Build, dependências e ciclo de testes do Java.</dd>
+            <dt>Testcontainers</dt><dd>Testes de integração com infraestrutura real e isolada.</dd>
+            <dt>Proxy / WAF</dt><dd>TLS, rate limiting e exposição mínima dos serviços.</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <h3>Frontend e qualidade</h3>
+          <dl class="tech-list">
+            <dt>React + TypeScript</dt><dd>Interface dinâmica com tipagem e componentes reutilizáveis.</dd>
+            <dt>Vite</dt><dd>Build e ambiente rápido de desenvolvimento frontend.</dd>
+            <dt>MUI Core</dt><dd>Base visual consistente e acessível.</dd>
+            <dt>TanStack Query / Table</dt><dd>Estado remoto, cache, filtros e tabelas dinâmicas.</dd>
+            <dt>React Hook Form</dt><dd>Estado e validação dos formulários gerados.</dd>
+            <dt>JSON Schema</dt><dd>Contrato de campos e validações interpretado em runtime.</dd>
+            <dt>Vitest · RTL · Playwright</dt><dd>Testes unitários, de componentes e ponta a ponta.</dd>
+          </dl>
+        </article>
+      </div>
+      <div class="footer"><span>* Dependências sujeitas às decisões de licença e provedor</span><span>14</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s15-title">
-      <p class="eyebrow">Riscos relevantes</p>
-      <h2 id="s15-title">Os maiores riscos são conhecidos — e precisam ser atacados cedo</h2>
+      <p class="eyebrow">Caminho de validação técnica</p>
+      <h2 id="s15-title">Cada etapa demonstra uma capacidade real antes de ampliar o escopo</h2>
+      <table aria-label="Etapas de validação técnica do ENT.IA">
+        <thead><tr><th>Etapa</th><th>Evidência prática</th><th>O que comprova</th></tr></thead>
+        <tbody>
+          <tr><td><strong>0 · Detalhar</strong></td><td>Requisitos não funcionais, convenções físicas, RLS, API e auditoria definidos</td><td>Arquitetura coerente e requisitos testáveis</td></tr>
+          <tr><td><strong>1 · Fundação</strong></td><td>Login, duas organizações e perfis com tentativas de acesso cruzado</td><td>Identidade, isolamento e autorização</td></tr>
+          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Modelar e ativar “Fornecedor”; tabela, REST e UI disponíveis</td><td>Ciclo de metadados ponta a ponta</td></tr>
+          <tr><td><strong>3 · IA controlada</strong></td><td>Consultar e propor alteração com preview, confirmação e auditoria</td><td>Utilidade sem caminho privilegiado</td></tr>
+          <tr><td><strong>4 · Piloto real</strong></td><td>Operar uma entidade real com usuários e métricas observáveis</td><td>Aplicabilidade, desempenho e operação</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">A sequência pode ser ajustada conforme as evidências. O objetivo é validar primeiro as hipóteses que concentram maior risco técnico.</div>
+      <div class="footer"><span>Evolução guiada por evidências</span><span>15</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s16-title">
+      <p class="eyebrow">Riscos reconhecidos · discussão em aberto</p>
+      <h2 id="s16-title">Hipóteses iniciais de mitigação para validação conjunta</h2>
       <div class="risk-list">
-        <div><strong>Vazamento entre organizações</strong><span>Contexto central, negação padrão, testes cruzados e decisão sobre PostgreSQL RLS.</span></div>
-        <div><strong>DDL em tabelas grandes</strong><span>Vocabulário fechado, análise de impacto, operações compatíveis e execução por fases.</span></div>
-        <div><strong>Complexidade do schema engine</strong><span>Planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
-        <div><strong>Prompt injection e excesso de autonomia</strong><span>Allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
-        <div><strong>Auditoria no mesmo banco</strong><span>Privilégios mínimos, cadeia de hashes e opção futura de checkpoint externo.</span></div>
-        <div><strong>Licenças e dependências</strong><span>Revisão jurídica antes de fixar versões sensíveis; fronteiras substituíveis.</span></div>
+        <div><strong>Vazamento entre organizações</strong><span><strong>Proposta:</strong> contexto central, negação padrão, testes cruzados e avaliação do PostgreSQL RLS.</span></div>
+        <div><strong>DDL em tabelas grandes</strong><span><strong>Proposta:</strong> vocabulário fechado, análise de impacto, operações compatíveis e execução por fases.</span></div>
+        <div><strong>Complexidade do schema engine</strong><span><strong>Proposta:</strong> planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
+        <div><strong>Prompt injection e excesso de autonomia</strong><span><strong>Proposta:</strong> allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
+        <div><strong>Auditoria no mesmo banco</strong><span><strong>Proposta:</strong> privilégios mínimos, cadeia de hashes e possível checkpoint externo no futuro.</span></div>
+        <div><strong>Licenças e dependências</strong><span><strong>Proposta:</strong> revisão jurídica antes de fixar versões sensíveis e fronteiras substituíveis.</span></div>
       </div>
-      <div class="footer"><span>Risco explícito é parte do design</span><span>15</span></div>
+      <div class="callout"><strong>Ponto para decisão:</strong> priorização, responsáveis, evidências esperadas e risco residual aceitável deverão ser acordados com os gestores. As propostas acima ainda não constituem decisões finais.</div>
+      <div class="footer"><span>Opções iniciais para discussão — não decisões finais</span><span>16</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s16-title">
-      <p class="eyebrow">Como medir a tese</p>
-      <h2 id="s16-title">O investimento deve ser acompanhado por métricas de produto, plataforma e risco</h2>
-      <div class="grid-3">
+    <section class="slide dark" aria-labelledby="s17-title">
+      <p class="eyebrow">Provas práticas de viabilidade</p>
+      <h2 id="s17-title">Como saberemos que o conceito funciona?</h2>
+      <div class="grid-4" style="flex:1">
         <article class="card">
-          <h3>Valor e velocidade</h3>
-          <ul>
-            <li>tempo de ideia até entidade ativa;</li>
-            <li>esforço evitado por novo domínio;</li>
-            <li>adoção e conclusão de fluxos.</li>
-          </ul>
+          <div class="number">1</div>
+          <h3>Configurar</h3>
+          <p class="muted"><strong>Cenário:</strong> um administrador modela “Fornecedor”.</p>
+          <p class="muted"><strong>Esperado:</strong> tabela, REST e telas ficam disponíveis sem código específico.</p>
         </article>
         <article class="card">
-          <h3>Confiabilidade</h3>
-          <ul>
-            <li>ativações concluídas ou recuperadas;</li>
-            <li>latência e erro por operação;</li>
-            <li>tempo de restauração e drift.</li>
-          </ul>
+          <div class="number">2</div>
+          <h3>Isolar</h3>
+          <p class="muted"><strong>Cenário:</strong> um usuário da Organização A tenta acessar dados da B.</p>
+          <p class="muted"><strong>Esperado:</strong> acesso bloqueado e tentativa registrada na auditoria.</p>
         </article>
         <article class="card">
-          <h3>Segurança e IA</h3>
-          <ul>
-            <li>zero acesso cruzado tolerado;</li>
-            <li>cobertura e integridade da auditoria;</li>
-            <li>aceite, erro e custo das sugestões.</li>
-          </ul>
+          <div class="number">3</div>
+          <h3>Evoluir</h3>
+          <p class="muted"><strong>Cenário:</strong> uma ativação de schema falha.</p>
+          <p class="muted"><strong>Esperado:</strong> a versão anterior permanece ativa e a operação pode ser retomada.</p>
+        </article>
+        <article class="card">
+          <div class="number">4</div>
+          <h3>Conversar</h3>
+          <p class="muted"><strong>Cenário:</strong> a IA recebe um prompt para alterar um registro.</p>
+          <p class="muted"><strong>Esperado:</strong> prévia, confirmação, autorização e auditoria antes da mudança.</p>
         </article>
       </div>
-      <div class="callout">Os valores-alvo serão definidos com o domínio piloto; a instrumentação nasce na fundação.</div>
-      <div class="footer"><span>KPIs antes de escala</span><span>16</span></div>
+      <div class="callout"><strong>Critério de sucesso:</strong> esses cenários devem funcionar de forma repetível e observável com uma entidade piloto e duas organizações de teste.</div>
+      <div class="footer"><span>Cenários ponta a ponta, não métricas abstratas</span><span>17</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s17-title">
-      <p class="eyebrow">Decisões solicitadas</p>
-      <h2 id="s17-title">O que os gestores precisam decidir para transformar design em plano financiável</h2>
+    <section class="slide" aria-labelledby="s18-title">
+      <p class="eyebrow">Alinhamentos técnicos</p>
+      <h2 id="s18-title">O que precisamos alinhar para transformar o conceito em uma prova executável</h2>
       <div class="grid-2">
         <article class="card">
-          <h3><span class="status">Validar agora</span></h3>
+          <h3><span class="status">Validar no conselho técnico</span></h3>
           <ul>
-            <li>tese e posicionamento do produto;</li>
-            <li>recorte do MVP e estratégia por gates;</li>
+            <li>problemas e casos de uso prioritários;</li>
+            <li>limites funcionais da primeira versão;</li>
             <li>monólito modular e stack proposta;</li>
-            <li>domínio piloto e patrocinador técnico.</li>
+            <li>entidade e organização para o piloto.</li>
           </ul>
         </article>
         <article class="card">
-          <h3><span class="status open">Destravar no Gate 0</span></h3>
+          <h3><span class="status open">Detalhar na próxima etapa</span></h3>
           <ul>
-            <li>NFRs, limites de volume e SLOs;</li>
-            <li>RLS e convenções físicas do schema;</li>
+            <li>requisitos não funcionais, limites e SLOs¹;</li>
+            <li>RLS² e convenções físicas do schema;</li>
             <li>contratos REST, filtros e exclusão;</li>
             <li>algoritmo de auditoria e retenção;</li>
-            <li>topologia, equipe, prazo e orçamento;</li>
+            <li>topologia, observabilidade e recuperação;</li>
             <li>licença Liquibase e critérios para LLM.</li>
           </ul>
         </article>
       </div>
-      <div class="callout"><strong>Recomendação:</strong> aprovar o Gate 0 e um spike do núcleo dinâmico; usar a evidência para fechar estimativa e autorizar a construção do MVP.</div>
-      <div class="footer"><span>Decisão informada</span><span>17</span></div>
+      <div class="callout"><strong>Legendas:</strong> ¹ <strong>SLO · Service Level Objective</strong>: meta mensurável de disponibilidade, latência ou erros. ² <strong>RLS · Row-Level Security</strong>: regras do PostgreSQL que restringem quais linhas cada contexto pode consultar ou alterar.</div>
+      <div class="footer"><span>Do conceito à prova executável</span><span>18</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s18-title">
+    <section class="slide dark" aria-labelledby="s19-title">
       <p class="eyebrow">ENT.IA</p>
-      <p id="s18-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
-      <p class="lead" style="font-size:clamp(14px,1.7vw,30px);margin-bottom:8%">Próximo passo proposto: autorizar o Gate 0 e selecionar a entidade piloto.</p>
-      <div class="footer"><span>ent.ia.br</span><span>Discussão e decisão</span></div>
+      <p id="s19-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
+      <p class="lead" style="font-size:clamp(14px,1.7vw,30px);margin-bottom:8%">Próximo passo proposto: selecionar a entidade piloto e definir os critérios objetivos de sucesso.</p>
+      <div class="footer"><span>ent.ia.br</span><span>19</span></div>
     </section>
   </main>
 
   <div class="hint" aria-hidden="true">← → navegar · F tela cheia · Home/End início/fim</div>
   <nav class="controls" aria-label="Controles da apresentação">
     <button id="previous" type="button" title="Slide anterior" aria-label="Slide anterior">←</button>
-    <span id="counter" class="counter" aria-live="polite">1 / 18</span>
+    <span id="counter" class="counter" aria-live="polite">1 / 19</span>
     <button id="next" type="button" title="Próximo slide" aria-label="Próximo slide">→</button>
     <button id="fullscreen" type="button" title="Tela cheia" aria-label="Alternar tela cheia">⛶</button>
   </nav>

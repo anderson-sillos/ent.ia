@@ -140,14 +140,30 @@
   <path class="arrow-bi dashed" d="M1002 518 C1170 520 1190 650 1280 650"/>
   <text class="flow" x="1165" y="537">tool calling</text>
 
-  <rect x="60" y="790" width="1475" height="72" rx="16" fill="#071a2d"/>
-  <circle cx="96" cy="826" r="13" fill="#4edbd1"/>
-  <text class="note" x="122" y="820" fill="#fff">1. Contexto confiável vem da sessão</text>
-  <text class="note-small" x="122" y="842" fill="#b8cad9">organization_id nunca é aceito como autoridade do prompt ou payload</text>
-  <circle cx="570" cy="826" r="13" fill="#4edbd1"/>
-  <text class="note" x="596" y="820" fill="#fff">2. REST repete autorização</text>
-  <text class="note-small" x="596" y="842" fill="#b8cad9">inclusive para interface, integrações e operações solicitadas pela IA</text>
-  <circle cx="1071" cy="826" r="13" fill="#ff8379"/>
-  <text class="note" x="1097" y="820" fill="#fff">3. IA sem caminho privilegiado</text>
-  <text class="note-small" x="1097" y="842" fill="#b8cad9">sem SQL livre; escrita exige preview, confirmação e auditoria</text>
+  <text class="zone-label" x="60" y="766">LEGENDA TÉCNICA</text>
+  <rect x="60" y="782" width="1475" height="98" rx="16" fill="#071a2d"/>
+
+  <text class="note" x="82" y="812">React SPA</text>
+  <text class="note-small" x="82" y="836">Interface web executada no navegador,</text>
+  <text class="note-small" x="82" y="855">sem recarregar a página inteira.</text>
+
+  <line x1="352" y1="800" x2="352" y2="862" stroke="#294259"/>
+  <text class="note" x="374" y="812">BFF · Backend for Frontend</text>
+  <text class="note-small" x="374" y="836">Backend dedicado à interface;</text>
+  <text class="note-small" x="374" y="855">protege a sessão e os tokens.</text>
+
+  <line x1="647" y1="800" x2="647" y2="862" stroke="#294259"/>
+  <text class="note" x="669" y="812">Keycloak</text>
+  <text class="note-small" x="669" y="836">Serviço de identidade, login, MFA</text>
+  <text class="note-small" x="669" y="855">e federação OIDC/SAML.</text>
+
+  <line x1="942" y1="800" x2="942" y2="862" stroke="#294259"/>
+  <text class="note" x="964" y="812">RBAC</text>
+  <text class="note-small" x="964" y="836">Acesso por perfis, organização,</text>
+  <text class="note-small" x="964" y="855">entidade e operação.</text>
+
+  <line x1="1237" y1="800" x2="1237" y2="862" stroke="#294259"/>
+  <text class="note" x="1259" y="812">LLM · Large Language Model</text>
+  <text class="note-small" x="1259" y="836">Modelo que interpreta prompts</text>
+  <text class="note-small" x="1259" y="855">e solicita ferramentas controladas.</text>
 </svg>
