@@ -61,6 +61,10 @@ Criações, alterações e exclusões propostas pela IA MUST exigir confirmaçã
 - **WHEN** o usuário cancela ou deixa expirar uma proposta de alteração
 - **THEN** nenhuma chamada REST de mutação é executada
 
+#### Scenario: IA propõe exclusão
+- **WHEN** o usuário confirma uma exclusão proposta pela IA
+- **THEN** o orquestrador chama somente a operação REST de exclusão lógica e não possui ferramenta de exclusão física
+
 ### Requirement: Proteção contra repetição e concorrência
 Chamadas REST de mutação originadas pela IA MUST possuir correlação, idempotência e verificação da versão esperada do registro.
 

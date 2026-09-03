@@ -11,6 +11,24 @@ A plataforma MUST determinar e validar o contexto organizacional no servidor e M
 - **WHEN** um cliente altera um identificador para tentar operar no contexto de outra organização
 - **THEN** o servidor rejeita a operação antes de acessar os dados solicitados
 
+### Requirement: Isolamento organizacional por RLS
+Todas as tabelas persistentes que armazenem dados organizacionais e sejam acessadas pelos fluxos regulares MUST usar PostgreSQL Row-Level Security como defesa adicional aos filtros e à autorização do backend. As políticas MUST restringir leitura e escrita ao contexto organizacional confiável da transação e MUST negar acesso quando esse contexto estiver ausente ou inválido. Áreas transitórias de staging que não suportem RLS MUST permanecer isoladas e sua promoção para tabelas finais MUST ocorrer sob RLS.
+
+#### Scenario: Operação sem contexto organizacional
+- **WHEN** a role de runtime tenta consultar ou alterar dados organizacionais sem um contexto válido definido para a transação
+- **THEN** o PostgreSQL não disponibiliza linhas e não aceita a escrita
+
+#### Scenario: Escrita com organização divergente
+- **WHEN** uma operação tenta persistir `organization_id` diferente do contexto confiável da transação
+- **THEN** a política de RLS rejeita a escrita mesmo que exista falha no filtro da aplicação
+
+### Requirement: Role de runtime sem bypass
+A role usada pelas requisições e jobs regulares MUST NOT ser proprietária das tabelas organizacionais, MUST NOT possuir `BYPASSRLS` e MUST NOT operar como superusuário. Credenciais de migration, schema dinâmico ou ingestão MUST NOT ser reutilizadas no runtime, e a role que promover importações para tabelas finais MUST permanecer submetida ao RLS.
+
+#### Scenario: Consulta por caminho regular da aplicação
+- **WHEN** uma requisição autenticada acessa uma tabela organizacional
+- **THEN** o acesso ocorre por uma role submetida às políticas de RLS e com o contexto definido somente pelo backend confiável
+
 ### Requirement: Validação de entradas dinâmicas
 A plataforma MUST tratar definições de metadados, filtros, ordenações e valores de registros como entradas não confiáveis e MUST validá-los antes de qualquer uso.
 

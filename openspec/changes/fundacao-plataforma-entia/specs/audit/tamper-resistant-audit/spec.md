@@ -18,6 +18,10 @@ Cada evento MUST registrar, quando aplicável, identidade do ator, organização
 - **WHEN** uma alteração de registro é concluída ou rejeitada
 - **THEN** a plataforma grava um evento que permite identificar quem executou a ação, em qual organização, sobre qual alvo e com qual resultado
 
+#### Scenario: Exclusão lógica de registro dinâmico
+- **WHEN** uma exclusão lógica é concluída ou rejeitada
+- **THEN** a plataforma registra ator, organização, entidade, identificador do registro, resultado e correlação sem remover eventos anteriores
+
 ### Requirement: Cobertura de eventos relevantes
 A plataforma MUST auditar eventos relevantes de autenticação, administração global e organizacional, autorização, publicação do catálogo e manipulação de registros dinâmicos.
 
@@ -38,3 +42,10 @@ O acesso à auditoria MUST respeitar escopo organizacional e permissões adminis
 #### Scenario: Consulta organizacional
 - **WHEN** um administrador organizacional autorizado consulta a auditoria
 - **THEN** a plataforma retorna somente eventos visíveis no contexto de sua organização
+
+### Requirement: Independência do ciclo de exclusão
+Eventos de auditoria MUST NOT ser removidos em cascata quando usuários, organizações, entidades ou registros de negócio forem desativados, descontinuados, excluídos logicamente ou expurgados.
+
+#### Scenario: Alvo auditado é excluído
+- **WHEN** um alvo associado a eventos existentes passa por exclusão lógica ou futuro expurgo autorizado
+- **THEN** os eventos permanecem verificáveis e conservam a identificação histórica necessária
