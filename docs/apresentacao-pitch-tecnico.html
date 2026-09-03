@@ -531,19 +531,9 @@
       transition: width .2s ease;
     }
 
-    .hint {
-      position: fixed;
-      z-index: 18;
-      bottom: 22px;
-      left: 22px;
-      color: rgb(255 255 255 / 58%);
-      font-size: 11px;
-    }
-
     .mobile-architecture-hint { display: none; }
 
     @media (max-width: 720px) {
-      .hint { display: none; }
       .controls { right: 8px; bottom: 8px; }
     }
 
@@ -717,7 +707,6 @@
         font-size: 13px;
       }
 
-      .hint { display: none; }
       code { overflow-wrap: anywhere; }
 
       .slide.architecture-slide {
@@ -770,7 +759,7 @@
         break-after: page;
         page-break-after: always;
       }
-      .controls, .progress, .hint { display: none; }
+      .controls, .progress { display: none; }
     }
   </style>
 </head>
@@ -1212,7 +1201,6 @@
     </section>
   </main>
 
-  <div class="hint" aria-hidden="true">← → navegar · F tela cheia · Home/End início/fim</div>
   <nav class="controls" aria-label="Controles da apresentação">
     <button id="previous" type="button" title="Slide anterior" aria-label="Slide anterior">←</button>
     <span id="counter" class="counter" aria-live="polite">1 / 19</span>
