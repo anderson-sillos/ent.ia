@@ -12,89 +12,88 @@ Em celulares na vertical, os slides entram em modo de leitura e permitem
 rolagem. Use os botões ou deslize horizontalmente para trocar de slide. No
 diagrama de arquitetura, gire o aparelho ou arraste a imagem para os lados.
 
-O roteiro abaixo foi pensado para uma conversa de aproximadamente 18 minutos,
-seguida de perguntas. Ajuste o tempo conforme o grau de familiaridade do
-público técnico com a proposta.
+O percurso principal possui 15 slides e foi pensado para aproximadamente 18 a
+20 minutos de apresentação, reservando de 5 a 7 minutos para perguntas. Depois
+do encerramento, avance para acessar o apêndice técnico. A tecla `A` abre
+diretamente o primeiro slide do apêndice; `Home` retorna ao início e `End` leva
+ao encerramento do percurso principal.
 
 ## Narrativa sugerida
 
-1. **ENT.IA:** apresente o significado do nome e a visão de transformar a
-   modelagem de entidades em capacidade reutilizável.
-2. **A ideia em uma página:** apresente o que é, exemplos de aplicação e por que
-   a arquitetura proposta torna o conceito tecnicamente viável. Explicite que
-   ainda não existe implementação.
-3. **Problema:** destaque que o desperdício está na repetição de infraestrutura
-   ao redor de cada domínio, não apenas na construção das tabelas.
-4. **Proposta:** explique que um mesmo metadado publicado governa persistência,
-   REST, interface, autorização e ferramentas da IA.
-5. **Aplicabilidade:** percorra exemplos de bons candidatos e use a coluna da
-   direita para mostrar que a proposta possui limites claros.
-6. **Exemplo:** use a entidade ilustrativa “Fornecedor” para mostrar que uma
-   única definição governa tabela, API, interface, acesso e IA. Leia os dois
-   prompts do rodapé e ressalte que o usuário não precisa conhecer endpoints ou
-   o schema físico.
-7. **Arquitetura:** percorra o desenho da esquerda para a direita e depois de
-   cima para baixo. Mostre o Nginx como borda confirmada, a separação física das
-   camadas de aplicação/identidade e dados em produção e a ausência de acesso da
-   LLM ao banco. Cite containers OCI, Docker Compose por host e OpenTofu; o
-   Kubernetes foi adiado, mas a arquitetura permanece compatível.
-8. **Monólito modular:** explique que ele reduz a complexidade operacional sem
-   abrir mão de limites que possibilitem extração futura.
-9. **Dados:** enfatize PostgreSQL 18.x, databases `entia` e `keycloak` com
-   credenciais separadas, tabela física por entidade, chave
-   `(organization_id, UUIDv7)`, RLS obrigatória e ativação global com recuperação
-   previsível. Diferencie Liquibase, usado no schema estático, do motor próprio
-   que governa as entidades dinâmicas.
-10. **Identidade:** comece pela entrada genérica, que não lista organizações.
-    Explique o encaminhamento direto por domínio inequívoco e a confirmação do
-    e-mail antes de revelar vínculos individuais. Compare a Organização Alfa,
-    com Entra ID, e a Beta, com identidade ENT.IA ou login social. Após resolver
-    a organização, o portal aplica seu tema declarativo; o Keycloak autentica e
-    a autorização de negócio continua na plataforma.
-11. **Autorização e auditoria:** explique a legenda de RBAC e relacione identidade
-    autenticada, trilha append-only e gravação na mesma transação da alteração.
-    Se o evento falhar, a mutação também deve falhar. Mostre que sessão não
-    secreta, IP, User-Agent e canal de origem permitem correlação, mas não são
-    prova isolada de identidade. Somente as chaves dos campos alterados são
-    registradas, sem valores, e não há expurgo automático no MVP. Use o termo
-    não-repúdio para explicar o objetivo futuro, deixando claro que o MVP entrega
-    rastreabilidade operacional, sem encadeamento ou garantia criptográfica.
-12. **IA:** leia os dois exemplos. Explique que a consulta autorizada pode ser
-    executada automaticamente, enquanto a alteração mostra uma pré-visualização
-    e aguarda confirmação. Em ambos os casos, a REST API continua sendo a
-    autoridade final e a LLM não acessa o banco.
-13. **API, DSL e AST:** mostre que React, integrações e IA enviam a mesma DSL
-    JSON para a API da entidade. A DSL é o vocabulário externo; a AST é a árvore
-    interna que preserva a lógica `and`/`or` e permite validar campo, tipo,
-    operador, permissão e limites antes de o jOOQ gerar SQL parametrizado. Use o
-    exemplo de fornecedores para percorrer o fluxo até PostgreSQL, RLS e o
-    retorno com `items`, `meta` e cursor.
-14. **Stack:** apresente a visão por camadas e conecte as escolhas à experiência
-    Java e à preferência por um ecossistema aberto.
-15. **Papel das tecnologias:** percorra as quatro colunas sem aprofundar APIs.
-    Destaque Nginx, containers OCI, Docker Compose e OpenTofu como decisões já
-    tomadas. As escolhas ainda condicionais são a versão/licença do Liquibase,
-    a adoção do Spring AI e o provedor de LLM.
-16. **Validação técnica:** mostre como cada etapa produz uma evidência executável
-    antes de ampliar o escopo. Explique que 20 organizações, um milhão de linhas
-    em uma tabela, 100 usuários virtuais e 30 RPS compõem o primeiro patamar
-    comprovável; as metas p95 são critérios de aceitação, não SLA.
-17. **Riscos:** diferencie controles arquiteturais já confirmados da eficácia que
-    ainda precisa ser comprovada. Use a discussão para acordar evidências,
-    responsáveis e risco residual aceitável.
-18. **Viabilidade:** percorra os quatro cenários concretos: configurar, isolar,
-    evoluir e conversar. A repetibilidade desses resultados é o critério de
-    sucesso da prova.
-19. **Alinhamentos:** contraste a fundação já consolidada, incluindo descoberta
-    protegida, white-label, auditoria transacional e metas de capacidade, com os
-    pontos realmente pendentes: piloto, operação, licença do Liquibase e
-    provedor de LLM. Exportações e relatórios assíncronos foram deliberadamente
-    deixados para uma fase futura.
-    Explique as legendas de SLO e RLS.
-20. **Encerramento:** proponha a seleção da entidade piloto e de critérios
-    objetivos para demonstrar o conceito.
+1. **Tese:** apresente o ENT.IA como a transformação de uma definição de entidade
+   em persistência, telas, APIs e interação por IA, com segurança e governança
+   incorporadas.
+2. **Problema:** destaque que o desperdício está na infraestrutura repetida ao
+   redor de cada entidade, e não somente na criação das tabelas.
+3. **Proposta:** explique que um catálogo central permite modelar, validar,
+   publicar, ativar e operar uma entidade a partir do mesmo contrato.
+4. **Exemplo de Fornecedor:** torne o conceito concreto antes de aprofundar as
+   abstrações. Mostre definição, tabela física, telas, REST e dois exemplos de
+   interação por prompt.
+5. **Aplicabilidade:** percorra os bons candidatos e os limites explícitos para
+   deixar claro onde a proposta se encaixa.
+6. **Como o modelo funciona:** mostre catálogo central, interface dinâmica e uma
+   fronteira operacional única. Use os termos técnicos apenas depois da
+   explicação em linguagem direta.
+7. **Validação de mercado:** resuma que plataformas corporativas e ERPs já
+   utilizam variações da abordagem. Deixe os comparativos completos para o
+   apêndice.
+8. **Diferencial:** apresente a combinação entre catálogo compartilhado, modelo
+   relacional, isolamento multitenant, APIs governadas e IA sem caminho
+   privilegiado até os dados.
+9. **Evolução progressiva:** mostre que a fundação pode ganhar produtividade,
+   processos e inteligência gradualmente, conforme valor e evidência.
+10. **Arquitetura:** percorra o desenho em alto nível, enfatizando a fronteira
+    REST comum, a separação das camadas e a ausência de acesso da LLM ao banco.
+11. **Apostas técnicas:** diferencie componentes maduros reutilizados do núcleo
+    que precisa ser construído e comprovado: catálogo, schema engine, runtime
+    dinâmico, consultas governadas e orquestração da IA.
+12. **IA na prática:** contraste uma consulta autorizada com uma alteração que
+    exige pré-visualização e confirmação. A REST API permanece como autoridade.
+13. **Piloto verificável:** percorra os quatro cenários concretos — configurar,
+    isolar, evoluir e conversar — e destaque que o resultado precisa ser
+    repetível e observável.
+14. **Alinhamentos:** contraste a fundação consolidada com o que ainda precisa
+    ser definido para a prova executável.
+15. **Encerramento:** proponha a escolha da entidade piloto e dos critérios
+    objetivos de sucesso.
+
+## Apêndice técnico
+
+O apêndice preserva os detalhes para responder perguntas sem interromper a
+narrativa principal:
+
+1. resumo executivo da ideia;
+2. comparativo completo com plataformas;
+3. comparativo completo com ERPs;
+4. monólito modular e fronteiras internas;
+5. dados e evolução do schema;
+6. identidade, descoberta de organização e white-label;
+7. RBAC, RLS e auditoria;
+8. API de entidades, DSL e AST;
+9. stack tecnológica por camada;
+10. papel de cada tecnologia;
+11. hipóteses críticas, provas e alternativas seguras.
 
 ## Perguntas esperadas
+
+### Esse conceito já é usado por plataformas e ERPs de mercado?
+
+Sim. Salesforce, Microsoft Dataverse e ServiceNow são referências de plataformas
+orientadas a metadados. SAP S/4HANA Cloud, Oracle Fusion, Dynamics 365, Odoo e
+TOTVS aplicam variações do conceito para criar ou ampliar objetos de negócio,
+campos, formulários, serviços e regras. Nos ERPs, porém, essa capacidade costuma
+estender um núcleo vertical existente. O ENT.IA parte de um motor genérico e
+transforma o catálogo na fonte de verdade para persistência, interface, APIs,
+acesso, auditoria e IA.
+
+Referências oficiais: [Salesforce](https://architect.salesforce.com/docs/architect/fundamentals/guide/platform-multitenant-architecture.html),
+[Microsoft Dataverse](https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/define-data-model-driven-app),
+[ServiceNow](https://www.servicenow.com/docs/r/platform-administration/table-administration-and-data-management/using-table-administration.html),
+[SAP S/4HANA Cloud](https://help.sap.com/docs/SAP_S4HANA_CLOUD/0f69f8fb28ac4bf48d2b57b9637e81fa/c703c5b4e6a24d52a928ea54e8ff5e52.html),
+[Oracle Fusion Cloud](https://docs.oracle.com/en/cloud/saas/applications-common/26a/oacex/overview-of-using-application-composer.html),
+[Odoo](https://www.odoo.com/documentation/18.0/applications/studio/models_modules_apps.html)
+e [TOTVS RM](https://tdn.totvs.com/display/LRM/Metadados%2B-%2BComo%2Bincluir%2Bum%2Bprojeto).
 
 ### Por que não usar JSONB ou NoSQL para todos os registros?
 
