@@ -11,6 +11,20 @@ A plataforma MUST permitir o cadastro e a operação de múltiplas organizaçõe
 - **WHEN** um administrador global cadastra uma nova organização válida
 - **THEN** a plataforma cria um contexto organizacional independente e apto a receber usuários e configurações
 
+### Requirement: Endereço organizacional estável
+Cada organização MUST possuir um `organizationSlug` público, único e estável, adequado para compor seu endereço de acesso. A arquitetura MUST permitir que endereços adicionais sejam resolvidos para o mesmo contexto sem mudar o contrato de sessão; subdomínios e domínios personalizados MUST NOT ser provisionados no MVP.
+
+#### Scenario: Resolução pelo slug
+- **WHEN** uma requisição usa um `organizationSlug` pertencente a uma organização ativa
+- **THEN** a plataforma resolve internamente a organização sem tratar o slug como autorização de acesso aos seus dados
+
+### Requirement: Identidade visual por organização
+Cada organização MUST poder selecionar um modelo visual publicado e configurar somente as personalizações declarativas permitidas, sem alterar a identidade visual das demais organizações.
+
+#### Scenario: Organização seleciona um tema
+- **WHEN** um administrador organizacional autorizado ativa um modelo visual válido
+- **THEN** a configuração passa a ser usada somente nas experiências pertencentes àquela organização
+
 ### Requirement: Isolamento organizacional
 Todo dado pertencente a uma organização MUST ser identificado por seu contexto organizacional, e a plataforma MUST impedir leitura ou alteração a partir de outra organização.
 

@@ -18,6 +18,17 @@ Uma definição de entidade MUST representar ao menos sua identidade estável, a
 - **WHEN** um consumidor autorizado consulta uma definição publicada
 - **THEN** recebe metadados suficientes para validar operações e apresentar a entidade dinamicamente
 
+### Requirement: Limites iniciais do catálogo
+O MVP MUST iniciar com limites de 200 entidades publicadas por instalação, 100 entidades habilitadas por organização, 100 campos e 20 relacionamentos por entidade, dez perfis compostos de ordenação e cinco campos com `patternSearch` por entidade. A instalação MAY reduzir esses valores; qualquer elevação MUST exigir configuração administrativa explícita e benchmark compatível antes de ser disponibilizada.
+
+#### Scenario: Definição excede um limite
+- **WHEN** uma publicação ou habilitação ultrapassa um dos limites vigentes do catálogo
+- **THEN** a plataforma rejeita a operação antes de criar ou alterar estruturas físicas e informa o limite excedido
+
+#### Scenario: Instalação pretende elevar um limite
+- **WHEN** a administração pretende configurar um valor superior ao padrão do MVP
+- **THEN** a mudança exige validação prévia no perfil de benchmark adotado e não ocorre implicitamente pela publicação de uma entidade
+
 ### Requirement: Identidades de apresentação, lógica e física
 Cada entidade e campo MUST manter separadamente um nome de exibição alterável, uma chave lógica canônica em `camelCase` e um nome físico persistido em `snake_case`; a mesma chave lógica MUST ser usada no catálogo, JSON, REST e OpenAPI.
 

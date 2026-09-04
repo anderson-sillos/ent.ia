@@ -362,6 +362,10 @@
       width: 100%;
     }
 
+    .tech-columns.four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     .tech-list { margin: 0; }
 
     .tech-list dt {
@@ -379,6 +383,95 @@
       color: var(--muted);
       font-size: clamp(8px, .78vw, 14px);
       line-height: 1.28;
+    }
+
+    .endpoint {
+      margin-bottom: .8em;
+      padding: .65em .8em;
+      border-radius: 9px;
+      color: #eafffd;
+      background: var(--navy);
+      font: 750 clamp(8px, .78vw, 14px) ui-monospace, SFMono-Regular, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .query-code {
+      margin: 0;
+      padding: 1em 1.1em;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: #173047;
+      background: #edf4f7;
+      font: 600 clamp(8px, .76vw, 13px) / 1.42 ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    .ast-diagram {
+      display: grid;
+      gap: .7em;
+      justify-items: center;
+      margin: .5em 0 1em;
+    }
+
+    .ast-root, .ast-leaf {
+      padding: .58em .85em;
+      border-radius: 10px;
+      font-size: clamp(9px, .88vw, 16px);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .ast-root {
+      min-width: 24%;
+      color: var(--white);
+      background: var(--teal);
+    }
+
+    .ast-children {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .8em;
+      width: 100%;
+    }
+
+    .ast-leaf {
+      color: var(--navy);
+      border: 1px solid #9bcfc9;
+      background: var(--teal-soft);
+    }
+
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: .6em;
+      margin-top: 1.2em;
+    }
+
+    .pipeline span {
+      position: relative;
+      display: grid;
+      flex: 1;
+      min-width: 0;
+      padding: .72em .6em;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--navy);
+      background: var(--white);
+      font-size: clamp(8px, .78vw, 14px);
+      font-weight: 800;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .pipeline span:not(:last-child)::after {
+      position: absolute;
+      z-index: 2;
+      right: -.72em;
+      color: var(--teal);
+      content: "→";
+      font-weight: 900;
     }
 
     table {
@@ -596,7 +689,7 @@
         font-size: 23px;
       }
 
-      .grid-2, .grid-3, .grid-4, .tech-columns {
+      .grid-2, .grid-3, .grid-4, .tech-columns, .tech-columns.four {
         grid-template-columns: 1fr;
         gap: 12px;
       }
@@ -676,6 +769,13 @@
       .risk-list span { margin-top: 6px; }
       .tech-list dt { font-size: 16px; }
       .tech-list dd { font-size: 14px; }
+
+      .endpoint, .query-code { font-size: 13px; }
+      .query-code { overflow-x: auto; }
+      .ast-root, .ast-leaf { font-size: 14px; }
+      .pipeline { flex-direction: column; }
+      .pipeline span { padding: 12px; font-size: 13px; }
+      .pipeline span:not(:last-child)::after { display: none; }
 
       .prompt, .preview { font-size: 15px; }
 
@@ -911,7 +1011,7 @@
         <div class="module risk">Catalog</div>
         <div class="module risk">Schema Management</div>
         <div class="module risk">Dynamic Records</div>
-        <div class="module">Dynamic API</div>
+        <div class="module">REST API / DSL</div>
         <div class="module">Audit</div>
         <div class="module risk">AI Orchestration</div>
         <div class="module platform">Observability</div>
@@ -931,11 +1031,11 @@
         <article class="card">
           <h3>Modelo físico escolhido</h3>
           <ul>
-            <li>um banco e schema de aplicação compartilhados;</li>
-            <li>uma tabela física por entidade;</li>
-            <li><code>organization_id</code> obrigatório;</li>
-            <li>UUID técnico e versão otimista do registro;</li>
-            <li>índices e unicidade incluem a organização.</li>
+            <li>PostgreSQL 18.x self-hosted ou gerenciado compatível, com databases separados;</li>
+            <li>tabela física por entidade no schema compartilhado;</li>
+            <li>PK <code>(organization_id, id UUIDv7)</code>;</li>
+            <li>RLS obrigatória como segunda barreira de isolamento;</li>
+            <li>credenciais separadas por responsabilidade.</li>
           </ul>
         </article>
         <article class="card">
@@ -956,12 +1056,12 @@
         <div class="step"><strong>Activating</strong><span>DDL idempotente</span></div>
         <div class="step"><strong>Active</strong><span>contrato vigente</span></div>
       </div>
-      <div class="footer"><span>Rollback mantém a versão anterior ativa; não apaga dados</span><span>09</span></div>
+      <div class="footer"><span>Liquibase evolui o schema estático; o motor próprio governa as entidades</span><span>09</span></div>
     </section>
 
     <section class="slide dark" aria-labelledby="s10-title">
       <p class="eyebrow">Identidade e segurança</p>
-      <h2 id="s10-title">Cada organização escolhe sua origem de identidade — a plataforma cobre quem não possui uma</h2>
+      <h2 id="s10-title">A entrada descobre a organização com segurança, aplica sua marca e encaminha ao provedor correto</h2>
       <div class="grid-3">
         <article class="card">
           <h3>Provedor da organização</h3>
@@ -977,8 +1077,8 @@
         </article>
       </div>
       <div class="grid-2" style="margin-top:2.3%">
-        <article class="card"><h3>Exemplo de roteamento</h3><p class="muted">Organização Alfa → Entra ID corporativo. Organização Beta → conta do ENT.IA ou login com Google. O vínculo organizacional continua na plataforma.</p></article>
-        <article class="card"><h3>Sessão protegida</h3><p class="muted">O BFF mantém tokens no backend e entrega somente cookie seguro. Console e APIs administrativas do Keycloak permanecem internos.</p></article>
+        <article class="card"><h3>Descoberta sem exposição</h3><p class="muted">A entrada genérica não lista clientes. Domínio inequívoco encaminha diretamente; vínculos individuais somente aparecem após confirmação do e-mail.</p></article>
+        <article class="card"><h3>Marca e sessão protegidas</h3><p class="muted">A organização aplica tema declarativo antes e depois do login. O BFF mantém tokens no backend; Keycloak e APIs administrativas permanecem internos.</p></article>
       </div>
       <div class="footer"><span>Keycloak autentica; o ENT.IA aplica autorização de negócio</span><span>10</span></div>
     </section>
@@ -996,19 +1096,22 @@
             <li>união das concessões;</li>
             <li>negação por padrão;</li>
             <li>controle aplicado no backend, inclusive para IA.</li>
+            <li>RLS no PostgreSQL como defesa adicional.</li>
           </ul>
         </article>
         <article class="card">
-          <h3>Auditoria e não-repúdio</h3>
+          <h3>Auditoria e evidência operacional</h3>
           <ul>
             <li>autoria vinculada à identidade autenticada;</li>
-            <li>append-only para a aplicação;</li>
-            <li>hash do evento + hash anterior;</li>
-            <li>verificação detecta alteração ou lacuna.</li>
+            <li>evento na mesma transação da alteração;</li>
+            <li>falha na auditoria reverte a operação;</li>
+            <li>sessão, IP, User-Agent e origem correlacionados;</li>
+            <li>somente nomes dos campos alterados, sem valores;</li>
+            <li>append-only e sem expurgo automático no MVP.</li>
           </ul>
         </article>
       </div>
-      <div class="callout"><strong>Não-repúdio:</strong> capacidade de associar uma ação ao seu autor e produzir evidências que dificultem sua negação posterior. O MVP oferece não-repúdio operacional; uma garantia criptográfica forte exigiria assinatura, carimbo de tempo ou âncora externa — ponto ainda aberto.</div>
+      <div class="callout"><strong>Não-repúdio:</strong> capacidade de associar uma ação ao seu autor e produzir evidências que dificultem sua negação posterior. O MVP entrega rastreabilidade transacional, mas não alega não-repúdio criptográfico nem detecção de alterações feitas por administradores privilegiados.</div>
       <div class="footer"><span>Controle + evidência</span><span>11</span></div>
     </section>
 
@@ -1040,27 +1143,77 @@
     </section>
 
     <section class="slide" aria-labelledby="s13-title">
+      <p class="eyebrow">API de entidades · DSL + AST</p>
+      <h2 id="s13-title">A consulta é declarada em JSON, validada como árvore e executada sem SQL livre</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>1 · O consumidor envia a DSL</h3>
+          <div class="endpoint">POST /api/v1/entities/fornecedor/records/query</div>
+          <pre class="query-code">{
+  "select": ["razaoSocial", "status"],
+  "filter": {
+    "logic": "and",
+    "conditions": [
+      {"field":"status", "operator":"eq", "value":"ATIVO"},
+      {"field":"razaoSocial", "operator":"ilike", "value":"ACME%"}
+    ]
+  },
+  "order": [{"field":"razaoSocial", "direction":"asc"}],
+  "page": {"limit":50}
+}</pre>
+        </article>
+        <article class="card">
+          <h3>2 · O backend constrói e valida a AST</h3>
+          <div class="ast-diagram" aria-label="Árvore de filtros com operador AND e duas condições">
+            <div class="ast-root">AND</div>
+            <div class="ast-children">
+              <div class="ast-leaf">status<br><span class="muted">eq “ATIVO”</span></div>
+              <div class="ast-leaf">razaoSocial<br><span class="muted">ilike “ACME%”</span></div>
+            </div>
+          </div>
+          <ul>
+            <li>catálogo valida campo, tipo, operador e capacidade;</li>
+            <li>RBAC valida organização, entidade e operação;</li>
+            <li>limites controlam profundidade, condições e página;</li>
+            <li>jOOQ gera SQL parametrizado; RLS reforça o isolamento.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="pipeline" aria-label="Fluxo de execução da consulta dinâmica">
+        <span>React · integração · IA</span>
+        <span>API da entidade</span>
+        <span>DSL → AST validada</span>
+        <span>jOOQ parametrizado</span>
+        <span>PostgreSQL + RLS</span>
+        <span>items + meta + cursor</span>
+      </div>
+      <div class="callout"><strong>Resultado:</strong> uma linguagem expressiva para telas e IA, mas limitada pelo catálogo, permissões, perfis de índice e tempo máximo de execução.</div>
+      <div class="footer"><span>Flexibilidade controlada, sem expor SQL</span><span>13</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s14-title">
       <p class="eyebrow">Stack tecnológica proposta</p>
-      <h2 id="s13-title">Tecnologias maduras, alinhadas à experiência da equipe e com preferência por ecossistema aberto</h2>
+      <h2 id="s14-title">Tecnologias maduras, alinhadas à experiência da equipe e com preferência por ecossistema aberto</h2>
       <table aria-label="Stack tecnológica do ENT.IA">
         <thead><tr><th>Camada</th><th>Tecnologias</th><th>Papel</th></tr></thead>
         <tbody>
           <tr><td><strong>Backend</strong></td><td>OpenJDK 25 LTS · Spring Boot 4.1 · Spring Modulith · Spring Security</td><td>Monólito modular, BFF, domínio e segurança</td></tr>
-          <tr><td><strong>Dados</strong></td><td>PostgreSQL · jOOQ · Liquibase*</td><td>Integridade, SQL seguro, schema estático</td></tr>
-          <tr><td><strong>Frontend</strong></td><td>React 19 · TypeScript · Vite · MUI</td><td>SPA e renderer dinâmico</td></tr>
-          <tr><td><strong>Estado/UI</strong></td><td>TanStack Query/Table · React Hook Form · JSON Schema 2020-12</td><td>Consultas, tabelas e formulários</td></tr>
-          <tr><td><strong>Identidade</strong></td><td>Keycloak · OIDC/SAML · proxy/WAF</td><td>Federação, login social e proteção de borda</td></tr>
+          <tr><td><strong>Dados</strong></td><td>PostgreSQL 18.x · jOOQ · Liquibase*</td><td>RLS, integridade, DSL parametrizada e migrations estáticas</td></tr>
+          <tr><td><strong>Frontend</strong></td><td>React 19 · TypeScript · Vite · MUI · TanStack · React Hook Form</td><td>SPA, renderer, formulários e consultas dinâmicas</td></tr>
+          <tr><td><strong>Identidade</strong></td><td>Keycloak · OIDC · SAML</td><td>Conta da plataforma, federação, MFA e login social</td></tr>
+          <tr><td><strong>Borda e infraestrutura</strong></td><td>Nginx OSS · Containers OCI · Docker Compose · OpenTofu</td><td>Entrada segura e implantação portável por camadas</td></tr>
+          <tr><td><strong>IA</strong></td><td>Spring AI* · provedor LLM a definir</td><td>Orquestração de ferramentas sobre a API REST</td></tr>
           <tr><td><strong>Qualidade</strong></td><td>Maven · Testcontainers · Vitest · RTL · Playwright</td><td>Build e testes em múltiplas camadas</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>* Decisão jurídica:</strong> a versão do Liquibase só será fixada após revisão da licença vigente. O motor de schema dinâmico é próprio e não depende dele.</div>
-      <div class="footer"><span>Spring AI é candidato; LLM ainda não decidida</span><span>13</span></div>
+      <div class="callout"><strong>* Decisões condicionais:</strong> a versão do Liquibase depende da revisão de licença; Spring AI e o provedor LLM serão confirmados por prova técnica. O motor de schema dinâmico é próprio.</div>
+      <div class="footer"><span>Kubernetes foi adiado; imagens e contratos permanecem compatíveis</span><span>14</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s14-title">
+    <section class="slide" aria-labelledby="s15-title">
       <p class="eyebrow">Stack tecnológica · visão complementar</p>
-      <h2 id="s14-title">O papel de cada tecnologia na solução</h2>
-      <div class="tech-columns">
+      <h2 id="s15-title">O papel de cada tecnologia na solução</h2>
+      <div class="tech-columns four">
         <article class="card">
           <h3>Backend e identidade</h3>
           <dl class="tech-list">
@@ -1069,71 +1222,79 @@
             <dt>Spring Modulith</dt><dd>Define e testa os limites do monólito modular.</dd>
             <dt>Spring Security</dt><dd>Protege sessões, endpoints e integração OIDC.</dd>
             <dt>Keycloak</dt><dd>Login, MFA, federação corporativa e login social.</dd>
-            <dt>Spring AI*</dt><dd>Candidato para abstrair modelos, prompts e ferramentas.</dd>
           </dl>
         </article>
         <article class="card">
-          <h3>Dados, build e infraestrutura</h3>
+          <h3>Dados e contratos</h3>
           <dl class="tech-list">
-            <dt>PostgreSQL</dt><dd>Persistência relacional, catálogo e tabelas das entidades.</dd>
-            <dt>jOOQ</dt><dd>SQL tipado e montagem segura de consultas dinâmicas.</dd>
+            <dt>PostgreSQL 18.x</dt><dd>Self-hosted ou gerenciado compatível, com RLS e tabelas por entidade.</dd>
+            <dt>jOOQ</dt><dd>Converte a DSL validada em SQL parametrizado.</dd>
             <dt>Liquibase*</dt><dd>Evolui somente o schema estático da plataforma.</dd>
-            <dt>Maven</dt><dd>Build, dependências e ciclo de testes do Java.</dd>
-            <dt>Testcontainers</dt><dd>Testes de integração com infraestrutura real e isolada.</dd>
-            <dt>Proxy / WAF</dt><dd>TLS, rate limiting e exposição mínima dos serviços.</dd>
+            <dt>JSON Schema</dt><dd>Contrato de campos e validações interpretado em runtime.</dd>
+            <dt>OpenAPI</dt><dd>Documenta a REST API e define ferramentas permitidas à IA.</dd>
           </dl>
         </article>
         <article class="card">
-          <h3>Frontend e qualidade</h3>
+          <h3>Frontend e IA</h3>
           <dl class="tech-list">
             <dt>React + TypeScript</dt><dd>Interface dinâmica com tipagem e componentes reutilizáveis.</dd>
-            <dt>Vite</dt><dd>Build e ambiente rápido de desenvolvimento frontend.</dd>
-            <dt>MUI Core</dt><dd>Base visual consistente e acessível.</dd>
+            <dt>Vite + MUI</dt><dd>Build rápido e base visual consistente.</dd>
             <dt>TanStack Query / Table</dt><dd>Estado remoto, cache, filtros e tabelas dinâmicas.</dd>
             <dt>React Hook Form</dt><dd>Estado e validação dos formulários gerados.</dd>
-            <dt>JSON Schema</dt><dd>Contrato de campos e validações interpretado em runtime.</dd>
+            <dt>Spring AI*</dt><dd>Candidato para modelos, prompts e ferramentas REST.</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <h3>Implantação e qualidade</h3>
+          <dl class="tech-list">
+            <dt>Nginx OSS</dt><dd>Serve o React e encaminha API e frontchannel de login.</dd>
+            <dt>OCI + Docker Compose</dt><dd>Containers portáveis e implantação inicial por host.</dd>
+            <dt>OpenTofu</dt><dd>Infraestrutura como código agnóstica de provedor.</dd>
+            <dt>Kubernetes</dt><dd>Adiado; compatibilidade preservada para evolução futura.</dd>
+            <dt>Maven + Testcontainers</dt><dd>Build Java e testes com infraestrutura real.</dd>
             <dt>Vitest · RTL · Playwright</dt><dd>Testes unitários, de componentes e ponta a ponta.</dd>
           </dl>
         </article>
       </div>
-      <div class="footer"><span>* Dependências sujeitas às decisões de licença e provedor</span><span>14</span></div>
-    </section>
-
-    <section class="slide" aria-labelledby="s15-title">
-      <p class="eyebrow">Caminho de validação técnica</p>
-      <h2 id="s15-title">Cada etapa demonstra uma capacidade real antes de ampliar o escopo</h2>
-      <table aria-label="Etapas de validação técnica do ENT.IA">
-        <thead><tr><th>Etapa</th><th>Evidência prática</th><th>O que comprova</th></tr></thead>
-        <tbody>
-          <tr><td><strong>0 · Detalhar</strong></td><td>Requisitos não funcionais, convenções físicas, RLS, API e auditoria definidos</td><td>Arquitetura coerente e requisitos testáveis</td></tr>
-          <tr><td><strong>1 · Fundação</strong></td><td>Login, duas organizações e perfis com tentativas de acesso cruzado</td><td>Identidade, isolamento e autorização</td></tr>
-          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Modelar e ativar “Fornecedor”; tabela, REST e UI disponíveis</td><td>Ciclo de metadados ponta a ponta</td></tr>
-          <tr><td><strong>3 · IA controlada</strong></td><td>Consultar e propor alteração com preview, confirmação e auditoria</td><td>Utilidade sem caminho privilegiado</td></tr>
-          <tr><td><strong>4 · Piloto real</strong></td><td>Operar uma entidade real com usuários e métricas observáveis</td><td>Aplicabilidade, desempenho e operação</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">A sequência pode ser ajustada conforme as evidências. O objetivo é validar primeiro as hipóteses que concentram maior risco técnico.</div>
-      <div class="footer"><span>Evolução guiada por evidências</span><span>15</span></div>
+      <div class="footer"><span>* Dependências sujeitas às decisões de licença e provedor</span><span>15</span></div>
     </section>
 
     <section class="slide" aria-labelledby="s16-title">
-      <p class="eyebrow">Riscos reconhecidos · discussão em aberto</p>
-      <h2 id="s16-title">Hipóteses iniciais de mitigação para validação conjunta</h2>
-      <div class="risk-list">
-        <div><strong>Vazamento entre organizações</strong><span><strong>Proposta:</strong> contexto central, negação padrão, testes cruzados e avaliação do PostgreSQL RLS.</span></div>
-        <div><strong>DDL em tabelas grandes</strong><span><strong>Proposta:</strong> vocabulário fechado, análise de impacto, operações compatíveis e execução por fases.</span></div>
-        <div><strong>Complexidade do schema engine</strong><span><strong>Proposta:</strong> planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
-        <div><strong>Prompt injection e excesso de autonomia</strong><span><strong>Proposta:</strong> allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
-        <div><strong>Auditoria no mesmo banco</strong><span><strong>Proposta:</strong> privilégios mínimos, cadeia de hashes e possível checkpoint externo no futuro.</span></div>
-        <div><strong>Licenças e dependências</strong><span><strong>Proposta:</strong> revisão jurídica antes de fixar versões sensíveis e fronteiras substituíveis.</span></div>
-      </div>
-      <div class="callout"><strong>Ponto para decisão:</strong> priorização, responsáveis, evidências esperadas e risco residual aceitável deverão ser acordados com os gestores. As propostas acima ainda não constituem decisões finais.</div>
-      <div class="footer"><span>Opções iniciais para discussão — não decisões finais</span><span>16</span></div>
+      <p class="eyebrow">Caminho de validação técnica</p>
+      <h2 id="s16-title">Cada etapa demonstra uma capacidade real antes de ampliar o escopo</h2>
+      <table aria-label="Etapas de validação técnica do ENT.IA">
+        <thead><tr><th>Etapa</th><th>Evidência prática</th><th>O que comprova</th></tr></thead>
+        <tbody>
+          <tr><td><strong>0 · Detalhar</strong></td><td>REST/DSL, RLS, convenções físicas e ciclo de schema documentados; pendências classificadas</td><td>Arquitetura coerente e requisitos testáveis</td></tr>
+          <tr><td><strong>1 · Fundação</strong></td><td>Login, duas organizações e perfis com tentativas de acesso cruzado</td><td>Identidade, isolamento e autorização</td></tr>
+          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Modelar e ativar “Fornecedor”; tabela, REST e UI disponíveis</td><td>Ciclo de metadados ponta a ponta</td></tr>
+          <tr><td><strong>3 · IA controlada</strong></td><td>Consultar e propor alteração com preview, confirmação e auditoria</td><td>Utilidade sem caminho privilegiado</td></tr>
+          <tr><td><strong>4 · Capacidade</strong></td><td>20 organizações, tabela com 1 milhão de linhas, 100 usuários virtuais e 30 RPS sustentados</td><td>Desempenho com RLS e auditoria ativos</td></tr>
+          <tr><td><strong>5 · Piloto real</strong></td><td>Operar uma entidade real com usuários e métricas observáveis</td><td>Aplicabilidade e operação</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Metas p95 no backend:</strong> ID até 300 ms · filtro simples até 500 ms · consulta composta até 1 s · mutação com auditoria até 750 ms. São critérios do MVP, não SLA.</div>
+      <div class="footer"><span>Evolução guiada por evidências</span><span>16</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s17-title">
+    <section class="slide" aria-labelledby="s17-title">
+      <p class="eyebrow">Riscos reconhecidos · validação técnica</p>
+      <h2 id="s17-title">Os controles estão definidos; sua eficácia e o risco residual precisam ser demonstrados</h2>
+      <div class="risk-list">
+        <div><strong>Vazamento entre organizações</strong><span><strong>Controle:</strong> contexto confiável, negação padrão, RLS obrigatória e testes cruzados.</span></div>
+        <div><strong>DDL em tabelas grandes</strong><span><strong>Controle:</strong> vocabulário fechado, análise de impacto, execução por fases e benchmark de locks.</span></div>
+        <div><strong>Consultas dinâmicas caras</strong><span><strong>Controle:</strong> AST limitada, perfis de índice, paginação por cursor e timeout de cinco segundos.</span></div>
+        <div><strong>Complexidade do schema engine</strong><span><strong>Controle:</strong> planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
+        <div><strong>Prompt injection e excesso de autonomia</strong><span><strong>Controle:</strong> allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
+        <div><strong>Auditoria no mesmo banco</strong><span><strong>Controle inicial:</strong> gravação atômica, privilégios mínimos, origem rastreável e monitoramento do crescimento sem expurgo automático; detecção criptográfica permanece futura.</span></div>
+      </div>
+      <div class="callout"><strong>Discussão ainda aberta:</strong> quais evidências, responsáveis e níveis de risco residual serão aceitos? Controles definidos reduzem risco, mas não substituem testes de segurança, carga e recuperação.</div>
+      <div class="footer"><span>Decisões de arquitetura + comprovação prática</span><span>17</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s18-title">
       <p class="eyebrow">Provas práticas de viabilidade</p>
-      <h2 id="s17-title">Como saberemos que o conceito funciona?</h2>
+      <h2 id="s18-title">Como saberemos que o conceito funciona?</h2>
       <div class="grid-4" style="flex:1">
         <article class="card">
           <div class="number">1</div>
@@ -1161,49 +1322,50 @@
         </article>
       </div>
       <div class="callout"><strong>Critério de sucesso:</strong> esses cenários devem funcionar de forma repetível e observável com uma entidade piloto e duas organizações de teste.</div>
-      <div class="footer"><span>Cenários ponta a ponta, não métricas abstratas</span><span>17</span></div>
+      <div class="footer"><span>Cenários ponta a ponta, não métricas abstratas</span><span>18</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s18-title">
+    <section class="slide" aria-labelledby="s19-title">
       <p class="eyebrow">Alinhamentos técnicos</p>
-      <h2 id="s18-title">O que precisamos alinhar para transformar o conceito em uma prova executável</h2>
+      <h2 id="s19-title">O que já está consolidado — e o que falta alinhar para a prova executável</h2>
       <div class="grid-2">
         <article class="card">
-          <h3><span class="status">Validar no conselho técnico</span></h3>
+          <h3><span class="status">Fundação consolidada</span></h3>
           <ul>
-            <li>problemas e casos de uso prioritários;</li>
-            <li>limites funcionais da primeira versão;</li>
             <li>monólito modular e stack proposta;</li>
-            <li>entidade e organização para o piloto.</li>
+            <li>PostgreSQL 18.x, tabela por entidade e RLS²;</li>
+            <li>REST, DSL, AST, limites e cursor opaco;</li>
+            <li>login identity-first, white-label declarativo e Keycloak;</li>
+            <li>RBAC e auditoria append-only, transacional e rastreável;</li>
+            <li>guardrails e metas de capacidade do MVP;</li>
+            <li>containers OCI, Docker Compose e OpenTofu.</li>
           </ul>
         </article>
         <article class="card">
           <h3><span class="status open">Detalhar na próxima etapa</span></h3>
           <ul>
-            <li>requisitos não funcionais, limites e SLOs¹;</li>
-            <li>RLS² e convenções físicas do schema;</li>
-            <li>contratos REST, filtros e exclusão;</li>
-            <li>algoritmo de auditoria e retenção;</li>
-            <li>topologia, observabilidade e recuperação;</li>
-            <li>licença Liquibase e critérios para LLM.</li>
+            <li>entidade, organização e casos de uso do piloto;</li>
+            <li>segredos, backup, recuperação, RPO/RTO e SLOs¹ de produção;</li>
+            <li>versão/licença Liquibase e provedor de LLM.</li>
+            <li>exportações e relatórios ficam para uma fase futura.</li>
           </ul>
         </article>
       </div>
       <div class="callout"><strong>Legendas:</strong> ¹ <strong>SLO · Service Level Objective</strong>: meta mensurável de disponibilidade, latência ou erros. ² <strong>RLS · Row-Level Security</strong>: regras do PostgreSQL que restringem quais linhas cada contexto pode consultar ou alterar.</div>
-      <div class="footer"><span>Do conceito à prova executável</span><span>18</span></div>
+      <div class="footer"><span>Do conceito à prova executável</span><span>19</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s19-title">
+    <section class="slide dark" aria-labelledby="s20-title">
       <p class="eyebrow">ENT.IA</p>
-      <p id="s19-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
+      <p id="s20-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
       <p class="lead" style="font-size:clamp(14px,1.7vw,30px);margin-bottom:8%">Próximo passo proposto: selecionar a entidade piloto e definir os critérios objetivos de sucesso.</p>
-      <div class="footer"><span>ent.ia.br</span><span>19</span></div>
+      <div class="footer"><span>ent.ia.br</span><span>20</span></div>
     </section>
   </main>
 
   <nav class="controls" aria-label="Controles da apresentação">
     <button id="previous" type="button" title="Slide anterior" aria-label="Slide anterior">←</button>
-    <span id="counter" class="counter" aria-live="polite">1 / 19</span>
+    <span id="counter" class="counter" aria-live="polite">1 / 20</span>
     <button id="next" type="button" title="Próximo slide" aria-label="Próximo slide">→</button>
     <button id="fullscreen" type="button" title="Tela cheia" aria-label="Alternar tela cheia">⛶</button>
   </nav>

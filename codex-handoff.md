@@ -1,6 +1,6 @@
 # Handoff de contexto — ENT.IA
 
-Última consolidação: 2026-09-03
+Última consolidação: 2026-09-04
 
 Este documento permite que uma nova sessão do Codex retome o trabalho sem depender do histórico da conversa. Os artefatos OpenSpec continuam sendo a fonte formal dos requisitos; este arquivo reúne decisões arquiteturais, estado do trabalho e pendências ainda não registradas no `design.md`.
 
@@ -110,6 +110,9 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 - Quando a organização não possuir provedor próprio, será usado o provedor padrão da instalação.
 - Keycloak self-hosted será o provedor padrão e o broker de identidade.
 - Será adotado um único realm Keycloak chamado `ent-ia`.
+- O caminho organizacional canônico do MVP será `/o/{organizationSlug}`; a entrada raiz será neutra e identity-first, sem listar organizações.
+- Quando a descoberta depender do e-mail, uma resposta pública indistinguível e uma comprovação de posse de uso único antecederão a apresentação dos vínculos elegíveis.
+- Identidades externas serão vinculadas por `(issuer, subject)`; igualdade de e-mail entre provedores não produzirá associação automática.
 - Senhas e hashes de senha não serão armazenados no banco da aplicação ENT.IA.
 - Recuperação de credenciais e políticas de senha ficarão sob responsabilidade do provedor de identidade.
 - Os dados do Keycloak ficarão logicamente separados dos dados da aplicação.
@@ -144,12 +147,20 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 
 ### Auditoria
 
-- A trilha precisa ser append-only, imutável para a aplicação e resistente à adulteração.
-- Inicialmente os eventos ficarão no mesmo PostgreSQL da aplicação.
-- Não haverá armazenamento externo WORM ou serviço separado de auditoria no MVP.
-- A trilha deverá permitir verificação de integridade e detecção de alterações ou remoções indevidas.
-- A proteção inicial não é absoluta contra um DBA ou superusuário do banco; essa limitação deverá ser explicitada no design.
-- Eventos relevantes incluem autenticação, administração, autorização, catálogo e manipulação dos registros dinâmicos.
+- Os eventos ficarão no mesmo PostgreSQL da aplicação e serão append-only para os fluxos e credenciais normais.
+- Toda mutação concluída gravará seu evento pela mesma conexão e transação PostgreSQL; falha na auditoria reverterá a operação de negócio.
+- A role de runtime poderá inserir eventos, mas não será proprietária da tabela nem poderá atualizar, excluir ou truncar a trilha.
+- Cada evento usará UUIDv7 próprio e não dependerá de cabeça compartilhada, sequence serial da trilha, hash anterior ou checkpoint.
+- Encadeamento criptográfico, WORM e âncora externa estão fora do MVP; a solução inicial não detecta alterações feitas por DBA, proprietário ou superusuário.
+- A auditoria registrará somente as chaves lógicas dos campos alterados e as versões envolvidas, sem valores anteriores ou posteriores.
+- O BFF criará um `session_trace_id` UUIDv7 interno e não secreto, diferente de cookies e tokens, para correlacionar os eventos da sessão.
+- Cada requisição auditada registrará IP normalizado, User-Agent sanitizado e limitado, cliente, canal, método, rota normalizada, request ID e correlation ID.
+- O backend confiará em informações de origem somente quando normalizadas pelo Nginx ou por proxies allowlisted; headers enviados livremente pelo cliente não serão aceitos como autoridade.
+- IP e User-Agent são evidências complementares e potencialmente dados pessoais, nunca prova isolada de identidade.
+- Listagens e leituras comuns não serão auditadas individualmente; consultas da auditoria, acesso a excluídos e outras leituras privilegiadas serão auditadas.
+- A IA reutilizará o evento da operação REST e distinguirá usuário iniciador, sessão de confirmação e orquestrador executor.
+- Importações massivas registrarão um evento resumido por bloco confirmado e manterão o detalhamento por linha nas estruturas da importação referenciadas pelo `import_id`.
+- Não haverá expurgo automático de eventos no MVP; crescimento da tabela e dos índices será monitorado até uma futura política explícita de retenção.
 
 ### Backend e arquitetura
 
@@ -187,7 +198,7 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 - Inicialmente haverá um serviço ou cluster com dois databases: `entia` e `keycloak`.
 - As organizações compartilharão o database e o schema de aplicação do `entia`, segregadas por `organization_id`.
 - Os databases `entia` e `keycloak` terão proprietários e credenciais independentes, sem acesso cruzado.
-- No database `entia`, haverá credenciais distintas para proprietário técnico, Liquibase, motor de schema dinâmico, runtime e escrita de auditoria.
+- No database `entia`, haverá credenciais distintas para proprietário técnico, Liquibase, motor de schema dinâmico, runtime, ingestão e leitura administrativa da auditoria. A escrita transacional será permitida à role de runtime somente por `INSERT`.
 - O fluxo de importação massiva terá credencial de ingestão própria, sem reutilização pelo runtime normal e sem bypass de RLS ao promover dados para tabelas finais.
 - O Keycloak terá credencial própria limitada ao database `keycloak`.
 - Nenhum processo normal da aplicação utilizará superusuário do cluster.
@@ -203,6 +214,8 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 - JSON Schema 2020-12 como contrato de estrutura e validação, complementado por um UI Schema separado para layout, widgets e visibilidade.
 - Será criado um renderer próprio da ENT.IA com registro de componentes para campos, formulários, detalhes, filtros e listagens.
 - A validação no frontend servirá à experiência do usuário; o backend continuará sendo a autoridade final.
+- A organização poderá selecionar temas declarativos e versionados e ajustar somente cores, nome e ativos permitidos; HTML, JavaScript, CSS, fontes e layouts arbitrários não serão aceitos.
+- A entrada genérica será neutra até a resolução da organização. Páginas e e-mails internos do Keycloak não receberão tema dinâmico no MVP, e domínios personalizados permanecerão uma evolução futura.
 - Evitar Redux inicialmente. Estado de sessão e organização pode ser mantido em contextos pequenos.
 - Testes previstos com Vitest, React Testing Library e Playwright.
 
@@ -225,7 +238,20 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 - O cursor usa serialização binária compacta, AEAD e Base64 URL-safe, com meta de 512 e máximo de 1.024 caracteres. CBOR é candidato, não obrigação. Gzip foi descartado no MVP.
 - Organização, sujeito, entidade, versão, projeção, filtro e ordem são representados por fingerprint criptográfico de 16 bytes; o token armazena apenas estado posicional mínimo. `limit` pode variar dentro do máximo.
 - O cursor vale 30 minutos. Cada página bem-sucedida emite novos cursores por mais 30 minutos; não existe renovação direta. Mudança de usuário, organização ou versão da entidade invalida a continuação; permissões são reavaliadas em toda página.
-- Perfis de ordenação são validados pelo pior tamanho possível de suas posições antes da publicação. Consultas, exportações e relatórios fora dos limites síncronos usarão futuramente jobs assíncronos.
+- Perfis de ordenação são validados pelo pior tamanho possível de suas posições antes da publicação.
+- Exportações, relatórios e consultas assíncronas com snapshot estão fora do MVP. Pontos de extensão serão preservados, mas o contrato de jobs, autorização, armazenamento, retenção e download será definido futuramente.
+
+### Limites e metas técnicas do MVP
+
+- Guardrails iniciais: 200 entidades publicadas por instalação, 100 habilitadas por organização, 100 campos e 20 relacionamentos por entidade, dez perfis compostos de ordenação e cinco campos com `patternSearch` por entidade.
+- Uma instalação poderá reduzir esses valores; qualquer elevação exigirá configuração administrativa e benchmark prévio.
+- Não haverá cota transacional de registros baseada em `COUNT` ou contador global. O volume será acompanhado por métricas e eventual quota será projetada sem contenção no caminho de escrita.
+- O perfil de capacidade terá 20 organizações, 100 entidades, aproximadamente cinco milhões de registros, uma tabela com um milhão de linhas e até 250 mil linhas para uma organização.
+- Ambiente de referência: Nginx com 2 vCPU/2 GiB, aplicação com 4 vCPU/8 GiB e PostgreSQL com 4 vCPU/16 GiB e SSD, em camadas separadas.
+- Metas p95 do backend: consulta por ID até 300 ms, filtro simples indexado até 500 ms, consulta composta indexada até um segundo e mutação com auditoria até 750 ms; p99 das operações comuns abaixo de dois segundos.
+- O teste sustentará 100 usuários virtuais e 30 RPS durante 30 minutos, com pico de 60 RPS durante cinco minutos e erros internos abaixo de 1%.
+- Não será permitido alcançar as metas relaxando isolamento ou auditoria: nenhuma mutação confirmada pode ficar sem evento e nenhum dado pode atravessar organizações.
+- Esses números são critérios técnicos de aceitação do MVP, não SLO de produção, SLA ou capacidade máxima do PostgreSQL.
 
 ### IA conversacional e operações REST
 
@@ -243,7 +269,7 @@ A fundação inclui uma área de chat para consultas e alterações de registros
 - Mutações deverão utilizar idempotência, correlação, prazo de validade da aprovação e controle de versão do registro.
 - Campos e entidades deverão admitir política de uso pela IA, incluindo permitido, mascarado ou proibido.
 - A auditoria deverá correlacionar conversa, usuário, organização, ferramenta, aprovação, chamada REST e resultado.
-- O conteúdo integral das conversas não deverá ser copiado indiscriminadamente para a auditoria imutável; mensagens terão armazenamento e retenção próprios.
+- O conteúdo integral das conversas não deverá ser copiado para a auditoria append-only; mensagens terão armazenamento e retenção próprios.
 - O núcleo da ENT.IA continuará como monólito modular. O orquestrador será um cliente REST interno e deverá possuir uma fronteira que permita isolamento ou implantação separada quando necessário.
 - Banco vetorial, RAG, MCP e agentes autônomos não são requisitos da primeira versão dessa capacidade.
 
@@ -275,13 +301,11 @@ Capacidades especificadas:
 
 Não transformar estes pontos em decisões sem discuti-los com o usuário:
 
-- algoritmo de integridade da auditoria, encadeamento, checkpoints, retenção e verificação;
-- contrato dos jobs assíncronos de exportação e relatórios com snapshot consistente;
-- roteamento de login quando uma identidade ou domínio puder corresponder a múltiplas organizações;
+- critérios futuros para adotar encadeamento, checkpoints, WORM ou âncora externa na auditoria;
+- contrato futuro dos jobs assíncronos de exportação e relatórios com snapshot consistente, fora do MVP;
 - forma de distribuir e acionar remotamente os projetos Docker Compose em cada host;
 - gestão de segredos, certificados, backups, recuperação e observabilidade;
 - RPO, RTO, SLOs e marco para introduzir réplica e failover do PostgreSQL;
-- limites máximos de entidades, campos e registros por organização, metas de concorrência e tempo de resposta do MVP;
 - versão exata do Liquibase e compatibilidade de sua licença com distribuição, hospedagem e modelo comercial da ENT.IA;
 - provedor e modelo de LLM, incluindo hospedagem, residência dos dados e possibilidade de configuração por organização;
 - política de retenção, exportação e exclusão das conversas;

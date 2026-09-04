@@ -84,7 +84,7 @@ A plataforma MUST limitar os dados enviados à LLM aos campos e registros necess
 - **THEN** o orquestrador remove ou mascara o campo antes de enviar contexto à LLM
 
 ### Requirement: Auditoria correlacionada
-A plataforma MUST auditar as chamadas REST originadas pela IA, registrando usuário, organização, conversa, ferramenta, operação, resultado e eventual confirmação, sem copiar indiscriminadamente dados sensíveis para a trilha imutável.
+A plataforma MUST auditar as chamadas REST originadas pela IA no mesmo evento da operação executada, registrando usuário iniciador, `session_trace_id` da confirmação, organização, orquestrador executor, conversa, ferramenta, operação, resultado e eventual aprovação. O evento MUST identificar os campos alterados somente por suas chaves lógicas e MUST NOT copiar valores, prompts, respostas completas ou outros dados sensíveis para a trilha append-only.
 
 #### Scenario: Alteração realizada pela IA
 - **WHEN** uma mutação confirmada é concluída

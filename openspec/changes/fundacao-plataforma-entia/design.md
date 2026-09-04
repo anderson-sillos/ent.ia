@@ -9,10 +9,12 @@ As principais restrições que moldam a arquitetura são:
 - definições de entidades são globais, compartilhadas e possuem uma única versão ativa;
 - cada entidade dinâmica possui tabela física própria, compartilhada entre organizações;
 - autenticação é delegada ao Keycloak e autorização de negócio pertence à ENT.IA;
+- a organização pode ser resolvida por endereço próprio ou por descoberta protegida baseada em e-mail antes do encaminhamento ao provedor de identidade;
+- a experiência da ENT.IA admite identidade visual organizacional por temas declarativos e versionados, sem código arbitrário;
 - o Nginx Open Source é o servidor web e proxy reverso da borda pública;
 - a implantação é agnóstica de provedor, usa containers OCI e começa com Docker Compose em camadas físicas separadas;
 - PostgreSQL 18.x admite operação gerenciada ou self-hosted sob o mesmo contrato técnico;
-- auditoria começa no mesmo PostgreSQL, precisa ser append-only e permitir detectar adulteração;
+- auditoria começa no mesmo PostgreSQL, é append-only pelos fluxos normais e participa da mesma transação das mutações auditadas;
 - interfaces e APIs são interpretadas em tempo de execução a partir do catálogo, sem geração de código por entidade;
 - uma LLM futura interage com os registros somente por APIs REST controladas;
 - a equipe possui maior experiência em Java e prioriza tecnologias abertas, sem assumir que toda edição comunitária possui licença OSI.
@@ -35,7 +37,8 @@ As principais restrições que moldam a arquitetura são:
 - executar SQL, scripts ou código arbitrário fornecido por administradores ou pela LLM;
 - gerar código-fonte Java ou React para cada entidade;
 - automatizar alterações destrutivas de tabelas e colunas no MVP;
-- garantir resistência absoluta da auditoria contra o superusuário do banco sem armazenamento ou âncora externa;
+- oferecer exportações, relatórios ou consultas assíncronas com snapshot no MVP;
+- oferecer detecção criptográfica de adulteração, WORM ou proteção contra o superusuário do banco no MVP;
 - definir agora o fornecedor da LLM, RAG, agentes autônomos ou banco vetorial;
 - representar regras de negócio específicas e arbitrárias dentro do núcleo inicial.
 
@@ -111,7 +114,7 @@ O PostgreSQL seguirá uma política híbrida. A implantação de referência ser
 
 Inicialmente haverá um único serviço ou cluster PostgreSQL 18.x com dois databases: `entia`, para a aplicação, e `keycloak`, exclusivo do provedor de identidade. Todas as organizações continuarão compartilhando o database e o schema de aplicação do `entia`, segregadas por `organization_id`. Os databases terão proprietários e credenciais independentes, sem acesso cruzado.
 
-As credenciais do `entia` serão separadas por responsabilidade ao menos entre: proprietário técnico sem uso cotidiano, migrations estáticas do Liquibase, motor controlado de schema dinâmico, runtime da aplicação, ingestão em massa e escrita de auditoria. O Keycloak usará credencial própria limitada ao database `keycloak`. Nenhum processo normal da aplicação usará superusuário do cluster.
+As credenciais do `entia` serão separadas por responsabilidade ao menos entre: proprietário técnico sem uso cotidiano, migrations estáticas do Liquibase, motor controlado de schema dinâmico, runtime da aplicação, ingestão em massa e leitura administrativa da auditoria. A role de runtime receberá `INSERT` na auditoria para que a gravação participe da mesma conexão e transação de negócio, mas não será proprietária da tabela nem terá `UPDATE`, `DELETE` ou `TRUNCATE`. O Keycloak usará credencial própria limitada ao database `keycloak`. Nenhum processo normal da aplicação usará superusuário do cluster.
 
 Alternativas consideradas: produção em host único, Kubernetes desde a fundação e dependência obrigatória de banco gerenciado. Foram rejeitadas, respectivamente, por concentrar falhas e exposição, introduzir orquestração prematura e contrariar a portabilidade on-premises.
 
@@ -121,12 +124,13 @@ O backend será separado ao menos nos seguintes módulos lógicos:
 
 - `identity`: integração OIDC, sessão BFF e identidade global;
 - `tenancy`: organizações e vínculos de usuários;
+- `branding`: modelos visuais, configuração organizacional e bootstrap público do tema;
 - `authorization`: perfis e avaliação de permissões;
 - `catalog`: entidades, campos, relações, versões e publicação;
 - `schema-management`: análise de impacto, planos e execução de DDL;
 - `dynamic-records`: validação e persistência dos registros;
 - `dynamic-api`: contratos REST e OpenAPI do runtime;
-- `audit`: gravação, consulta e verificação da trilha;
+- `audit`: gravação transacional, consulta protegida, retenção e rastreabilidade da trilha;
 - `ai-orchestration`: conversas, tool calling, aprovações e cliente REST;
 - `platform-observability`: correlação técnica, métricas e integração com logs/traces.
 
@@ -162,6 +166,12 @@ Alternativas consideradas: database/schema por organização, definição person
 ### 5. Identidade, Keycloak e sessão BFF
 
 O Keycloak self-hosted será o provedor padrão e broker de identidades. Haverá um realm `ent-ia`, identidades globais e vínculos organizacionais mantidos pela aplicação. Cada organização poderá associar um provedor OIDC ou SAML; quem não possuir um usará o provedor padrão, incluindo login social habilitado.
+
+Cada organização recebe um `organizationSlug` público, único e estável. O acesso por `/o/{organizationSlug}` é o caminho organizacional canônico do MVP; o endereço raiz oferece uma entrada neutra identity-first por e-mail sem listar organizações. Um domínio inequivocamente associado a uma organização pode orientar o encaminhamento sem consultar vínculos pessoais. Quando a resolução depender dos vínculos do e-mail, a plataforma responde de forma indistinguível para endereços conhecidos e desconhecidos e exige um código ou link de descoberta, curto e de uso único, antes de revelar opções. Se houver uma organização elegível, o fluxo pode prosseguir diretamente; se houver várias, somente as associações comprovadas são apresentadas.
+
+O comprovante de e-mail serve apenas para descoberta e não autentica nem autoriza. O BFF cria um contexto pré-login opaco e seleciona no servidor o alias do IdP, podendo encaminhá-lo ao Keycloak por `kc_idp_hint`. Depois do callback, a identidade externa é resolvida por `(issuer, subject)`, o vínculo ativo é revalidado e somente então a sessão recebe a organização. Igualdade de e-mail entre provedores nunca produz fusão automática; vinculação exige prova das duas contas ou ação administrativa autorizada e auditada.
+
+A organização e seus vínculos permanecem sob autoridade da ENT.IA. Recursos organizacionais do Keycloak poderão auxiliar o brokering, mas não se tornam a fonte canônica de tenancy ou RBAC. A abstração de resolução aceitará futuramente subdomínios e domínios personalizados, enquanto DNS, certificados e onboarding desses endereços ficam fora do MVP.
 
 O Keycloak ficará em rede interna. O Nginx publicará em `auth.ent.ia.br` somente o frontchannel necessário, incluindo `/realms/ent-ia/*`, `/resources/*` e `/.well-known/*`, após validação final das rotas. Console administrativo, Admin REST API, realm `master`, health, métricas e porta de gerenciamento permanecerão internos ou sob VPN.
 
@@ -238,7 +248,7 @@ Uma tabela física existente sem o respectivo registro no catálogo caracteriza 
 
 ### 7.2 Inserções em lote e importações massivas
 
-Lotes regulares recebidos pelas APIs usarão `INSERT` multi-row ou batch JDBC, sempre sob contexto organizacional, autorização, RLS, validações, constraints e auditoria. O UUIDv7 será gerado antecipadamente pelo backend, permitindo que o resultado e os relacionamentos sejam conhecidos sem recuperar uma sequence depois de cada inserção.
+Lotes regulares recebidos pelas APIs usarão `INSERT` multi-row ou batch JDBC, sempre sob contexto organizacional, autorização, RLS, validações, constraints e auditoria. O UUIDv7 será gerado antecipadamente pelo backend, permitindo que o resultado e os relacionamentos sejam conhecidos sem recuperar uma sequence depois de cada inserção. Importações massivas não produzirão obrigatoriamente um evento por linha: cada bloco promovido gravará um resumo transacional e apontará para o detalhamento persistido da importação por `import_id`.
 
 Importações de alto volume usarão uma área de staging controlada. O componente de ingestão do módulo `dynamic-records` criará um `import_id`, fixará a organização a partir do contexto confiável, manterá a chave de origem de cada linha, gerará os UUIDv7 e carregará a staging com `COPY FROM STDIN`. Depois de validar tipos, duplicidades, permissões e relacionamentos, moverá os dados com operações SQL em conjunto para as tabelas finais protegidas por RLS. A chave de origem permitirá mapear referências entre registros do mesmo arquivo para os UUIDs definitivos e sustentar retries idempotentes.
 
@@ -426,19 +436,39 @@ O React opera como SPA atrás do BFF. TanStack Query gerencia estado remoto, Rea
 
 JSON Schema 2020-12 representa estrutura e validação; um UI Schema separado representa layout, widget, visibilidade e apresentação. Um registro próprio mapeia tipos de campo para componentes MUI. O renderer monta formulário, detalhe, filtros e tabela em runtime; validação no cliente melhora a experiência, mas o backend continua autoritativo.
 
-Alternativa considerada: gerador genérico de formulários como núcleo ou geração de código React. Foi rejeitada para manter controle da experiência, evolução do contrato e compatibilidade com permissões dinâmicas.
+O white-label usa `ThemeTemplate` e `OrganizationBranding`. Modelos podem ser globais ou restritos a uma organização e contêm versões imutáveis de tokens de cores, superfícies, texto, estados, foco, modos claro/escuro, densidade, arredondamento, tipografia permitida, ativos de marca e variantes de layout enumeradas. O React converte esse contrato validado em variáveis CSS e tema do MUI. JSONB poderá armazenar o conjunto pequeno e extensível de tokens, sempre validado por schema antes da publicação.
 
-### 15. Auditoria append-only e resistente à adulteração
+Administradores da plataforma criam, pré-visualizam, validam e publicam novos modelos no MVP. Administradores organizacionais selecionam uma versão publicada e alteram somente cores, nome e ativos expressamente permitidos. HTML, JavaScript, CSS, fontes externas e layouts arbitrários não são aceitos. Contraste, foco, formatos e limites de ativos são verificados; falha ou ausência de configuração aplica o tema neutro da ENT.IA. O bootstrap público expõe apenas dados visuais não sensíveis e será versionado para cache seguro.
 
-Eventos ficam inicialmente no PostgreSQL da aplicação. A API não oferece update/delete e a role de aplicação recebe somente a permissão necessária para inserir e consultar conforme o caso. Identidade, organização, alvo, operação, instante, resultado e correlação são campos estruturados.
+O tema organizacional cobre a entrada resolvida e a aplicação autenticada. A entrada genérica permanece neutra até a resolução. Páginas internas e e-mails do Keycloak não recebem tema dinâmico no MVP; provedores corporativos preservam sua própria identidade visual. Domínios personalizados permanecem requisito futuro, sem implementação inicial.
 
-A estrutura reservará sequência, hash do evento e hash anterior para permitir encadeamento e verificação. O algoritmo, granularidade das cadeias e política de checkpoints serão definidos antes da implementação. A verificação gera evento e alerta quando encontra alteração, lacuna ou quebra de encadeamento.
+Alternativa considerada: gerador genérico de formulários como núcleo ou geração de código React. Foi rejeitada para manter controle da experiência, evolução do contrato e compatibilidade com permissões dinâmicas. CSS, HTML ou JavaScript arbitrário fornecido por organizações também foi rejeitado por ampliar risco de XSS, quebrar acessibilidade e criar experiências incompatíveis com atualizações da plataforma.
 
-Eventos globais e organizacionais têm visibilidade distinta. Conversas da IA mantêm retenção própria; a auditoria guarda correlação e hash/referência, evitando copiar indiscriminadamente prompts e respostas sensíveis.
+### 15. Auditoria append-only e transacional no MVP
 
-A proteção no mesmo banco detecta e dificulta adulteração pela aplicação, mas não é WORM e não protege plenamente contra DBA/superusuário, especialmente para truncamento da cauda. Uma âncora externa poderá ser adicionada sem mudar o formato lógico dos eventos.
+Eventos ficam inicialmente em uma tabela própria no PostgreSQL da aplicação. Cada evento possui UUIDv7 e campos estruturados para organização, ator e tipo de ator, provedor de identidade, sessão rastreável, origem, alvo, operação, resultado, versões, instante do servidor, requisição e correlação. Campos de busca frequente permanecem tipados; detalhes pequenos e validados podem usar JSONB. Eventos globais e organizacionais têm visibilidade distinta, e as consultas organizacionais ficam sujeitas à autorização e RLS.
 
-Alternativa considerada: armazenamento externo imutável desde o MVP. Foi adiada para reduzir topologia e custo operacional, aceitando explicitamente a limitação inicial.
+Toda mutação concluída sobre dados de negócio, catálogo ou administração grava seu evento de forma síncrona pela mesma conexão JDBC e dentro da mesma transação PostgreSQL. No backend Spring, o gravador de auditoria participa obrigatoriamente do limite transacional do serviço, com semântica equivalente a `Propagation.MANDATORY`: não inicia uma transação independente e não usa processamento assíncrono como garantia principal. O commit confirma alteração e evento juntos; falha na auditoria causa rollback da operação de negócio.
+
+A role de runtime recebe `INSERT` direto na tabela de auditoria para preservar a atomicidade, mas não é proprietária e não recebe `UPDATE`, `DELETE` ou `TRUNCATE`. A API também não expõe essas operações. Uma role separada pode atender consultas administrativas autorizadas. Restrições e triggers defensivas poderão reforçar invariantes de estrutura, sem substituir a separação de privilégios.
+
+Cada inserção é independente: o MVP não mantém cabeça compartilhada, número serial da trilha, hash anterior, cadeia ou checkpoint. Assim, transações concorrentes não precisam bloquear uma linha comum para decidir qual evento precede o próximo. Índices serão orientados às consultas por organização, tempo, ator, alvo e correlação, e validados por benchmark para evitar que a própria auditoria prolongue excessivamente as mutações.
+
+Ações relevantes rejeitadas antes de alterar estado são gravadas sincronamente em uma transação curta própria. Se uma falha técnica já invalidou a transação, não é possível preservar nela um evento enquanto se desfazem suas demais alterações; no MVP, essa ocorrência permanece em log operacional estruturado. Uma eventual transação pós-rollback será avaliada somente se os requisitos futuros justificarem a complexidade.
+
+Ao concluir o login, o BFF gera um `session_trace_id` UUIDv7 interno e não secreto, distinto do cookie, dos tokens e de qualquer credencial reutilizável. Eventos originados por usuário carregam esse identificador e o contexto organizacional efetivo; eventos de início, troca de organização, encerramento e revogação tornam a sessão correlacionável mesmo após seu armazenamento operacional expirar.
+
+Cada requisição auditada registra IP normalizado em tipo `inet`, User-Agent sanitizado e limitado a 512 caracteres, cliente OIDC quando aplicável, canal de origem, método HTTP, rota normalizada, `request_id` e `correlation_id`. O backend aceita informações encaminhadas somente do Nginx ou de proxies allowlisted; a borda remove ou substitui headers fornecidos pelo cliente. IP e User-Agent são evidências complementares e potencialmente dados pessoais, não prova de identidade. Headers completos, query string integral, corpos, cookies e tokens nunca são copiados para a auditoria.
+
+Mutações regulares produzem um evento por registro. A auditoria registra apenas as chaves lógicas dos campos alterados e as versões anterior e posterior, sem valores. Listagens e leituras comuns não geram evento individual; consulta da auditoria, acesso a excluídos e outras leituras privilegiadas são auditados. Validações usuais e falhas técnicas permanecem em logs operacionais, salvo quando representarem evento de segurança relevante.
+
+Operações delegadas distinguem o usuário iniciador do executor. A IA reutiliza o evento da chamada REST, marcado com origem `AI`, e acrescenta sessão da confirmação, orquestrador, conversa, ferramenta e aprovação, sem duplicar o evento de negócio. Jobs preservam a referência ao iniciador quando existente. Importações massivas geram um resumo por bloco confirmado com `import_id`, quantidades e resultado; o detalhamento por linha fica nas estruturas da importação.
+
+Conversas da IA mantêm retenção própria; a auditoria guarda somente correlação e referência, sem prompts ou respostas completas. Eventos não são removidos pelo ciclo de exclusão de seus alvos. No MVP também não haverá expurgo automático por idade: o crescimento da tabela e dos índices será monitorado até que uma política futura, explícita e autorizada de retenção ou exportação seja definida.
+
+Essa solução oferece imutabilidade operacional contra os fluxos e credenciais normais da aplicação, mas não detecta de forma criptográfica adulterações realizadas por DBA, proprietário ou superusuário. Encadeamento de hashes, checkpoints, âncora externa e armazenamento WORM ficam fora do MVP e serão discutidos futuramente como evolução de segurança.
+
+Alternativas consideradas: encadeamento criptográfico e armazenamento externo imutável desde o MVP. Foram adiadas para evitar serialização de escrita, bloqueios adicionais, nova topologia e custo operacional antes de existir uma exigência comprovada para essas garantias.
 
 ### 16. IA conversacional como cliente REST
 
@@ -460,9 +490,27 @@ Alternativa considerada: permitir que o provedor de LLM chame diretamente a API 
 
 Não haverá Kafka inicialmente. Ativações, preenchimentos e trabalhos longos usam fila persistida no PostgreSQL. Eventos que precisam sobreviver à transação usam outbox com consumidor idempotente.
 
+Exportações, relatórios e consultas assíncronas com snapshot não fazem parte do MVP. A arquitetura preserva a possibilidade de adicioná-los como jobs persistidos, mas seu contrato, autorização, retenção, formato e armazenamento serão definidos somente em uma fase posterior; consultas que excedam o perfil interativo não serão executadas de forma síncrona como atalho.
+
 Toda requisição recebe correlation ID propagado por módulos, chamadas REST internas, jobs, auditoria e IA. Métricas não incluem conteúdo sensível por padrão. Logs estruturados evitam tokens, segredos, prompts completos e valores de campos classificados.
 
 Alternativa considerada: broker externo desde a fundação. Foi adiada porque o volume ainda não é conhecido e PostgreSQL já é uma dependência operacional obrigatória.
+
+### 18. Limites e metas técnicas do MVP
+
+O catálogo começa com guardrails de 200 entidades publicadas por instalação, 100 habilitadas por organização, 100 campos e 20 relacionamentos por entidade, dez perfis compostos de ordenação e cinco campos com `patternSearch` por entidade. A instalação pode reduzir esses valores; ampliá-los exige configuração administrativa e benchmark representativo antes da liberação. Os limites estruturais já definidos para a DSL e o cursor permanecem cumulativos.
+
+Quantidade de registros não será uma cota transacional. O runtime não executa `COUNT` nem bloqueia contador global a cada inserção para impedir crescimento. Métricas acompanham o volume e poderão sustentar quotas futuras sem inserir contenção no caminho de escrita.
+
+O patamar inicial de capacidade será validado com 20 organizações, 100 entidades publicadas, aproximadamente cinco milhões de registros dinâmicos no conjunto, uma tabela com um milhão de linhas e até 250 mil linhas de uma mesma organização. O conjunto também exercita uma entidade com 100 campos, outra com 20 relacionamentos, valores nulos, distribuição desigual e pesquisas textuais indexadas.
+
+O ambiente de referência possui Nginx com 2 vCPU e 2 GiB, aplicação com 4 vCPU e 8 GiB e PostgreSQL com 4 vCPU, 16 GiB e armazenamento SSD, mantendo aplicação e dados em camadas separadas. As medições abrangem o backend e sua rede interna, excluindo navegador, IdP externo e provedor de LLM.
+
+Nesse perfil, as metas p95 são: consulta por ID até 300 ms, listagem ou filtro simples indexado até 500 ms, consulta composta indexada até um segundo e mutação até 750 ms já incluindo sessão local, autorização, RLS e auditoria. O p99 das operações comuns fica abaixo de dois segundos, e o limite duro de cinco segundos continua valendo para consultas síncronas.
+
+O teste sustentará 100 usuários virtuais e 30 requisições por segundo por 30 minutos, além de pico de 60 requisições por segundo por cinco minutos. Erros internos ficam abaixo de 1%, excluídas rejeições esperadas de validação, autenticação e autorização. Nenhuma meta admite relaxar isolamento ou auditoria: o critério exige zero vazamento entre organizações e nenhuma mutação confirmada sem evento.
+
+Esses números são critérios de aceitação e um patamar comprovado do MVP, não limites definitivos do PostgreSQL, SLO de produção ou SLA. Capacidade e limites serão ampliados somente com evidências medidas.
 
 ## Risks / Trade-offs
 
@@ -475,9 +523,12 @@ Alternativa considerada: broker externo desde a fundação. Foi adiada porque o 
 - [Motor de schema próprio é uma área de alta complexidade] -> vocabulário fechado de operações, planos imutáveis, pre/pós-condições, testes reais e diário idempotente.
 - [Drift por intervenção manual quebra o catálogo] -> credenciais separadas, comparação com `pg_catalog`, bloqueio e correção administrada.
 - [Schema obsoleto causa perda de atualização] -> versionar schema e registro, rejeitar com conflito e invalidar caches por outbox.
-- [Um realm compartilhado amplia colisões e roteamento de identidade] -> identidade por subject estável, vínculo controlado e política de descoberta ainda a definir.
+- [Um realm compartilhado amplia colisões e roteamento de identidade] -> identidade por `(issuer, subject)`, vínculo controlado, slug estável e descoberta por e-mail resistente à enumeração.
+- [White-label pode introduzir código malicioso ou quebrar a interface] -> tokens declarativos, variantes fechadas, validação de acessibilidade, ativos controlados e fallback neutro.
 - [Exposição pública do Keycloak amplia ataque] -> Nginx com rotas mínimas, console interno, proxies confiáveis, TLS, rate limiting e BFF; avaliar WAF como defesa adicional antes da exposição pública de produção.
-- [Auditoria no mesmo banco não é WORM] -> append-only, privilégios mínimos, encadeamento verificável e opção futura de âncora externa.
+- [Auditoria no mesmo banco pode ser alterada por atores privilegiados] -> atomicidade com a mutação, append-only, privilégios mínimos e transparência sobre a ausência de detecção criptográfica no MVP; encadeamento, WORM e âncora externa permanecem evoluções futuras.
+- [Auditoria sem expurgo automático cresce indefinidamente no MVP] -> monitorar tamanho, taxa de crescimento e índices; definir retenção explícita antes que o volume ou requisitos legais exijam expurgo ou exportação.
+- [IP e User-Agent podem expor dados pessoais ou ser falsificados] -> coleta mínima, acesso restrito, sanitização, limite de tamanho, cadeia de proxies confiáveis e proibição de tratá-los como prova isolada de identidade.
 - [LLM pode sofrer prompt injection ou solicitar ação excessiva] -> allowlist de ferramentas, contexto fora do prompt, confirmação humana, limites e autorização repetida na API.
 - [Dados sensíveis podem sair para um provedor de LLM] -> classificação por campo, minimização, mascaramento e seleção do provedor condicionada a requisitos de privacidade.
 - [REST interno adiciona latência e autenticação ao orquestrador] -> cliente gerado/validado, conexão privada e fronteira que permite medir e extrair o componente.
@@ -488,7 +539,7 @@ Alternativa considerada: broker externo desde a fundação. Foi adiada porque o 
 Como o projeto é novo, o plano é de implantação incremental, não de migração de um sistema legado:
 
 1. provisionar um cluster PostgreSQL 18.x com databases `entia` e `keycloak`, ou um serviço gerenciado equivalente;
-2. criar proprietários e credenciais separados para Keycloak, migrations, schema dinâmico, runtime, ingestão e auditoria;
+2. criar proprietários e credenciais separados para Keycloak, migrations, schema dinâmico, runtime, ingestão e leitura administrativa da auditoria, concedendo ao runtime somente `INSERT` na tabela de eventos;
 3. aplicar o schema estático inicial por migration controlada, habilitando e forçando RLS nas tabelas organizacionais e mantendo o runtime sem propriedade ou bypass;
 4. configurar realm `ent-ia`, clientes BFF/API e um provedor padrão;
 5. implantar Nginx com frontchannel mínimo do Keycloak, administração interna, rate limiting e limites de tráfego;
@@ -505,14 +556,12 @@ Rollback de aplicação deve preservar compatibilidade com o schema estático j�
 
 ### Antes de decompor o trabalho de implementação
 
-- Qual será o contrato específico dos jobs assíncronos de exportação e dos relatórios que exijam snapshot consistente?
-- Quais limites máximos de entidades, campos e registros por organização serão adotados, e quais ajustes finos de índices serão indicados pelos benchmarks?
-- Qual algoritmo e granularidade de encadeamento serão usados na auditoria, e como será tratada a retenção?
-- Como a organização será descoberta antes do login e como conflitos de e-mail entre provedores serão resolvidos?
-- Quais metas de tempo de resposta e concorrência complementarão os limites técnicos já definidos para as consultas síncronas do MVP?
+Nenhuma questão arquitetural restante é considerada bloqueadora para a decomposição inicial do trabalho.
 
 ### Definíveis durante o planejamento de implantação ou de fases posteriores
 
+- Qual será o contrato dos futuros jobs assíncronos de exportação e dos relatórios que exijam snapshot consistente?
+- Quais requisitos e nível de risco justificariam evoluir a auditoria com encadeamento, checkpoints, âncora externa ou armazenamento WORM?
 - Em qual marco de exposição e risco um WAF passa a ser obrigatório, e qual solução será adotada?
 - Como os projetos Docker Compose serão distribuídos e acionados remotamente em cada host?
 - Quais soluções cuidarão de segredos, observabilidade, backup, recuperação e disaster recovery?
@@ -524,3 +573,4 @@ Rollback de aplicação deve preservar compatibilidade com o schema estático j�
 - Quais limites de tokens, custo, duração, chamadas de ferramentas e operações em lote serão adotados?
 - Quais tamanho de bloco, atomicidade, retenção e política de retomada serão usados nas importações massivas?
 - Em que fase RAG, embeddings, pgvector, MCP ou agentes especializados passam a ter benefício comprovado?
+- Em que fase serão habilitados subdomínios e domínios personalizados, e como ocorrerão verificação de posse, DNS e emissão de certificados?

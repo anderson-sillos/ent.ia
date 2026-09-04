@@ -27,40 +27,61 @@ O estado indicado em cada item significa:
 | **Collation** | Conceito | Conjunto de regras usado pelo banco para comparar e ordenar textos, incluindo idioma, caixa e acentos. O ENT.IA não permitirá que cada requisição escolha uma collation arbitrária; a semântica será definida de forma compatível com o catálogo e os índices. |
 | **CRUD — Create, Read, Update, Delete** | Conceito | Conjunto básico de operações de criação, consulta, alteração e exclusão de registros. As operações disponíveis dependerão das permissões da organização, entidade e ação. |
 | **Contrato** | Conceito | Definição estável das entradas, saídas e regras de uma integração. Exemplos: contrato REST, OpenAPI, JSON Schema e ferramentas oferecidas à LLM. |
-| **CONNECT** | Não exposto | Método HTTP usado para estabelecer um túnel por meio de um proxy. Não será aceito pela API pública do ENT.IA. |
 | **Correlation ID** | Confirmado | Identificador propagado por requisições, jobs, auditoria e chamadas da IA para relacionar eventos pertencentes à mesma operação. |
 | **Cursor opaco** | Confirmado | Token de continuação cujo conteúdo interno não integra o contrato público. No ENT.IA será stateless, criptografado, autenticado e vinculado por fingerprint ao usuário, organização, entidade, versão e consulta. |
-| **DELETE** | Confirmado | Método HTTP que solicita a exclusão de um recurso. Para registros dinâmicos do ENT.IA, executará exclusão lógica, com auditoria e preservação da linha no banco. |
+| **Design tokens** | Confirmado para white-label | Valores declarativos de aparência, como cores, superfícies, texto, foco e arredondamento. Serão validados e convertidos em variáveis CSS e tema MUI sem aceitar código fornecido pela organização. |
 | **DSL — Domain-Specific Language / Linguagem Específica de Domínio** | Confirmado | Linguagem com vocabulário restrito a uma finalidade. No ENT.IA, será uma estrutura JSON usada para declarar filtros, projeção, ordenação e paginação. O backend validará a DSL contra o catálogo, os tipos e as permissões antes de convertê-la em SQL parametrizado com jOOQ; SQL e expressões textuais livres não serão aceitos. |
-| **GET** | Confirmado | Método HTTP seguro e somente leitura usado para consultar um recurso ou obter uma listagem padrão. No ENT.IA aceitará apenas parâmetros simples e reservados; filtros compostos usarão `POST .../query`. |
 | **Gzip** | Não adotado nos cursores do MVP | Formato de compactação baseado em DEFLATE; não fornece criptografia nem proteção por senha. Foi descartado para o cursor porque o payload binário mínimo possui pouca redundância e o cabeçalho pode aumentar tokens pequenos. |
-| **HEAD** | Suporte automático | Método equivalente ao `GET`, mas sem corpo de resposta. Poderá ser tratado automaticamente pelo Nginx ou Spring quando aplicável, sem representar uma operação de negócio. |
 | **Idempotência** | Confirmado | Garantia de que repetir uma mesma solicitação identificada não provoca a mesma alteração mais de uma vez. Será obrigatória nas mutações iniciadas pela IA. |
 | **JSON Merge Patch** | Confirmado | Formato de alteração parcial definido para o método `PATCH`. Campos omitidos são preservados e valores `null` seguem a semântica explícita do contrato. |
 | **Keyset/seek pagination** | Confirmado | Paginação que continua a partir dos valores de ordenação do último item, evitando percorrer linhas anteriores por offset. Será encapsulada pelos cursores opacos do ENT.IA. |
-| **Método HTTP / verbo REST** | Conceito | Ação padronizada de uma requisição HTTP. “Verbo REST” é uma denominação comum; tecnicamente são métodos HTTP, como `GET`, `POST`, `PATCH` e `DELETE`, aplicados aos recursos da API. |
 | **Monólito modular** | Confirmado | Aplicação implantada inicialmente como uma unidade, mas dividida internamente em módulos com responsabilidades e contratos claros. Permite menor complexidade operacional sem criar um código fortemente acoplado. |
 | **OpenAPI** | Confirmado | Especificação legível por máquinas para descrever endpoints, parâmetros, respostas e erros de uma API HTTP. Também apoiará a seleção controlada de ferramentas oferecidas à IA. |
-| **OPTIONS** | Suporte automático | Método HTTP usado, entre outros fins, na negociação de CORS e na indicação dos métodos permitidos. Será tratado pela infraestrutura e pelo framework, sem executar comandos de negócio. |
 | **Outbox** | Confirmado | Padrão que grava um evento na mesma transação dos dados de negócio, permitindo seu processamento posterior sem perder a consistência. Será armazenado inicialmente no PostgreSQL. |
 | **Paginação por cursor** | Confirmado | Navegação em que `after` ou `before` recebe um token que representa a posição, sem expor os valores internos. O cursor terá validade de 30 minutos, meta de 512 caracteres e limite absoluto de 1.024. |
-| **PATCH** | Confirmado | Método HTTP usado para alteração parcial. O ENT.IA adotará JSON Merge Patch, preservando campos omitidos e aplicando controle otimista de concorrência. |
 | **Perfil de consulta** | Confirmado | Combinação versionada de até três campos de ordenação, com prioridade, direção e tratamento de nulos. Perfis compostos somente serão ativados depois da criação e validação de um índice compatível. |
-| **POST** | Confirmado | Método HTTP usado para criar recursos, enviar a DSL de consulta composta e iniciar comandos ou jobs. `POST .../records/query` será somente leitura, apesar de usar esse método. |
 | **Problem Details** | Confirmado | Formato padronizado `application/problem+json` para erros HTTP. Será usado em validações, conflitos, falhas de autorização e estados de cursor inválido, expirado ou obsoleto. |
-| **PUT** | Fora do MVP | Método HTTP normalmente associado à substituição integral de um recurso. Não será usado inicialmente nos registros dinâmicos para evitar que campos omitidos sejam apagados durante a evolução do schema. |
 | **REST — Representational State Transfer** | Confirmado | Estilo de API baseado em recursos, operações HTTP e respostas padronizadas. Será a fronteira oficial das operações dinâmicas do ENT.IA. |
 | **Renderer dinâmico** | Confirmado | Componente que interpreta metadados em tempo de execução para montar formulários, detalhes, filtros e tabelas sem gerar código-fonte para cada entidade. |
 | **Runtime** | Conceito | Momento em que a aplicação está sendo executada. O ENT.IA interpreta o catálogo e monta APIs e telas em runtime. |
 | **Schema Version** | Confirmado | Versão do contrato de uma entidade. Uma escrita baseada em versão desatualizada deverá ser rejeitada para evitar inconsistências durante ativações. |
 | **Record Version** | Confirmado | Versão de um registro individual usada para concorrência otimista e prevenção de perda de atualizações simultâneas. |
-| **SLI — Service Level Indicator** | Em aberto | Medição observada de uma característica do serviço, como disponibilidade, latência ou taxa de erros. Servirá de base para os SLOs. |
-| **SLO — Service Level Objective** | Em aberto | Meta mensurável para um SLI, por exemplo: 99,9% de disponibilidade mensal ou 95% das consultas abaixo de determinado tempo. Os SLOs do MVP ainda serão definidos. |
+| **SLI — Service Level Indicator** | Conceito adotado | Medição observada de uma característica do serviço, como disponibilidade, latência ou taxa de erros. Latência por percentil, throughput e erros serão medidos na validação do MVP. |
+| **SLO — Service Level Objective** | Futuro para produção | Meta mensurável para um SLI, por exemplo: 99,9% de disponibilidade mensal. As metas de benchmark do MVP são critérios técnicos de aceitação e não constituem ainda um SLO de produção. |
 | **SLA — Service Level Agreement** | Futuro | Compromisso formal de nível de serviço, normalmente associado a consequências contratuais. Um SLA pode usar SLOs como referência, mas não é sinônimo deles. |
 | **SPA — Single-Page Application** | Confirmado | Aplicação web carregada como uma página principal e atualizada dinamicamente no navegador. O frontend React do ENT.IA seguirá esse modelo. |
 | **SSR — Server-Side Rendering** | Fora do MVP | Renderização do HTML no servidor antes de enviá-lo ao navegador. Não é necessária inicialmente para a aplicação autenticada e interativa do ENT.IA. |
 | **Stateless** | Confirmado como princípio | Componente que não depende do disco ou da memória local para preservar o estado necessário entre requisições. Os cursores não terão sessão persistida no servidor, e esse princípio facilitará réplicas e futura execução em Kubernetes. |
-| **TRACE** | Desabilitado | Método HTTP de diagnóstico que devolve informações da requisição recebida. Permanecerá desabilitado no Nginx e na aplicação por não ser necessário ao contrato público. |
+| **Theme template** | Confirmado | Modelo visual versionado e declarativo que reúne tokens e variantes suportados. No MVP, novos modelos serão publicados pela administração da plataforma, enquanto organizações escolhem uma versão e ajustam somente propriedades permitidas. |
+| **White-label** | Confirmado | Personalização da identidade visual da experiência ENT.IA por organização. Abrangerá entrada resolvida e aplicação autenticada no MVP, sem personalização dinâmica das páginas ou e-mails internos do Keycloak. |
+
+## Desempenho e capacidade
+
+| Termo | Estado | Definição e aplicação no ENT.IA |
+|---|---|---|
+| **Benchmark** | Confirmado | Teste reproduzível usado para medir capacidade e desempenho em ambiente, dados e carga conhecidos. O MVP terá um perfil de referência antes que seus limites sejam ampliados. |
+| **Latência** | Confirmado como métrica | Tempo decorrido para concluir uma operação. As metas do backend serão medidas sem incluir navegador, IdP externo ou provedor de LLM. |
+| **p95 / p99** | Confirmado como métrica | Percentis de latência: p95 indica que 95% das medições ficaram naquele valor ou abaixo; p99 aplica o mesmo raciocínio a 99%. Evitam avaliar desempenho apenas pela média. |
+| **RPS — Requests per Second** | Confirmado como métrica | Quantidade de requisições processadas por segundo. O benchmark sustentará 30 RPS por 30 minutos e validará um pico de 60 RPS por cinco minutos. |
+| **Throughput** | Confirmado como métrica | Volume de trabalho concluído por unidade de tempo. Será analisado junto com latência, erros, consumo de recursos e integridade da auditoria. |
+| **Usuário virtual — VU** | Confirmado como métrica | Usuário simulado por uma ferramenta de carga. O teste inicial trabalhará com 100 usuários virtuais concorrentes; isso não representa limite de sessões cadastradas. |
+
+## Métodos HTTP da API REST
+
+Embora sejam frequentemente chamados de “verbos REST”, tecnicamente estes são
+métodos HTTP aplicados aos recursos da API.
+
+| Método | Estado | Definição e aplicação no ENT.IA |
+|---|---|---|
+| **GET** | Confirmado | Método seguro e somente leitura usado para consultar um recurso ou obter uma listagem padrão. No ENT.IA aceitará apenas parâmetros simples e reservados; filtros compostos usarão `POST .../query`. |
+| **POST** | Confirmado | Usado para criar recursos, enviar a DSL de consulta composta e iniciar comandos ou jobs. `POST .../records/query` será somente leitura, apesar de usar esse método. |
+| **PATCH** | Confirmado | Usado para alteração parcial. O ENT.IA adotará JSON Merge Patch, preservando campos omitidos e aplicando controle otimista de concorrência. |
+| **DELETE** | Confirmado | Solicita a exclusão de um recurso. Para registros dinâmicos do ENT.IA, executará exclusão lógica, com auditoria e preservação da linha no banco. |
+| **PUT** | Fora do MVP | Normalmente associado à substituição integral de um recurso. Não será usado inicialmente nos registros dinâmicos para evitar que campos omitidos sejam apagados durante a evolução do schema. |
+| **HEAD** | Suporte automático | Equivale ao `GET`, mas sem corpo de resposta. Poderá ser tratado automaticamente pelo Nginx ou Spring quando aplicável, sem representar uma operação de negócio. |
+| **OPTIONS** | Suporte automático | Usado, entre outros fins, na negociação de CORS e indicação dos métodos permitidos. Será tratado pela infraestrutura e pelo framework, sem executar comandos de negócio. |
+| **TRACE** | Desabilitado | Método de diagnóstico que devolve informações da requisição recebida. Permanecerá desabilitado no Nginx e na aplicação por não ser necessário ao contrato público. |
+| **CONNECT** | Não exposto | Estabelece um túnel por meio de um proxy. Não será aceito pela API pública do ENT.IA. |
 
 ## Organizações, catálogo e entidades dinâmicas
 
@@ -79,6 +100,7 @@ O estado indicado em cada item significa:
 | **Metadata-driven** | Confirmado | Abordagem na qual o comportamento do sistema é determinado por metadados publicados, e não por código específico para cada entidade. |
 | **Multi-organização / multitenancy** | Confirmado | Uma mesma instalação atende várias organizações, mantendo seus dados segregados. As definições de entidades serão globais e os registros serão organizacionais. |
 | **Nome de exibição** | Confirmado | Rótulo livre, traduzível e alterável apresentado aos usuários. Sua alteração não muda a chave lógica nem o nome físico já publicado. |
+| **`organizationSlug`** | Confirmado | Identificador público, único e estável usado no endereço organizacional `/o/{organizationSlug}`. Ajuda a resolver o contexto antes do login, mas nunca funciona como autorização. |
 | **`organization_id`** | Confirmado | Identificador obrigatório que delimita a organização proprietária de cada dado organizacional. O contexto confiável virá da sessão, não de um valor livre enviado pelo cliente. |
 | **Referência / `REFERENCE`** | Confirmado | Relação entre registros com ciclos de vida independentes. É a única semântica de relacionamento ativável no MVP. |
 | **Relação inversa** | Confirmado | Visão consultável no sentido oposto de uma FK, como os pedidos de um cliente. É derivada da relação direta e não cria estado duplicado. |
@@ -111,26 +133,32 @@ O estado indicado em cada item significa:
 | **Fingerprint criptográfico** | Confirmado para cursores | Resumo compacto usado para vincular um cursor ao usuário, organização, entidade, versão e consulta sem armazenar integralmente esse contexto. Terá 16 bytes e será recalculado a cada página. |
 | **Frontchannel** | Confirmado | Parte do fluxo de autenticação que passa pelo navegador. Somente as rotas indispensáveis do realm do Keycloak serão expostas externamente. |
 | **IdP — Identity Provider** | Confirmado | Sistema que autentica usuários e emite identidades ou tokens, como Keycloak, Microsoft Entra ID, Google ou um provedor OIDC/SAML da organização. |
+| **Identity-first login** | Confirmado | Fluxo genérico em que o usuário informa primeiro seu e-mail para descobrir com segurança a rota de autenticação aplicável. Vínculos individuais somente serão revelados após comprovação de posse do endereço. |
 | **Keycloak** | Confirmado | Provedor de identidade self-hosted escolhido como padrão e broker de identidades. Centralizará login, MFA, federação, recuperação de acesso e login social. |
 | **Login social** | Confirmado | Autenticação usando uma conta externa, como Google, Microsoft, Apple ou GitHub, mediada pelo Keycloak. Os provedores exatos ainda serão escolhidos. |
 | **MFA — Multi-Factor Authentication** | Confirmado | Autenticação que exige mais de um fator, como senha e código temporário. Será responsabilidade do Keycloak ou do IdP federado. |
 | **OIDC — OpenID Connect** | Confirmado | Protocolo de identidade construído sobre OAuth 2.0. Será o protocolo principal entre o BFF e o Keycloak e poderá integrar provedores organizacionais. |
 | **OAuth 2.0** | Confirmado | Framework de autorização usado como base para emissão e uso controlado de tokens. O login utiliza OIDC sobre OAuth 2.0. |
 | **Privilégio mínimo** | Confirmado | Princípio de conceder a usuários, serviços e credenciais apenas os acessos indispensáveis. |
+| **Proxy confiável** | Confirmado | Proxy cujos endereços e comportamento são controlados pela instalação. O backend aceitará informações de origem somente do Nginx ou de proxies allowlisted; headers enviados livremente pelo cliente serão descartados ou substituídos. |
 | **RBAC — Role-Based Access Control** | Confirmado | Controle de acesso baseado em perfis. No ENT.IA, é contextual: os perfis pertencem a uma organização e concedem operações sobre entidades específicas. |
 | **Realm** | Confirmado | Domínio lógico do Keycloak que agrupa usuários, clientes, políticas e provedores de identidade. A instalação usará inicialmente um realm chamado `ent-ia`. |
 | **RLS — Row-Level Security** | Confirmado | Recurso do PostgreSQL que restringe no próprio banco quais linhas uma sessão pode consultar ou alterar. Será obrigatório nas tabelas persistentes organizacionais como segunda barreira ao filtro e à autorização do backend, usando o contexto confiável de `organization_id` da transação. |
 | **SAML — Security Assertion Markup Language** | Confirmado | Protocolo de federação de identidade comum em ambientes corporativos. Poderá conectar o Keycloak ao provedor de uma organização. |
 | **SSO — Single Sign-On** | Confirmado | Capacidade de usar uma autenticação para acessar diferentes aplicações ou serviços integrados ao mesmo provedor. |
+| **`session_trace_id`** | Confirmado | UUIDv7 interno e não secreto que correlaciona eventos de uma sessão autenticada. É diferente do cookie e dos tokens e não pode ser reutilizado para assumir a sessão. |
 | **Subject / `sub`** | Confirmado | Identificador estável do usuário emitido por um provedor OIDC. Deve ser usado com o emissor para vincular corretamente identidades externas. |
 | **TLS — Transport Layer Security** | Confirmado | Proteção criptográfica do tráfego HTTPS. Será obrigatória na borda pública e nas comunicações internas que exigirem proteção adicional. |
+| **User-Agent** | Confirmado como evidência complementar | Texto declarado pelo cliente sobre navegador e dispositivo. Será sanitizado, limitado a 512 caracteres e nunca usado sozinho como prova de identidade ou autorização. |
 | **VPN — Virtual Private Network** | Recomendado | Rede privada usada para restringir acesso administrativo, como console do Keycloak, métricas e endpoints de gerenciamento. |
 | **WAF — Web Application Firewall** | Em aberto | Camada adicional que inspeciona e bloqueia tráfego HTTP malicioso. A solução e o marco de adoção ainda serão definidos conforme o risco; não substitui autenticação, autorização ou validação na aplicação. |
+| **Domínio personalizado** | Futuro; requisito previsto | Endereço próprio de uma organização direcionado à ENT.IA. O resolvedor será compatível com essa evolução, mas verificação de posse, DNS e certificados não serão implementados no MVP. |
 
 ## Dados e persistência
 
 | Termo | Estado | Definição e aplicação no ENT.IA |
 |---|---|---|
+| **Atomicidade** | Confirmado | Propriedade pela qual um conjunto de alterações é confirmado integralmente ou totalmente desfeito. Nas mutações auditadas, a alteração de negócio e o evento de auditoria pertencem à mesma transação PostgreSQL. |
 | **Backfill** | Confirmado | Preenchimento de um campo novo ou incompleto nos registros existentes antes de tornar uma regra mais restritiva. |
 | **Base 36** | Confirmado para colisões de nomes | Codificação usando `0-9` e `a-z`. Um sufixo determinístico de três caracteres será acrescentado somente quando dois objetos catalogados resultarem no mesmo nome físico. |
 | **Bulk insert / inserção em massa** | Confirmado como capacidade | Gravação eficiente de muitos registros em uma mesma operação ou fluxo. Lotes regulares usarão batch; volumes elevados usarão staging, validação e promoção em conjunto para as tabelas finais. |
@@ -145,6 +173,7 @@ O estado indicado em cada item significa:
 | **GIN — Generalized Inverted Index** | Candidato para padrões textuais | Tipo de índice do PostgreSQL adequado a conjuntos de componentes, podendo apoiar buscas com `pg_trgm`. A estratégia exata será validada por benchmark. |
 | **GiST — Generalized Search Tree** | Candidato para padrões textuais | Estrutura extensível de índice do PostgreSQL que também pode suportar operadores de similaridade e padrões por extensões como `pg_trgm`. Será comparada ao GIN conforme escrita, espaço e leitura. |
 | **Identity column** | Uso específico | Coluna cujo valor é gerado automaticamente pelo PostgreSQL por meio de uma sequence. Será adequada para numerações e posições técnicas locais, mas não será o identificador padrão dos registros dinâmicos. |
+| **`inet`** | Confirmado para auditoria | Tipo nativo do PostgreSQL para endereços IPv4 e IPv6. Armazenará o IP normalizado de origem das requisições auditadas. |
 | **Índice** | Confirmado | Estrutura do banco que acelera buscas e também pode suportar regras de unicidade, com impacto adicional em armazenamento e escrita. |
 | **Índice parcial** | Confirmado como estratégia | Índice que contém somente linhas que atendem a uma condição. As listagens comuns poderão usar índices com `WHERE deleted_at IS NULL` para priorizar registros ativos. |
 | **JSON — JavaScript Object Notation** | Confirmado | Formato textual estruturado usado em APIs, metadados e contratos. |
@@ -161,14 +190,14 @@ O estado indicado em cada item significa:
 | **PostgreSQL** | Confirmado — 18.x | Banco relacional principal da plataforma, usado para dados estáticos, catálogo, auditoria, fila/outbox e tabelas físicas das entidades. A linha 18.x será mantida no minor release validado mais recente. |
 | **PostgreSQL gerenciado** | Confirmado como perfil | Serviço operado por um provedor, responsável por parte das rotinas de infraestrutura do banco. Poderá ser preferido em produção na nuvem quando atender ao contrato PostgreSQL portável do ENT.IA. |
 | **PostgreSQL self-hosted** | Confirmado como referência | PostgreSQL operado pela própria instalação. Será o perfil de referência em container OCI no host de dados e permitirá implantação on-premises. |
-| **Role de banco** | Confirmado | Identidade PostgreSQL à qual são atribuídos privilégios. Haverá separação entre proprietário técnico, Liquibase, schema dinâmico, runtime, ingestão, auditoria e Keycloak. A promoção de importações para tabelas finais continuará submetida ao RLS. |
+| **Role de banco** | Confirmado | Identidade PostgreSQL à qual são atribuídos privilégios. Haverá separação entre proprietário técnico, Liquibase, schema dinâmico, runtime, ingestão, leitura administrativa da auditoria e Keycloak. Para preservar a atomicidade, a role de runtime poderá inserir eventos de auditoria, mas não alterá-los, excluí-los ou truncá-los. A promoção de importações para tabelas finais continuará submetida ao RLS. |
 | **`RESTRICT`** | Confirmado para FKs dinâmicas | Ação referencial que bloqueia imediatamente uma exclusão física enquanto existirem registros dependentes, sem apagá-los ou alterá-los automaticamente. |
 | **Schema de banco** | Confirmado | Namespace que organiza objetos como tabelas e índices. As organizações compartilharão o banco e o schema de aplicação. Não deve ser confundido com JSON Schema. |
 | **Sequence** | Uso específico | Objeto do PostgreSQL que entrega números crescentes com alta concorrência. Será usado para versões, posições ou numerações locais quando apropriado; pode conter lacunas após rollback ou falha e, por isso, não garante numeração legalmente contínua. |
 | **SQL — Structured Query Language** | Confirmado | Linguagem usada para consultar e modificar dados relacionais. Usuários, administradores e LLM não poderão fornecer SQL arbitrário para execução. |
 | **Staging** | Confirmado para importações massivas | Área temporária e isolada onde um lote é carregado e validado antes de chegar às tabelas definitivas. Ficará presa a um `import_id` e a uma organização confiável, sem acesso público nem escolha arbitrária de SQL ou tabela-alvo. |
 | **`statement_timeout`** | Confirmado para consultas síncronas | Parâmetro do PostgreSQL que cancela uma instrução ao exceder o tempo definido. O executor da DSL começará com cinco segundos para consultas interativas. |
-| **Transação** | Confirmado | Unidade de trabalho que confirma todas as operações em conjunto ou desfaz todas em caso de falha. |
+| **Transação** | Confirmado | Unidade de trabalho que confirma todas as operações em conjunto ou desfaz todas em caso de falha. Uma mutação e seu evento de auditoria serão confirmados pelo mesmo commit. |
 | **UI Schema** | Confirmado | Metadado complementar ao JSON Schema que define layout, widget, visibilidade e apresentação dos campos no frontend. |
 | **UUID — Universally Unique Identifier** | Confirmado | Família de identificadores de 128 bits com unicidade prática global. O ENT.IA os armazenará no tipo nativo `uuid` do PostgreSQL, e não como texto. |
 | **UUIDv7** | Confirmado | Variante temporal de UUID escolhida como identificador técnico imutável dos registros dinâmicos e demais recursos que exijam identidade global. Será gerada preferencialmente pelo backend ou importador antes da persistência; o PostgreSQL 18.x poderá fornecer `uuidv7()` como default de segurança. |
@@ -177,14 +206,15 @@ O estado indicado em cada item significa:
 
 | Termo | Estado | Definição e aplicação no ENT.IA |
 |---|---|---|
-| **Append-only** | Confirmado | Modelo em que novos eventos podem ser acrescentados, mas os já registrados não são atualizados ou excluídos pela aplicação. |
+| **Append-only** | Confirmado no MVP | Modelo em que novos eventos podem ser acrescentados, mas os já registrados não são atualizados, excluídos ou truncados pelos fluxos e credenciais normais da aplicação. Não impede sozinho a ação de um DBA ou superusuário. |
+| **Auditoria síncrona** | Confirmado no MVP | Gravação realizada antes de concluir a operação. Nas mutações, o evento usa a mesma conexão e transação PostgreSQL; se a auditoria falhar, a alteração de negócio também sofre rollback. |
 | **DBA — Database Administrator** | Conceito | Administrador com privilégios elevados no banco. A auditoria no mesmo PostgreSQL não oferece proteção absoluta contra um DBA ou superusuário malicioso. |
-| **Encadeamento de hashes** | Confirmado; detalhes em aberto | Cada evento registra seu hash e o hash do evento anterior. Alterações ou lacunas quebram a cadeia e podem ser detectadas. Algoritmo e granularidade ainda serão definidos. |
-| **Hash criptográfico** | Confirmado | Resumo matemático de um conteúdo. Uma pequena alteração produz outro resultado, permitindo verificar integridade sem representar criptografia reversível. |
-| **Imutabilidade** | Confirmado | Propriedade de um registro que não pode ser alterado pelos fluxos normais após sua criação. |
-| **Não-repúdio** | Objetivo operacional | Capacidade de produzir evidências de que uma ação ocorreu e foi associada a determinado contexto. Não-repúdio criptográfico forte exigiria assinatura, timestamp confiável ou âncora externa. |
-| **Retenção** | Em aberto | Política que determina por quanto tempo dados e eventos são mantidos. Auditoria e conversas da IA terão políticas próprias. |
-| **Tamper-evident** | Confirmado | Resistente à adulteração no sentido de tornar mudanças detectáveis, por exemplo pelo encadeamento de hashes. Não significa que toda adulteração seja fisicamente impossível. |
+| **Encadeamento de hashes** | Futuro; fora do MVP | Técnica em que cada evento registra seu hash e o hash do evento anterior para tornar alterações ou lacunas detectáveis. Foi adiada porque uma cabeça compartilhada pode serializar gravações e ampliar bloqueios nas transações de negócio. |
+| **Hash criptográfico** | Conceito; uso futuro na auditoria | Resumo matemático de um conteúdo. Uma pequena alteração produz outro resultado, permitindo verificar integridade sem representar criptografia reversível. O MVP não encadeará hashes dos eventos de auditoria. |
+| **Imutabilidade operacional** | Confirmado no MVP | Garantia de que os eventos não podem ser alterados ou removidos pelos caminhos e credenciais normais da aplicação. Não equivale a imutabilidade criptográfica ou física diante de um administrador privilegiado. |
+| **Não-repúdio** | Objetivo futuro; evidência limitada no MVP | Capacidade de produzir evidências que dificultem negar a autoria ou ocorrência de uma ação. O MVP associa eventos à identidade autenticada e ao contexto transacional, mas não alega não-repúdio criptográfico, que exigiria controles como assinatura, carimbo de tempo confiável ou âncora externa. |
+| **Retenção da auditoria** | Confirmado no MVP | Não haverá expurgo automático por idade no MVP. Eventos permanecerão armazenados e o crescimento da tabela e dos índices será monitorado até existir uma política futura explícita, autorizada e juridicamente revisada. |
+| **Tamper-evident** | Futuro; fora do MVP | Propriedade de tornar adulterações detectáveis, por exemplo por encadeamento de hashes e checkpoints independentes. O append-only operacional do MVP não oferece sozinho essa garantia contra atores privilegiados. |
 | **WORM — Write Once, Read Many** | Fora do MVP | Armazenamento no qual o dado é escrito uma vez e depois somente lido. Não será introduzido inicialmente; poderá fortalecer a auditoria no futuro. |
 
 ## Inteligência artificial
@@ -288,6 +318,7 @@ discussão para a implantação.
 | **Microsserviços** | Não serão a arquitetura inicial; módulos poderão ser extraídos do monólito quando escala ou independência operacional justificarem. |
 | **Next.js** | Não é necessário inicialmente, pois o frontend autenticado será uma SPA React sem requisito atual de SSR. |
 | **Banco vetorial** | Não faz parte do MVP e só será avaliado junto com uma necessidade concreta de embeddings ou RAG. |
+| **Exportações e relatórios assíncronos** | Fora do MVP; evolução prevista. O contrato de jobs, snapshot, autorização, armazenamento, retenção e download será definido em fase posterior. |
 
 ## Manutenção deste dicionário
 

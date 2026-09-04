@@ -152,7 +152,34 @@ A DSL síncrona MUST aceitar no máximo cinco níveis na árvore de filtros, 25 
 
 #### Scenario: Consumidor necessita processamento mais pesado
 - **WHEN** uma exportação, relatório ou consulta não cabe no perfil síncrono
-- **THEN** o consumidor deve usar um futuro job assíncrono com limites e snapshot próprios
+- **THEN** a plataforma rejeita o uso do perfil interativo e não tenta executar implicitamente uma exportação ou relatório pesado de forma síncrona
+
+### Requirement: Exportações e relatórios assíncronos fora do MVP
+O MVP MUST NOT expor operações de exportação, geração de relatórios ou jobs assíncronos de consulta com snapshot. A arquitetura MAY reservar pontos de extensão, mas o contrato, armazenamento, autorização, retenção e download desses artefatos MUST ser definidos em uma fase futura.
+
+#### Scenario: Consumidor solicita exportação
+- **WHEN** um consumidor tenta iniciar uma exportação ou relatório não oferecido pelo contrato do MVP
+- **THEN** a plataforma não executa a carga como consulta síncrona alternativa e informa que a capacidade não está disponível
+
+### Requirement: Meta inicial de capacidade sem cota transacional de registros
+O MVP MUST validar uma carga com 20 organizações, 100 entidades publicadas, aproximadamente cinco milhões de registros dinâmicos no conjunto e pelo menos uma tabela com um milhão de linhas, das quais até 250 mil pertençam à mesma organização. A plataforma MUST NOT executar `COUNT` nem atualizar contador serializado em cada inserção apenas para impor uma cota síncrona de registros por organização; crescimento e eventual quota MUST ser tratados por métricas e processos próprios.
+
+#### Scenario: Organização amplia seu volume de registros
+- **WHEN** uma inserção válida aumenta o volume da organização
+- **THEN** o runtime aplica autorização, validação, RLS, constraints e auditoria sem executar contagem total ou bloquear contador global de quota na transação
+
+### Requirement: Critérios técnicos de desempenho do MVP
+No ambiente de referência e com o perfil de dados confirmado, o backend MUST atender às seguintes metas p95: consulta por identificador em até 300 ms, listagem ou filtro simples indexado em até 500 ms, consulta composta indexada em até um segundo e criação, alteração ou exclusão lógica em até 750 ms, incluindo autenticação local da sessão, autorização, RLS e auditoria. O p99 das operações comuns MUST permanecer abaixo de dois segundos, sem substituir o `statement_timeout` de cinco segundos já aplicado às consultas síncronas.
+
+O teste MUST sustentar 100 usuários virtuais e 30 requisições por segundo durante 30 minutos, além de um pico de 60 requisições por segundo durante cinco minutos. A taxa de erros internos MUST permanecer abaixo de 1%, excluindo rejeições esperadas de validação, autenticação e autorização. O tempo do navegador, de provedores externos de identidade e da LLM MUST NOT integrar essas medições do backend.
+
+#### Scenario: Perfil sustentado é executado
+- **WHEN** o teste representativo opera com o volume, a concorrência e a duração definidos
+- **THEN** as latências por percentil e a taxa de erros atendem às metas e nenhuma verificação de isolamento ou auditoria é relaxada para alcançá-las
+
+#### Scenario: Pico temporário é executado
+- **WHEN** o benchmark aplica 60 requisições por segundo durante cinco minutos
+- **THEN** o backend permanece funcional, não perde eventos de mutações confirmadas e se recupera sem intervenção após o pico
 
 ### Requirement: Projeções versionadas
 Cada versão publicada da entidade MUST definir uma projeção padrão de lista e outra de detalhe. A ausência de `select` MUST aplicar a projeção correspondente; um `select` explícito MUST retornar exatamente os campos de negócio solicitados e autorizados, além de `id` e `meta`. A API MUST NOT admitir wildcard, alias, agregação, expressão calculada ou seleção aninhada no MVP.
@@ -320,7 +347,7 @@ O runtime MUST tratar a autorreferência opcional do MVP como uma referência co
 - **THEN** a plataforma retorna os vínculos autorizados sem apresentá-los como uma hierarquia garantida
 
 ### Requirement: Exclusão lógica de registros
-A operação regular de exclusão MUST marcar o registro com `deleted_at`, incrementar sua versão otimista e registrar a ação na auditoria, sem remover fisicamente a linha. A API regular e as ferramentas da IA MUST NOT oferecer exclusão física.
+A operação regular de exclusão MUST marcar o registro com `deleted_at`, incrementar sua versão otimista e registrar a ação na auditoria, sem remover fisicamente a linha. Criações, alterações, exclusões lógicas e restaurações MUST auditar as chaves lógicas dos campos afetados e as versões envolvidas, sem copiar valores anteriores ou posteriores. A API regular e as ferramentas da IA MUST NOT oferecer exclusão física.
 
 #### Scenario: Usuário exclui registro
 - **WHEN** um usuário autorizado confirma a exclusão de um registro ativo
@@ -343,11 +370,11 @@ A operação regular de exclusão MUST marcar o registro com `deleted_at`, incre
 - **THEN** a plataforma rejeita a duplicidade e orienta o fluxo de restauração controlada
 
 ### Requirement: Importação massiva controlada
-A plataforma MUST processar importações de alto volume por um fluxo de staging controlado e MUST aplicar contexto organizacional, autorização, validação, integridade, RLS e auditoria antes de promover os registros para as tabelas finais.
+A plataforma MUST processar importações de alto volume por um fluxo de staging controlado e MUST aplicar contexto organizacional, autorização, validação, integridade, RLS e auditoria antes de promover os registros para as tabelas finais. Cada bloco confirmado MUST gravar na mesma transação um evento resumido referenciado pelo `import_id`, enquanto o detalhamento por linha permanece nas estruturas próprias da importação.
 
 #### Scenario: Promoção de lote validado
 - **WHEN** todas as linhas selecionadas de um lote passam pelas validações aplicáveis
-- **THEN** a plataforma as insere em conjunto nas tabelas finais sob o contexto confiável da organização e registra o resultado da importação
+- **THEN** a plataforma as insere em conjunto nas tabelas finais sob o contexto confiável da organização e registra na mesma transação um resumo auditável do bloco
 
 #### Scenario: Organização divergente no lote
 - **WHEN** uma linha ou referência tenta usar uma organização diferente daquela fixada pelo job de importação
