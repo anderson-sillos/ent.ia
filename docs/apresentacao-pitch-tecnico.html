@@ -270,6 +270,37 @@
       background: rgb(78 219 209 / 10%);
     }
 
+    .key-message {
+      align-self: center;
+      width: 84%;
+      margin: 2.2% auto 0;
+      padding: 1.15% 1.55%;
+      border: 2px solid rgb(0 166 156 / 48%);
+      border-left: 7px solid var(--teal);
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--white), var(--teal-soft));
+      box-shadow: 0 12px 30px rgb(7 26 45 / 13%);
+      font-size: clamp(11px, 1.12vw, 20px);
+      font-weight: 620;
+      line-height: 1.38;
+    }
+
+    .key-message strong {
+      color: #056d68;
+      font-size: 1.08em;
+    }
+
+    .dark .key-message {
+      border-color: rgb(78 219 209 / 52%);
+      border-left-color: var(--cyan);
+      background: linear-gradient(135deg, rgb(78 219 209 / 16%), rgb(255 255 255 / 7%));
+      box-shadow: 0 14px 34px rgb(0 0 0 / 22%);
+    }
+
+    .dark .key-message strong {
+      color: var(--cyan);
+    }
+
     .prompt {
       margin: .55em 0 .7em;
       padding: .8em 1em;
@@ -501,6 +532,33 @@
 
     tr:last-child td { border-bottom: 0; }
 
+    .compact-table {
+      font-size: clamp(11px, 1vw, 18px);
+    }
+
+    .compact-table th, .compact-table td {
+      padding: .62em .78em;
+    }
+
+    table a {
+      color: #056d68;
+      text-decoration-thickness: 1px;
+      text-underline-offset: .16em;
+    }
+
+    .source-note {
+      margin: .8% 0 0;
+      color: var(--muted);
+      font-size: clamp(7px, .68vw, 12px);
+      line-height: 1.3;
+    }
+
+    .source-note a {
+      color: #056d68;
+      text-decoration-thickness: 1px;
+      text-underline-offset: .16em;
+    }
+
     .risk-list {
       display: grid;
       gap: 1.1%;
@@ -558,6 +616,32 @@
     }
 
     .dark .footer { color: #91a9ba; }
+
+    .slide.appendix::after {
+      position: absolute;
+      z-index: 4;
+      top: 2.2%;
+      right: 3%;
+      padding: .42em .72em;
+      border: 1px solid rgb(0 166 156 / 30%);
+      border-radius: 999px;
+      color: #056d68;
+      background: var(--teal-soft);
+      content: "APÊNDICE TÉCNICO";
+      font-size: clamp(7px, .68vw, 12px);
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+
+    .slide.appendix.dark::after {
+      color: var(--cyan);
+      border-color: rgb(78 219 209 / 25%);
+      background: rgb(78 219 209 / 9%);
+    }
+
+    .progress.appendix-progress span {
+      background: linear-gradient(90deg, var(--coral), var(--gold));
+    }
 
     .brand {
       display: inline-flex;
@@ -659,6 +743,17 @@
         -webkit-overflow-scrolling: touch;
       }
 
+      .slide.appendix {
+        padding-top: max(70px, calc(env(safe-area-inset-top) + 52px));
+      }
+
+      .slide.appendix::after {
+        position: fixed;
+        top: max(16px, env(safe-area-inset-top));
+        right: 18px;
+        font-size: 10px;
+      }
+
       .eyebrow {
         margin-bottom: 12px;
         font-size: 11px;
@@ -722,6 +817,14 @@
         font-size: 15px;
       }
 
+      .key-message {
+        width: 100%;
+        margin: 20px auto 0;
+        padding: 16px;
+        border-left-width: 7px;
+        font-size: 17px;
+      }
+
       .module-map {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
@@ -745,6 +848,9 @@
         min-width: 145px;
         padding: 10px;
       }
+
+      .compact-table { font-size: 16px; }
+      .source-note { margin-top: 14px; font-size: 12px; }
 
       .risk-list {
         grid-template-columns: 1fr;
@@ -868,7 +974,7 @@
     <section class="slide dark active" aria-labelledby="s1-title">
       <p class="eyebrow">Apresentação conceitual e técnica · viabilidade e aplicabilidade</p>
       <h1 id="s1-title">ENT<span class="accent">.IA</span></h1>
-      <p class="lead">Plataforma inteligente para modelagem e personalização de entidades de negócio.</p>
+      <p class="lead">Uma definição de entidade se transforma em persistência, telas, APIs e interação por IA — com segurança e governança incorporadas.</p>
       <div style="margin-top:auto">
         <span class="tag">Entidades moldadas ao seu negócio.</span>
         <span class="tag">Modele entidades. A IA faz o resto.</span>
@@ -967,9 +1073,116 @@
       <div class="footer"><span>Aplicabilidade com limites explícitos</span><span>05</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s6-title">
+    <section class="slide dark" aria-labelledby="s6-title">
+      <p class="eyebrow">Como o modelo funciona</p>
+      <h2 id="s6-title">Uma definição publicada orienta dados, telas e todas as formas de acesso</h2>
+      <div class="grid-3" style="flex:1">
+        <article class="card">
+          <div class="number">1</div>
+          <h3>Catálogo central</h3>
+          <p class="muted">O catálogo é a fonte de verdade para entidades, campos, relações, validações, acesso e apresentação.</p>
+        </article>
+        <article class="card">
+          <div class="number">2</div>
+          <h3>Interface dinâmica</h3>
+          <p class="muted">Telas de cadastro e consulta são interpretadas em runtime a partir do modelo publicado.</p>
+        </article>
+        <article class="card">
+          <div class="number">3</div>
+          <h3>Fronteira operacional única</h3>
+          <p class="muted">Pessoas, integrações e LLM utilizam as mesmas APIs, permissões, validações e auditoria.</p>
+        </article>
+      </div>
+      <div class="callout"><strong>Em termos técnicos:</strong> plataforma multitenant, metadata-driven, model-driven e API-first para construir aplicações e módulos de negócio configuráveis.</div>
+      <div class="footer"><span>Uma fundação reutilizável para diferentes domínios</span><span>06</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s7-title">
+      <p class="eyebrow">Conceito consolidado</p>
+      <h2 id="s7-title">O padrão já é aplicado amplamente em plataformas corporativas e ERPs</h2>
+      <div class="bar" style="margin-top:1.3%">
+        <div class="step"><strong>Descrever</strong><span>Objetos, campos, relações e regras como metadados.</span></div>
+        <div class="step"><strong>Materializar</strong><span>Estruturas físicas ou virtuais para persistência.</span></div>
+        <div class="step"><strong>Apresentar</strong><span>Formulários, listas, pesquisas e relatórios.</span></div>
+        <div class="step"><strong>Governar</strong><span>Permissões, auditoria, APIs e automações.</span></div>
+      </div>
+      <div class="grid-3" style="margin-top:3%">
+        <article class="card"><h3>Plataformas corporativas</h3><p class="muted">Salesforce, Dataverse e ServiceNow comprovam o modelo metadata-driven em aplicações de grande escala.</p></article>
+        <article class="card"><h3>ERPs extensíveis</h3><p class="muted">SAP, Oracle, Dynamics, Odoo e TOTVS permitem criar ou ampliar objetos de negócio por configuração.</p></article>
+        <article class="card"><h3>Validação para o ENT.IA</h3><p class="muted">O conceito-base é conhecido; a oportunidade está em uma combinação mais aberta, reutilizável e preparada para IA.</p></article>
+      </div>
+      <div class="callout"><strong>Leitura correta:</strong> o mercado valida a abordagem, não uma equivalência completa. Cada produto materializa, isola e governa seus metadados de forma diferente.</div>
+      <div class="footer"><span>Precedentes reduzem o risco conceitual</span><span>07</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s8-title">
+      <p class="eyebrow">Comparativo · plataformas</p>
+      <h2 id="s8-title">Produtos estabelecidos resolvem partes importantes da mesma proposta</h2>
+      <table class="compact-table" aria-label="Comparação do ENT.IA com plataformas orientadas a metadados">
+        <thead><tr><th>Produto</th><th>Abordagem semelhante</th><th>Diferença em relação ao ENT.IA</th></tr></thead>
+        <tbody>
+          <tr><td><strong><a href="https://architect.salesforce.com/docs/architect/fundamentals/guide/platform-multitenant-architecture.html" target="_blank" rel="noreferrer">Salesforce Platform</a></strong></td><td>Objetos, campos, interfaces e APIs materializados por metadados em ambiente multitenant.</td><td>Plataforma proprietária com objetos virtuais sobre armazenamento compartilhado.</td></tr>
+          <tr><td><strong><a href="https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/define-data-model-driven-app" target="_blank" rel="noreferrer">Dataverse + Power Apps</a></strong></td><td>Tabelas, relações, formulários, views, regras e segurança model-driven.</td><td>Fortemente integrado ao ecossistema Microsoft e aos seus ambientes.</td></tr>
+          <tr><td><strong><a href="https://www.servicenow.com/docs/r/platform-administration/table-administration-and-data-management/using-table-administration.html" target="_blank" rel="noreferrer">ServiceNow</a></strong></td><td>Dicionário define tabelas e campos que orientam listas, formulários, ACLs e workflows.</td><td>Ênfase em workflows corporativos e no ecossistema proprietário ServiceNow.</td></tr>
+          <tr><td><strong><a href="https://docs.frappe.io/framework/user/en/basics/doctypes" target="_blank" rel="noreferrer">Frappe Framework</a></strong></td><td>DocType cria tabela física, lista, formulário e REST API automaticamente.</td><td>Multitenancy por site; stack e modelo operacional distintos.</td></tr>
+          <tr><td><strong><a href="https://docs.directus.io/reference/introduction" target="_blank" rel="noreferrer">Directus</a></strong></td><td>Transforma um schema SQL em APIs REST/GraphQL e interface administrativa.</td><td>É principalmente uma camada de dados, não o núcleo corporativo completo proposto.</td></tr>
+        </tbody>
+      </table>
+      <p class="source-note">Os nomes dos produtos abrem suas documentações oficiais. A comparação trata de capacidades arquiteturais, não de equivalência comercial.</p>
+      <div class="footer"><span>Referências de plataforma</span><span>08</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s9-title">
+      <p class="eyebrow">Comparativo · ERPs</p>
+      <h2 id="s9-title">Nos ERPs, metadados normalmente estendem um núcleo de processos já definido</h2>
+      <table class="compact-table" aria-label="Comparação do ENT.IA com mecanismos de extensão de ERPs">
+        <thead><tr><th>ERP</th><th>Como aplica o conceito</th><th>Limite em relação ao ENT.IA</th></tr></thead>
+        <tbody>
+          <tr><td><strong><a href="https://help.sap.com/docs/SAP_S4HANA_CLOUD/0f69f8fb28ac4bf48d2b57b9637e81fa/c703c5b4e6a24d52a928ea54e8ff5e52.html" target="_blank" rel="noreferrer">SAP S/4HANA Cloud</a></strong></td><td>Custom Business Objects com campos, associações, UI e serviço OData gerados.</td><td>Extensibilidade subordinada ao modelo e aos processos SAP.</td></tr>
+          <tr><td><strong><a href="https://docs.oracle.com/en/cloud/saas/applications-common/26a/oacex/overview-of-using-application-composer.html" target="_blank" rel="noreferrer">Oracle Fusion Cloud</a></strong></td><td>Application Composer cria objetos, campos, relações, páginas, lógica e segurança.</td><td>Extensão das aplicações Oracle e de seu modelo operacional.</td></tr>
+          <tr><td><strong><a href="https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-custom-entity" target="_blank" rel="noreferrer">Dynamics 365</a></strong></td><td>Dataverse adiciona tabelas personalizadas, views, formulários e relações.</td><td>Capacidades vinculadas à Power Platform.</td></tr>
+          <tr><td><strong><a href="https://www.odoo.com/documentation/18.0/applications/studio/models_modules_apps.html" target="_blank" rel="noreferrer">Odoo</a></strong></td><td>Studio cria modelos, campos, views, automações e regras de segurança.</td><td>Personalização acontece dentro do ERP e de seus módulos.</td></tr>
+          <tr><td><strong><a href="https://tdn.totvs.com/display/LRM/Metadados%2B-%2BComo%2Bincluir%2Bum%2Bprojeto" target="_blank" rel="noreferrer">TOTVS RM</a></strong></td><td>Metadados fornecem persistência, negócio, formulários e APIs para extensões.</td><td>Extensão integrada à respectiva linha de ERP.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout key-message"><strong>Inversão do ENT.IA:</strong> em vez de começar por um ERP vertical e permitir extensões, começa por um motor genérico no qual os próprios módulos de negócio são modelados.</div>
+      <div class="footer"><span>Referências de ERP</span><span>09</span></div>
+    </section>
+
+    <section class="slide dark" aria-labelledby="s10-title">
+      <p class="eyebrow">Diferencial proposto</p>
+      <h2 id="s10-title">O diferencial não é o metadado isolado; é a combinação governada desde a fundação</h2>
+      <div class="grid-4" style="margin-top:1.2%">
+        <article class="card"><div class="number">1</div><h3>Catálogo compartilhado</h3><p class="muted">Definições globais versionadas, com habilitação e experiência por organização.</p></article>
+        <article class="card"><div class="number">2</div><h3>Modelo relacional explícito</h3><p class="muted">Tabela física por entidade, <code>organization_id</code>, constraints, índices e RLS.</p></article>
+        <article class="card"><div class="number">3</div><h3>Uma fronteira operacional</h3><p class="muted">React, integrações e IA usam REST, DSL/AST, RBAC, validações e auditoria comuns.</p></article>
+        <article class="card"><div class="number">4</div><h3>Controle e portabilidade</h3><p class="muted">Identidade federável, white-label e implantação agnóstica com componentes abertos.</p></article>
+      </div>
+      <div class="callout key-message"><strong>Tese de diferenciação:</strong> flexibilidade de configuração orientada a metadados com integridade relacional, isolamento multitenant e IA sem caminho privilegiado até os dados.</div>
+      <div class="footer"><span>Diferencial pela composição, não por uma função isolada</span><span>10</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s11-title">
+      <p class="eyebrow">Evolução progressiva</p>
+      <h2 id="s11-title">Uma fundação estável permite incorporar recursos por valor e evidência</h2>
+      <div class="bar" style="margin-top:1.2%">
+        <div class="step"><strong>1 · Provar a fundação</strong><span>Catálogo, tabela, REST, UI, identidade, RBAC/RLS e auditoria.</span></div>
+        <div class="step"><strong>2 · Ganhar produtividade</strong><span>Importação, views salvas, campos calculados e notificações.</span></div>
+        <div class="step"><strong>3 · Orquestrar processos</strong><span>Workflows, webhooks, relatórios e exportações assíncronas.</span></div>
+        <div class="step"><strong>4 · Ampliar inteligência</strong><span>Modelagem assistida, agentes especializados e automações com políticas.</span></div>
+      </div>
+      <div class="grid-3" style="margin-top:3%">
+        <article class="card"><h3>Contratos versionados</h3><p class="muted">Novas capacidades evoluem sobre snapshots publicados e APIs compatíveis.</p></article>
+        <article class="card"><h3>Módulos substituíveis</h3><p class="muted">O monólito modular preserva limites para extração futura quando escala ou risco justificarem.</p></article>
+        <article class="card"><h3>Decisão por evidência</h3><p class="muted">Cada fase exige casos reais, métricas e controles comprovados antes da próxima ampliação.</p></article>
+      </div>
+      <div class="callout key-message"><strong>Compromisso realista:</strong> a arquitetura proposta evita bloqueios previsíveis de evolução; a prontidão de cada capacidade será validada progressivamente, sem prometer antecipadamente um ERP completo.</div>
+      <div class="footer"><span>Expandir sem perder o núcleo de governança</span><span>11</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s12-title">
       <p class="eyebrow">Exemplo ilustrativo</p>
-      <h2 id="s6-title">Uma definição de “Fornecedor” vira dados, telas, APIs e interação por prompt</h2>
+      <h2 id="s12-title">Uma definição de “Fornecedor” vira dados, telas, APIs e interação por prompt</h2>
       <div class="grid-4" style="flex:1">
         <article class="card">
           <div class="number">01</div>
@@ -993,17 +1206,18 @@
         </article>
       </div>
       <div class="callout"><strong>Diferencial competitivo técnico:</strong> “Liste fornecedores ativos” gera uma consulta REST autorizada; “Altere a categoria da ACME” gera uma prévia e aguarda confirmação. O mesmo metadado governa dados, interface, acesso e IA.</div>
-      <div class="footer"><span>Do conceito à operação</span><span>06</span></div>
+      <div class="footer"><span>Do conceito à operação</span><span>12</span></div>
     </section>
 
     <section class="slide architecture-slide" aria-label="Arquitetura de referência do ENT.IA">
       <p class="mobile-architecture-hint">Gire o celular ou arraste o diagrama horizontalmente</p>
       <img class="architecture-full" src="arquitetura-entia.svg" alt="Diagrama da arquitetura de referência do ENT.IA">
+      <div class="footer"><span>Arquitetura de referência</span><span>10</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s8-title">
+    <section class="slide" aria-labelledby="s14-title">
       <p class="eyebrow">Estratégia de software</p>
-      <h2 id="s8-title">Monólito modular: velocidade inicial com limites explícitos de evolução</h2>
+      <h2 id="s14-title">Monólito modular: velocidade inicial com limites explícitos de evolução</h2>
       <div class="module-map">
         <div class="module">Identity</div>
         <div class="module">Tenancy</div>
@@ -1021,12 +1235,12 @@
         <article class="card"><h3>Fronteiras testáveis</h3><p class="muted">Interfaces públicas, eventos e propriedade de dados por módulo.</p></article>
         <article class="card"><h3>Extração por evidência</h3><p class="muted">IA ou jobs podem ser separados quando risco ou escala justificarem.</p></article>
       </div>
-      <div class="footer"><span>Spring Modulith reforça os limites</span><span>08</span></div>
+      <div class="footer"><span>Spring Modulith reforça os limites</span><span>14</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s9-title">
+    <section class="slide" aria-labelledby="s15-title">
       <p class="eyebrow">Dados e evolução</p>
-      <h2 id="s9-title">Definição global; ativação segura; dados isolados por organização</h2>
+      <h2 id="s15-title">Definição global; ativação segura; dados isolados por organização</h2>
       <div class="grid-2">
         <article class="card">
           <h3>Modelo físico escolhido</h3>
@@ -1056,12 +1270,12 @@
         <div class="step"><strong>Activating</strong><span>DDL idempotente</span></div>
         <div class="step"><strong>Active</strong><span>contrato vigente</span></div>
       </div>
-      <div class="footer"><span>Liquibase evolui o schema estático; o motor próprio governa as entidades</span><span>09</span></div>
+      <div class="footer"><span>Liquibase evolui o schema estático; o motor próprio governa as entidades</span><span>15</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s10-title">
+    <section class="slide dark" aria-labelledby="s16-title">
       <p class="eyebrow">Identidade e segurança</p>
-      <h2 id="s10-title">A entrada descobre a organização com segurança, aplica sua marca e encaminha ao provedor correto</h2>
+      <h2 id="s16-title">A entrada descobre a organização com segurança, aplica sua marca e encaminha ao provedor correto</h2>
       <div class="grid-3">
         <article class="card">
           <h3>Provedor da organização</h3>
@@ -1080,12 +1294,12 @@
         <article class="card"><h3>Descoberta sem exposição</h3><p class="muted">A entrada genérica não lista clientes. Domínio inequívoco encaminha diretamente; vínculos individuais somente aparecem após confirmação do e-mail.</p></article>
         <article class="card"><h3>Marca e sessão protegidas</h3><p class="muted">A organização aplica tema declarativo antes e depois do login. O BFF mantém tokens no backend; Keycloak e APIs administrativas permanecem internos.</p></article>
       </div>
-      <div class="footer"><span>Keycloak autentica; o ENT.IA aplica autorização de negócio</span><span>10</span></div>
+      <div class="footer"><span>Keycloak autentica; o ENT.IA aplica autorização de negócio</span><span>16</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s11-title">
+    <section class="slide" aria-labelledby="s17-title">
       <p class="eyebrow">Autorização e auditoria</p>
-      <h2 id="s11-title">Toda operação responde a duas perguntas: “pode?” e “como comprovamos?”</h2>
+      <h2 id="s17-title">Toda operação responde a duas perguntas: “pode?” e “como comprovamos?”</h2>
       <div class="grid-2">
         <article class="card">
           <h3>RBAC contextual</h3>
@@ -1112,12 +1326,12 @@
         </article>
       </div>
       <div class="callout"><strong>Não-repúdio:</strong> capacidade de associar uma ação ao seu autor e produzir evidências que dificultem sua negação posterior. O MVP entrega rastreabilidade transacional, mas não alega não-repúdio criptográfico nem detecção de alterações feitas por administradores privilegiados.</div>
-      <div class="footer"><span>Controle + evidência</span><span>11</span></div>
+      <div class="footer"><span>Controle + evidência</span><span>17</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s12-title">
+    <section class="slide" aria-labelledby="s18-title">
       <p class="eyebrow">IA na prática</p>
-      <h2 id="s12-title">O usuário pede em linguagem natural; o ENT.IA executa como uma operação comum</h2>
+      <h2 id="s18-title">O usuário pede em linguagem natural; o ENT.IA executa como uma operação comum</h2>
       <div class="grid-2">
         <article class="card">
           <span class="tag">Consulta</span>
@@ -1139,12 +1353,12 @@
         </article>
       </div>
       <div class="callout"><strong>Regra simples:</strong> consultas autorizadas podem ser automáticas e limitadas; qualquer alteração exige pré-visualização e confirmação. A LLM nunca acessa diretamente o banco.</div>
-      <div class="footer"><span>API REST é a fronteira oficial da IA</span><span>12</span></div>
+      <div class="footer"><span>API REST é a fronteira oficial da IA</span><span>18</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s13-title">
+    <section class="slide" aria-labelledby="s19-title">
       <p class="eyebrow">API de entidades · DSL + AST</p>
-      <h2 id="s13-title">A consulta é declarada em JSON, validada como árvore e executada sem SQL livre</h2>
+      <h2 id="s19-title">A consulta é declarada em JSON, validada como árvore e executada sem SQL livre</h2>
       <div class="grid-2">
         <article class="card">
           <h3>1 · O consumidor envia a DSL</h3>
@@ -1188,12 +1402,12 @@
         <span>items + meta + cursor</span>
       </div>
       <div class="callout"><strong>Resultado:</strong> uma linguagem expressiva para telas e IA, mas limitada pelo catálogo, permissões, perfis de índice e tempo máximo de execução.</div>
-      <div class="footer"><span>Flexibilidade controlada, sem expor SQL</span><span>13</span></div>
+      <div class="footer"><span>Flexibilidade controlada, sem expor SQL</span><span>19</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s14-title">
+    <section class="slide" aria-labelledby="s20-title">
       <p class="eyebrow">Stack tecnológica proposta</p>
-      <h2 id="s14-title">Tecnologias maduras, alinhadas à experiência da equipe e com preferência por ecossistema aberto</h2>
+      <h2 id="s20-title">Tecnologias maduras, alinhadas à experiência da equipe e com preferência por ecossistema aberto</h2>
       <table aria-label="Stack tecnológica do ENT.IA">
         <thead><tr><th>Camada</th><th>Tecnologias</th><th>Papel</th></tr></thead>
         <tbody>
@@ -1207,12 +1421,12 @@
         </tbody>
       </table>
       <div class="callout"><strong>* Decisões condicionais:</strong> a versão do Liquibase depende da revisão de licença; Spring AI e o provedor LLM serão confirmados por prova técnica. O motor de schema dinâmico é próprio.</div>
-      <div class="footer"><span>Kubernetes foi adiado; imagens e contratos permanecem compatíveis</span><span>14</span></div>
+      <div class="footer"><span>Kubernetes foi adiado; imagens e contratos permanecem compatíveis</span><span>20</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s15-title">
+    <section class="slide" aria-labelledby="s21-title">
       <p class="eyebrow">Stack tecnológica · visão complementar</p>
-      <h2 id="s15-title">O papel de cada tecnologia na solução</h2>
+      <h2 id="s21-title">O papel de cada tecnologia na solução</h2>
       <div class="tech-columns four">
         <article class="card">
           <h3>Backend e identidade</h3>
@@ -1256,45 +1470,64 @@
           </dl>
         </article>
       </div>
-      <div class="footer"><span>* Dependências sujeitas às decisões de licença e provedor</span><span>15</span></div>
+      <div class="footer"><span>* Dependências sujeitas às decisões de licença e provedor</span><span>21</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s16-title">
-      <p class="eyebrow">Caminho de validação técnica</p>
-      <h2 id="s16-title">Cada etapa demonstra uma capacidade real antes de ampliar o escopo</h2>
-      <table aria-label="Etapas de validação técnica do ENT.IA">
-        <thead><tr><th>Etapa</th><th>Evidência prática</th><th>O que comprova</th></tr></thead>
+    <section class="slide" aria-labelledby="s22-title">
+      <p class="eyebrow">Viabilidade técnica</p>
+      <h2 id="s22-title">A inovação fica concentrada no núcleo que realmente diferencia o produto</h2>
+      <div class="grid-2">
+        <article class="card" style="border-top:5px solid var(--teal)">
+          <h3>Reutilizar capacidades comprovadas</h3>
+          <ul>
+            <li>Java, Spring e React como bases de aplicação;</li>
+            <li>Keycloak, OIDC e SAML para identidade;</li>
+            <li>PostgreSQL, constraints e RLS para dados;</li>
+            <li>Nginx, containers OCI e OpenTofu na implantação;</li>
+            <li>bibliotecas consolidadas para UI, testes e observabilidade.</li>
+          </ul>
+        </article>
+        <article class="card" style="border-top:5px solid var(--coral)">
+          <h3>Construir e provar o núcleo diferenciado</h3>
+          <ul>
+            <li>catálogo global e contratos versionados;</li>
+            <li>motor seguro de evolução do schema;</li>
+            <li>runtime de registros, REST e interface dinâmica;</li>
+            <li>DSL/AST com autorização e limites;</li>
+            <li>orquestração da IA sem acesso direto ao banco.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="pipeline" aria-label="Estratégia de construção e validação do ENT.IA">
+        <span>Componentes maduros</span>
+        <span>Núcleo diferenciado</span>
+        <span>Fatia vertical</span>
+        <span>Evidência técnica</span>
+        <span>Expansão progressiva</span>
+      </div>
+      <div class="callout"><strong>Abordagem:</strong> não reconstruir identidade, banco ou infraestrutura. O esforço próprio se concentra em transformar metadados em uma operação segura, observável e repetível.</div>
+      <div class="footer"><span>Inovação focalizada, fundação comprovada</span><span>22</span></div>
+    </section>
+
+    <section class="slide" aria-labelledby="s23-title">
+      <p class="eyebrow">Redução de incerteza</p>
+      <h2 id="s23-title">Cada hipótese crítica tem uma prova objetiva e uma alternativa segura</h2>
+      <table class="compact-table" aria-label="Hipóteses críticas, provas e alternativas técnicas do ENT.IA">
+        <thead><tr><th>Hipótese</th><th>Prova objetiva</th><th>Alternativa segura</th></tr></thead>
         <tbody>
-          <tr><td><strong>0 · Detalhar</strong></td><td>REST/DSL, RLS, convenções físicas e ciclo de schema documentados; pendências classificadas</td><td>Arquitetura coerente e requisitos testáveis</td></tr>
-          <tr><td><strong>1 · Fundação</strong></td><td>Login, duas organizações e perfis com tentativas de acesso cruzado</td><td>Identidade, isolamento e autorização</td></tr>
-          <tr><td><strong>2 · Núcleo dinâmico</strong></td><td>Modelar e ativar “Fornecedor”; tabela, REST e UI disponíveis</td><td>Ciclo de metadados ponta a ponta</td></tr>
-          <tr><td><strong>3 · IA controlada</strong></td><td>Consultar e propor alteração com preview, confirmação e auditoria</td><td>Utilidade sem caminho privilegiado</td></tr>
-          <tr><td><strong>4 · Capacidade</strong></td><td>20 organizações, tabela com 1 milhão de linhas, 100 usuários virtuais e 30 RPS sustentados</td><td>Desempenho com RLS e auditoria ativos</td></tr>
-          <tr><td><strong>5 · Piloto real</strong></td><td>Operar uma entidade real com usuários e métricas observáveis</td><td>Aplicabilidade e operação</td></tr>
+          <tr><td><strong>Isolamento e escala</strong></td><td>Testes cruzados entre organizações e carga com RLS, auditoria e um milhão de registros.</td><td>Ajustar índices e políticas; particionar apenas quando houver evidência.</td></tr>
+          <tr><td><strong>Evolução do schema</strong></td><td>Simular locks, falhas, retomada e drift durante a ativação de versões.</td><td>Restringir transições e executar mudanças pesadas em manutenção controlada.</td></tr>
+          <tr><td><strong>Experiência dinâmica</strong></td><td>Configurar “Fornecedor” e validar cadastro e consulta com usuários do piloto.</td><td>Adicionar templates e componentes específicos somente para exceções reais.</td></tr>
+          <tr><td><strong>IA governada</strong></td><td>Testar consultas, prompt injection e mutação com prévia, confirmação e auditoria.</td><td>Manter a IA somente para leitura até os controles de alteração serem aprovados.</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>Metas p95 no backend:</strong> ID até 300 ms · filtro simples até 500 ms · consulta composta até 1 s · mutação com auditoria até 750 ms. São critérios do MVP, não SLA.</div>
-      <div class="footer"><span>Evolução guiada por evidências</span><span>16</span></div>
+      <div class="callout"><strong>Decisão progressiva:</strong> nenhuma hipótese exige construir o produto inteiro para ser confirmada ou rejeitada. Cada prova pode limitar, redirecionar ou liberar a etapa seguinte.</div>
+      <div class="footer"><span>Risco convertido em experimento e decisão</span><span>23</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s17-title">
-      <p class="eyebrow">Riscos reconhecidos · validação técnica</p>
-      <h2 id="s17-title">Os controles estão definidos; sua eficácia e o risco residual precisam ser demonstrados</h2>
-      <div class="risk-list">
-        <div><strong>Vazamento entre organizações</strong><span><strong>Controle:</strong> contexto confiável, negação padrão, RLS obrigatória e testes cruzados.</span></div>
-        <div><strong>DDL em tabelas grandes</strong><span><strong>Controle:</strong> vocabulário fechado, análise de impacto, execução por fases e benchmark de locks.</span></div>
-        <div><strong>Consultas dinâmicas caras</strong><span><strong>Controle:</strong> AST limitada, perfis de índice, paginação por cursor e timeout de cinco segundos.</span></div>
-        <div><strong>Complexidade do schema engine</strong><span><strong>Controle:</strong> planos imutáveis, locks, diário idempotente, pre/pós-condições e testes reais.</span></div>
-        <div><strong>Prompt injection e excesso de autonomia</strong><span><strong>Controle:</strong> allowlist, minimização, confirmação humana e autorização repetida na REST API.</span></div>
-        <div><strong>Auditoria no mesmo banco</strong><span><strong>Controle inicial:</strong> gravação atômica, privilégios mínimos, origem rastreável e monitoramento do crescimento sem expurgo automático; detecção criptográfica permanece futura.</span></div>
-      </div>
-      <div class="callout"><strong>Discussão ainda aberta:</strong> quais evidências, responsáveis e níveis de risco residual serão aceitos? Controles definidos reduzem risco, mas não substituem testes de segurança, carga e recuperação.</div>
-      <div class="footer"><span>Decisões de arquitetura + comprovação prática</span><span>17</span></div>
-    </section>
-
-    <section class="slide dark" aria-labelledby="s18-title">
+    <section class="slide dark" aria-labelledby="s24-title">
       <p class="eyebrow">Provas práticas de viabilidade</p>
-      <h2 id="s18-title">Como saberemos que o conceito funciona?</h2>
+      <h2 id="s24-title">Como saberemos que o conceito funciona?</h2>
       <div class="grid-4" style="flex:1">
         <article class="card">
           <div class="number">1</div>
@@ -1322,12 +1555,12 @@
         </article>
       </div>
       <div class="callout"><strong>Critério de sucesso:</strong> esses cenários devem funcionar de forma repetível e observável com uma entidade piloto e duas organizações de teste.</div>
-      <div class="footer"><span>Cenários ponta a ponta, não métricas abstratas</span><span>18</span></div>
+      <div class="footer"><span>Cenários ponta a ponta, não métricas abstratas</span><span>24</span></div>
     </section>
 
-    <section class="slide" aria-labelledby="s19-title">
+    <section class="slide" aria-labelledby="s25-title">
       <p class="eyebrow">Alinhamentos técnicos</p>
-      <h2 id="s19-title">O que já está consolidado — e o que falta alinhar para a prova executável</h2>
+      <h2 id="s25-title">O que já está consolidado — e o que falta alinhar para a prova executável</h2>
       <div class="grid-2">
         <article class="card">
           <h3><span class="status">Fundação consolidada</span></h3>
@@ -1352,20 +1585,20 @@
         </article>
       </div>
       <div class="callout"><strong>Legendas:</strong> ¹ <strong>SLO · Service Level Objective</strong>: meta mensurável de disponibilidade, latência ou erros. ² <strong>RLS · Row-Level Security</strong>: regras do PostgreSQL que restringem quais linhas cada contexto pode consultar ou alterar.</div>
-      <div class="footer"><span>Do conceito à prova executável</span><span>19</span></div>
+      <div class="footer"><span>Do conceito à prova executável</span><span>25</span></div>
     </section>
 
-    <section class="slide dark" aria-labelledby="s20-title">
+    <section class="slide dark" aria-labelledby="s26-title">
       <p class="eyebrow">ENT.IA</p>
-      <p id="s20-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
+      <p id="s26-title" class="quote">Entidades moldadas ao seu negócio.<br><span class="accent">Governança incorporada.</span><br>IA sob controle.</p>
       <p class="lead" style="font-size:clamp(14px,1.7vw,30px);margin-bottom:8%">Próximo passo proposto: selecionar a entidade piloto e definir os critérios objetivos de sucesso.</p>
-      <div class="footer"><span>ent.ia.br</span><span>20</span></div>
+      <div class="footer"><span>ent.ia.br</span><span>26</span></div>
     </section>
   </main>
 
   <nav class="controls" aria-label="Controles da apresentação">
     <button id="previous" type="button" title="Slide anterior" aria-label="Slide anterior">←</button>
-    <span id="counter" class="counter" aria-live="polite">1 / 20</span>
+    <span id="counter" class="counter" aria-live="polite">1 / 15</span>
     <button id="next" type="button" title="Próximo slide" aria-label="Próximo slide">→</button>
     <button id="fullscreen" type="button" title="Tela cheia" aria-label="Alternar tela cheia">⛶</button>
   </nav>
@@ -1374,7 +1607,62 @@
   <script>
     (() => {
       const deck = document.querySelector('.deck');
-      const slides = Array.from(document.querySelectorAll('.slide'));
+      const originalSlides = Array.from(document.querySelectorAll('.slide'));
+      const slideByKey = new Map(originalSlides.map((slide) => [
+        slide.getAttribute('aria-labelledby') || 'architecture',
+        slide
+      ]));
+      const mainKeys = [
+        's1-title',
+        's3-title',
+        's4-title',
+        's12-title',
+        's5-title',
+        's6-title',
+        's7-title',
+        's10-title',
+        's11-title',
+        'architecture',
+        's22-title',
+        's18-title',
+        's24-title',
+        's25-title',
+        's26-title'
+      ];
+      const appendixKeys = [
+        's2-title',
+        's8-title',
+        's9-title',
+        's14-title',
+        's15-title',
+        's16-title',
+        's17-title',
+        's19-title',
+        's20-title',
+        's21-title',
+        's23-title'
+      ];
+      const orderedKeys = [...mainKeys, ...appendixKeys];
+      const slides = orderedKeys.map((key) => slideByKey.get(key));
+      const mainSlideCount = mainKeys.length;
+      const appendixSlideCount = appendixKeys.length;
+
+      if (slides.some((slide) => !slide) || slides.length !== originalSlides.length) {
+        throw new Error('A ordem da apresentação contém slides ausentes ou duplicados.');
+      }
+
+      slides.forEach((slide, index) => {
+        const isAppendix = index >= mainSlideCount;
+        slide.classList.toggle('appendix', isAppendix);
+        deck.appendChild(slide);
+
+        const number = slide.querySelector('.footer span:last-child');
+        if (number && index > 0) {
+          number.textContent = isAppendix
+            ? `A${index - mainSlideCount + 1}`
+            : String(index + 1).padStart(2, '0');
+        }
+      });
       const counter = document.getElementById('counter');
       const progress = document.getElementById('progress');
       let current = 0;
@@ -1392,8 +1680,14 @@
         slides.forEach((slide, position) => slide.classList.toggle('active', position === current));
         slides[current].scrollTop = 0;
         slides[current].scrollLeft = 0;
-        counter.textContent = `${current + 1} / ${slides.length}`;
-        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        const isAppendix = current >= mainSlideCount;
+        const positionInSection = isAppendix ? current - mainSlideCount + 1 : current + 1;
+        const sectionSize = isAppendix ? appendixSlideCount : mainSlideCount;
+        counter.textContent = isAppendix
+          ? `A${positionInSection} / A${sectionSize}`
+          : `${positionInSection} / ${sectionSize}`;
+        progress.parentElement.classList.toggle('appendix-progress', isAppendix);
+        progress.style.width = `${(positionInSection / sectionSize) * 100}%`;
         if (updateHash) history.replaceState(null, '', `#slide-${current + 1}`);
       };
 
@@ -1433,7 +1727,10 @@
           show(0);
         } else if (event.key === 'End') {
           event.preventDefault();
-          show(slides.length - 1);
+          show(mainSlideCount - 1);
+        } else if (event.key.toLowerCase() === 'a') {
+          event.preventDefault();
+          show(mainSlideCount);
         } else if (event.key.toLowerCase() === 'f') {
           fullscreen();
         }
