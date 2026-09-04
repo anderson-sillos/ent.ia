@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
   <title id="title">Arquitetura de referência do ENT.IA</title>
-  <desc id="description">Diagrama das zonas pública, de borda e interna, incluindo React, proxy e WAF, BFF e API REST, monólito modular, Keycloak, PostgreSQL, orquestrador de IA e provedor de LLM.</desc>
+  <desc id="description">Diagrama das zonas pública, de borda e interna, incluindo React, Nginx, BFF e API REST com DSL, monólito modular, RBAC, Keycloak, PostgreSQL 18 com RLS, orquestrador de IA e provedor de LLM.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f7f9fc"/>
@@ -13,10 +13,10 @@
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
       <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#102033" flood-opacity="0.12"/>
     </filter>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
       <path d="M0,0 L12,6 L0,12 z" fill="#49657a"/>
     </marker>
-    <marker id="arrowTeal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+    <marker id="arrowTeal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
       <path d="M0,0 L12,6 L0,12 z" fill="#00a69c"/>
     </marker>
     <style>
@@ -26,6 +26,7 @@
       .box-core { fill:#e5f7f5; stroke:#00a69c; stroke-width:3; filter:url(#shadow); }
       .box-external { fill:#fff0ed; stroke:#ff8379; stroke-width:2; filter:url(#shadow); }
       .box-data { fill:#edf2f8; stroke:#7693aa; stroke-width:2; filter:url(#shadow); }
+      .database { fill:#fff; stroke:#9aafc0; stroke-width:1.5; }
       .title { fill:#071a2d; font:800 42px Inter,system-ui,sans-serif; letter-spacing:-1px; }
       .subtitle { fill:#55667a; font:500 20px Inter,system-ui,sans-serif; }
       .zone-label { fill:#00a69c; font:800 16px Inter,system-ui,sans-serif; letter-spacing:2px; }
@@ -43,127 +44,124 @@
       .note-small { fill:#b8cad9; font:500 13px Inter,system-ui,sans-serif; }
     </style>
   </defs>
-
   <rect width="1600" height="900" fill="url(#background)"/>
   <rect x="0" y="0" width="1600" height="9" fill="url(#brand)"/>
-  <text class="title" x="72" y="72">ENT.IA · Arquitetura de referência</text>
-  <text class="subtitle" x="72" y="106">Metadados como contrato central · segurança contextual · IA mediada por APIs REST</text>
-
+  <text class="title" x="72" y="72" >ENT.IA · Arquitetura de referência</text>
+  <text class="subtitle" x="72" y="106" >Metadados como contrato central · segurança contextual · IA mediada pela API REST</text>
   <rect class="zone" x="60" y="145" width="255" height="605" rx="22"/>
-  <text class="zone-label" x="85" y="180">ACESSO PÚBLICO</text>
+  <text class="zone-label" x="85" y="180" >ACESSO PÚBLICO</text>
   <rect class="box" x="95" y="220" width="185" height="105" rx="16"/>
-  <text class="label" x="188" y="261">React SPA</text>
-  <text class="small" x="188" y="288">UI dinâmica</text>
-  <text class="small" x="188" y="309">sem tokens no browser</text>
+  <text class="label" x="188" y="261" >React SPA</text>
+  <text class="small" x="188" y="288" >UI dinâmica</text>
+  <text class="small" x="188" y="309" >sem tokens no browser</text>
   <rect class="box" x="95" y="405" width="185" height="105" rx="16"/>
-  <text class="label" x="188" y="446">Usuário</text>
-  <text class="small" x="188" y="473">sessão + organização</text>
-  <text class="small" x="188" y="494">selecionada</text>
-
+  <text class="label" x="188" y="446" >Usuário</text>
+  <text class="small" x="188" y="473" >sessão + organização</text>
+  <text class="small" x="188" y="494" >selecionada</text>
   <rect class="zone" x="345" y="145" width="245" height="605" rx="22"/>
-  <text class="zone-label" x="370" y="180">BORDA SEGURA</text>
-  <rect class="box-data" x="380" y="250" width="175" height="135" rx="16"/>
-  <text class="label" x="468" y="292">Proxy / WAF</text>
-  <text class="small" x="468" y="321">TLS · rate limiting</text>
-  <text class="small" x="468" y="344">headers confiáveis</text>
-  <text class="small" x="468" y="367">rotas mínimas</text>
+  <text class="zone-label" x="370" y="180" >BORDA SEGURA</text>
+  <rect class="box-data" x="370" y="250" width="195" height="135" rx="16"/>
+  <text class="label" x="468" y="287" >Nginx OSS</text>
+  <text class="small" x="468" y="316" >React estático + proxy</text>
+  <text class="small" x="468" y="339" >TLS · rate limiting</text>
+  <text class="small" x="468" y="362" >rotas mínimas · WAF futuro</text>
   <rect x="380" y="455" width="175" height="88" rx="14" fill="#d9f3f0" stroke="#00a69c" stroke-width="2"/>
-  <text class="label" x="468" y="490">auth.ent.ia.br</text>
-  <text class="small" x="468" y="518">somente frontchannel</text>
-
+  <text class="label" x="468" y="490" >auth.ent.ia.br</text>
+  <text class="small" x="468" y="518" >somente frontchannel</text>
   <rect class="zone-private" x="620" y="145" width="915" height="605" rx="22"/>
-  <text class="zone-label" x="645" y="180">REDE INTERNA / SERVIÇOS CONFIÁVEIS</text>
-
+  <text class="zone-label" x="645" y="180" >REDE INTERNA / SERVIÇOS CONFIÁVEIS</text>
+  <text class="small" x="1291" y="180">OCI · Docker Compose · OpenTofu · compatível com Kubernetes</text>
   <rect class="box-core" x="660" y="205" width="555" height="355" rx="20"/>
-  <text class="label" x="938" y="243">ENT.IA · Spring Boot modular monolith</text>
+  <text class="label" x="938" y="243" >ENT.IA · monólito modular Spring Boot</text>
   <rect x="700" y="267" width="475" height="62" rx="13" fill="url(#brand)"/>
-  <text x="938" y="294" fill="#fff" font-family="Inter,system-ui,sans-serif" font-size="19" font-weight="800" text-anchor="middle">BFF + REST API + autorização contextual</text>
-  <text x="938" y="315" fill="#eafffd" font-family="Inter,system-ui,sans-serif" font-size="13" text-anchor="middle">fronteira única para UI, integrações e IA</text>
-
+  <text x="938" y="294" fill="#fff" font-family="Inter,system-ui,sans-serif" font-size="19" font-weight="800" text-anchor="middle" >BFF + REST API + autorização contextual</text>
+  <text x="938" y="315" fill="#eafffd" font-family="Inter,system-ui,sans-serif" font-size="13" text-anchor="middle" >fronteira única para UI, integrações e IA</text>
   <rect class="module" x="700" y="357" width="104" height="55" rx="10"/>
-  <text class="module-label" x="752" y="390">Identity</text>
+  <text class="module-label" x="752" y="390" >Identity</text>
   <rect class="module" x="816" y="357" width="104" height="55" rx="10"/>
-  <text class="module-label" x="868" y="390">Tenancy</text>
+  <text class="module-label" x="868" y="390" >Tenancy</text>
   <rect class="module" x="932" y="357" width="104" height="55" rx="10"/>
-  <text class="module-label" x="984" y="390">Authorization</text>
+  <text class="module-label" x="984" y="390" >RBAC</text>
   <rect class="module-risk" x="1048" y="357" width="127" height="55" rx="10"/>
-  <text class="module-label" x="1112" y="390">Catalog</text>
-
+  <text class="module-label" x="1112" y="390" >Catalog</text>
   <rect class="module-risk" x="700" y="426" width="145" height="55" rx="10"/>
-  <text class="module-label" x="773" y="459">Schema Engine</text>
+  <text class="module-label" x="773" y="459" >Schema Engine</text>
   <rect class="module-risk" x="857" y="426" width="145" height="55" rx="10"/>
-  <text class="module-label" x="930" y="459">Dynamic Records</text>
+  <text class="module-label" x="930" y="459" >Dynamic Records</text>
   <rect class="module" x="1014" y="426" width="161" height="55" rx="10"/>
-  <text class="module-label" x="1095" y="459">Dynamic API</text>
-
+  <text class="module-label" x="1095" y="459" >REST API / DSL</text>
   <rect class="module" x="700" y="495" width="145" height="45" rx="10"/>
-  <text class="module-label" x="773" y="523">Audit</text>
+  <text class="module-label" x="773" y="523" >Audit</text>
   <rect class="module-risk" x="857" y="495" width="145" height="45" rx="10"/>
-  <text class="module-label" x="930" y="523">AI Orchestration</text>
+  <text class="module-label" x="930" y="523" >AI Orchestrator</text>
   <rect class="module" x="1014" y="495" width="161" height="45" rx="10"/>
-  <text class="module-label" x="1095" y="523">Observability</text>
-
-  <rect class="box-external" x="1260" y="215" width="225" height="115" rx="16"/>
-  <text class="label" x="1373" y="254">Keycloak</text>
-  <text class="small" x="1373" y="281">realm ent-ia</text>
-  <text class="small" x="1373" y="304">OIDC / SAML / social</text>
-
-  <rect class="box-data" x="680" y="620" width="300" height="92" rx="16"/>
-  <text class="label" x="830" y="654">PostgreSQL · aplicação</text>
-  <text class="small" x="830" y="680">catálogo + auditoria + tabelas por entidade</text>
-  <text class="small" x="830" y="702">organization_id obrigatório</text>
-
-  <rect class="box-data" x="1030" y="620" width="205" height="92" rx="16"/>
-  <text class="label" x="1133" y="654">Dados Keycloak</text>
-  <text class="small" x="1133" y="680">logicamente separados</text>
-  <text class="small" x="1133" y="702">sem senhas no ENT.IA</text>
-
-  <rect class="box-external" x="1280" y="605" width="205" height="107" rx="16"/>
-  <text class="label" x="1383" y="643">Provedor LLM</text>
-  <text class="small" x="1383" y="670">modelo a decidir</text>
-  <text class="small" x="1383" y="693">sem acesso ao banco</text>
-
-  <path class="arrow-bi" d="M280 272 L380 300"/>
-  <text class="flow" x="329" y="270">HTTPS</text>
-  <path class="arrow-trust" d="M555 315 L660 315"/>
-  <text class="flow" x="607" y="296">app / API</text>
-  <path class="arrow" d="M555 490 C610 490 602 285 660 285"/>
-  <text class="flow" x="603" y="430">callback BFF</text>
-  <path class="arrow" d="M555 490 C760 590 1160 480 1260 285"/>
-  <text class="flow" x="934" y="580">frontchannel público limitado</text>
-  <path class="arrow-bi" d="M1215 285 L1260 285"/>
-  <text class="flow" x="1237" y="267">OIDC</text>
-  <path class="arrow-bi" d="M830 560 L830 620"/>
-  <text class="flow" x="894" y="597">jOOQ / SQL</text>
-  <path class="arrow-bi" d="M1133 330 L1133 620"/>
-  <text class="flow" x="1194" y="590">persistência</text>
-  <path class="arrow-bi dashed" d="M1002 518 C1170 520 1190 650 1280 650"/>
-  <text class="flow" x="1165" y="537">tool calling</text>
-
-  <text class="zone-label" x="60" y="766">LEGENDA TÉCNICA</text>
+  <text class="module-label" x="1095" y="523" >Observability</text>
+  <rect class="box-data" x="1250" y="205" width="245" height="355" rx="20"/>
+  <text class="label" x="1373" y="239" >PostgreSQL 18.x</text>
+  <text class="small" x="1373" y="263" >1 cluster / serviço</text>
+  <line x1="1270" y1="278" x2="1475" y2="278" stroke="#adc1d1" stroke-width="1.5"/>
+  <rect class="database" x="1270" y="292" width="205" height="100" rx="12"/>
+  <text class="label" x="1373" y="323" style="font-size:18px">Database entia</text>
+  <text class="small" x="1373" y="348" >RLS · catálogo · auditoria</text>
+  <text class="small" x="1373" y="370" >entidades · organization_id</text>
+  <rect class="database" x="1270" y="425" width="205" height="100" rx="12"/>
+  <text class="label" x="1373" y="456" style="font-size:18px">Database keycloak</text>
+  <text class="small" x="1373" y="481" >credencial independente</text>
+  <text class="small" x="1373" y="503" >sem senhas no ENT.IA</text>
+  <text class="small" x="1373" y="545" >databases logicamente isolados</text>
+  <rect class="box-external" x="680" y="620" width="245" height="90" rx="16"/>
+  <text class="label" x="803" y="651" >Keycloak</text>
+  <text class="small" x="803" y="676" >realm ent-ia · OIDC / SAML</text>
+  <text class="small" x="803" y="698" >IdP próprio · login social</text>
+  <rect class="box-external" x="970" y="620" width="245" height="90" rx="16"/>
+  <text class="label" x="1093" y="651" >Provedor LLM</text>
+  <text class="small" x="1093" y="676" >modelo a decidir</text>
+  <text class="small" x="1093" y="698" >sem acesso direto ao banco</text>
+  <path class="arrow-bi" d="M 283 289 L 369 290"/>
+  <text class="flow" x="329" y="283" >HTTPS</text>
+  <path class="arrow-trust" d="M 565 315 L 657 314"/>
+  <text class="flow" x="610" y="305" >app / API</text>
+  <path class="arrow-bi" d="M 555 493 C 571 493 607 493 607 493 L 607 446 C 607 446 642 447 659 446"/>
+  <text class="flow" x="603" y="435" >callback BFF</text>
+  <path class="arrow-bi" d="M 555 524 L 608 524 L 610 665 L 675 665"/>
+  <text class="flow" x="515" y="620" >frontchannel público limitado</text>
+  <path class="arrow-bi" d="M 760 563 L 760 617"/>
+  <text class="flow" x="814" y="596" >OIDC</text>
+  <path class="arrow-bi" d="M 1220 315 L 1235 315 L 1235 377 L 1249 377"/>
+  <text class="flow" x="1233" y="297" >SQL</text>
+  <path class="arrow-bi" d="M 926 675 L 952 675 L 953 740 L 1373 740 L 1373 561"/>
+  <text class="flow" x="1135" y="734" >persistência isolada do Keycloak</text>
+  <path class="arrow-bi dashed" d="M 930 542 L 930 575 L 1093 575 L 1093 616"/>
+  <text class="flow" x="1150" y="600" >tool calling</text>
+  <text class="zone-label" x="60" y="766" >LEGENDA TÉCNICA</text>
   <rect x="60" y="782" width="1475" height="98" rx="16" fill="#071a2d"/>
+  <text class="note" x="82" y="812" >React SPA</text>
+  <text class="note-small" x="82" y="836" >Interface web no navegador;</text>
+  <text class="note-small" x="82" y="855" >atualiza sem recarregar a página.</text>
+  <line x1="305" y1="800" x2="305" y2="862" stroke="#294259"/>
 
-  <text class="note" x="82" y="812">React SPA</text>
-  <text class="note-small" x="82" y="836">Interface web executada no navegador,</text>
-  <text class="note-small" x="82" y="855">sem recarregar a página inteira.</text>
+  <text class="note" x="327" y="812" >BFF · Backend for Frontend</text>
+  <text class="note-small" x="327" y="836" >Backend dedicado à interface;</text>
+  <text class="note-small" x="327" y="855" >mantém tokens fora do navegador.</text>
+  <line x1="550" y1="800" x2="550" y2="862" stroke="#294259"/>
 
-  <line x1="352" y1="800" x2="352" y2="862" stroke="#294259"/>
-  <text class="note" x="374" y="812">BFF · Backend for Frontend</text>
-  <text class="note-small" x="374" y="836">Backend dedicado à interface;</text>
-  <text class="note-small" x="374" y="855">protege a sessão e os tokens.</text>
+  <text class="note" x="572" y="812" >Keycloak</text>
+  <text class="note-small" x="572" y="836" >Login, MFA e federação;</text>
+  <text class="note-small" x="572" y="855" >OIDC, SAML e login social.</text>
+  <line x1="795" y1="800" x2="795" y2="862" stroke="#294259"/>
 
-  <line x1="647" y1="800" x2="647" y2="862" stroke="#294259"/>
-  <text class="note" x="669" y="812">Keycloak</text>
-  <text class="note-small" x="669" y="836">Serviço de identidade, login, MFA</text>
-  <text class="note-small" x="669" y="855">e federação OIDC/SAML.</text>
+  <text class="note" x="817" y="812" >RBAC</text>
+  <text class="note-small" x="817" y="836" >Permissões por organização,</text>
+  <text class="note-small" x="817" y="855" >entidade e operação.</text>
+  <line x1="1040" y1="800" x2="1040" y2="862" stroke="#294259"/>
 
-  <line x1="942" y1="800" x2="942" y2="862" stroke="#294259"/>
-  <text class="note" x="964" y="812">RBAC</text>
-  <text class="note-small" x="964" y="836">Acesso por perfis, organização,</text>
-  <text class="note-small" x="964" y="855">entidade e operação.</text>
+  <text class="note" x="1062" y="812" >RLS · Row-Level Security</text>
+  <text class="note-small" x="1062" y="836" >Políticas do PostgreSQL filtram</text>
+  <text class="note-small" x="1062" y="855" >linhas por organização.</text>
+  <line x1="1285" y1="800" x2="1285" y2="862" stroke="#294259"/>
 
-  <line x1="1237" y1="800" x2="1237" y2="862" stroke="#294259"/>
-  <text class="note" x="1259" y="812">LLM · Large Language Model</text>
-  <text class="note-small" x="1259" y="836">Modelo que interpreta prompts</text>
-  <text class="note-small" x="1259" y="855">e solicita ferramentas controladas.</text>
+  <text class="note" x="1307" y="812" >LLM · Large Language Model</text>
+  <text class="note-small" x="1307" y="836" >Interpreta prompts e solicita</text>
+  <text class="note-small" x="1307" y="855" >ferramentas controladas.</text>
+
 </svg>
